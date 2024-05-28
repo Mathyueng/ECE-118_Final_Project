@@ -13,7 +13,7 @@
 #include "ES_Timers.h"
 #include "ES_Configure.h"
 
-#define PING_TEST
+//#define PING_MAIN
 #define PING_BASIC_TEST
 
 #ifdef PING_TEST
@@ -99,7 +99,7 @@ int16_t PingAndReportDistance(void) { // function for Problem 6, part c
 }
 
 
-#ifdef PING_TEST
+#ifdef PING_MAIN
 
 int main(void) {
     BOARD_Init();

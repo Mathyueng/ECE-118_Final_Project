@@ -13,7 +13,7 @@
 #include "AD.h"
 #include "math.h"
 
-//#define DRIVETRAIN_TEST
+#define DRIVETRAIN_MAIN
 
 #define DRIVE_MULTIPLIER_R 1
 #define DRIVE_MULTIPLIER_L 1
@@ -22,17 +22,33 @@
 #define RIGHT_DRIVE_PIN PWM_PORTY10
 #define LEFT_DRIVE_PIN PWM_PORTY12
 
-#define H_BRIDGE_PORT PORTX
-#define R_H_BRIDGE_IN1 PIN3
-#define R_H_BRIDGE_IN2 PIN4
-#define L_H_BRIDGE_IN1 PIN5
-#define L_H_BRIDGE_IN2 PIN6
+#define H_BRIDGE_PORT PORTW
+#define R_H_BRIDGE_IN1 PIN5
+#define R_H_BRIDGE_IN2 PIN6
+#define L_H_BRIDGE_IN1 PIN7
+#define L_H_BRIDGE_IN2 PIN8
 
 #define BATTERY_MAX 1024
 #define WHEEL_DIST 11000
 
 static int16_t right_speed;
 static int16_t left_speed;
+
+// private helper functions
+
+uint8_t ReadHBridge() {
+    return (IO_PortsReadPort(H_BRIDGE_PORT));
+}
+
+uint8_t GetRightPWM() {
+    return PWM_GetDutyCycle(RIGHT_DRIVE_PIN);
+}
+
+uint8_t GetLeftPWM() {
+    return PWM_GetDutyCycle(LEFT_DRIVE_PIN);
+}
+
+// public drivetrain library functions
 
 /**
  * @Function DT_Init(void)
@@ -42,6 +58,8 @@ static int16_t left_speed;
  * @author Aarush Banerjee 5.19.2024 */
 char DT_Init(void) {
     PWM_AddPins(RIGHT_DRIVE_PIN | LEFT_DRIVE_PIN);
+    PWM_SetFrequency(MIN_PWM_FREQ);
+    IO_PortsClearPortBits(H_BRIDGE_PORT, 0xFF);
     IO_PortsSetPortOutputs(H_BRIDGE_PORT, R_H_BRIDGE_IN1 | R_H_BRIDGE_IN2 | L_H_BRIDGE_IN1 | L_H_BRIDGE_IN2);
     IO_PortsWritePort(H_BRIDGE_PORT, 0);
     DT_SetRightDrive(0);
@@ -57,19 +75,18 @@ char DT_Init(void) {
  * @author Aarush Banerjee 5.19.2024 */
 char DT_SetRightDrive(int16_t speed) {
     if (speed < 0) {
-        IO_PortsWritePort(H_BRIDGE_PORT, IO_PortsReadPort(H_BRIDGE_PORT) | R_H_BRIDGE_IN2 & !(R_H_BRIDGE_IN1));
+        IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | R_H_BRIDGE_IN2) & !(R_H_BRIDGE_IN1)));
         speed *= -1;
     } else {
-        IO_PortsWritePort(H_BRIDGE_PORT, IO_PortsReadPort(H_BRIDGE_PORT) | R_H_BRIDGE_IN1 & !(R_H_BRIDGE_IN2));
+        IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | R_H_BRIDGE_IN1) & !(R_H_BRIDGE_IN2)));
     }
     if (speed * SPEED_TO_PWM > 1000) return ERROR;
-    unsigned int pwmDutyCycle = (speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_R * (BATTERY_MAX << 4) / AD_ReadADPin(BAT_VOLTAGE)) >> 4; // bitshifting done to prevent float division or integer imprecision
-    PWM_SetDutyCycle(RIGHT_DRIVE_PIN, pwmDutyCycle);
+    PWM_SetDutyCycle(RIGHT_DRIVE_PIN, (speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_R)); // bitshifting done to prevent float division or integer imprecision
     right_speed = speed;
     return SUCCESS;
 }
 
-/**
+/** 
  * @Function DT_SetLeftDrive(int16_t speed)
  * @param speed - the linear speed to set the edge of the left wheel to, in +/- milli-inches/second
  * @return SUCCESS OR ERROR
@@ -82,8 +99,8 @@ char DT_SetLeftDrive(int16_t speed) {
     } else {
         IO_PortsWritePort(H_BRIDGE_PORT, IO_PortsReadPort(H_BRIDGE_PORT) | L_H_BRIDGE_IN1 & !(L_H_BRIDGE_IN2));
     }
-    unsigned int pwmDutyCycle = (speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_R * (BATTERY_MAX << 4) / AD_ReadADPin(BAT_VOLTAGE)) >> 4;
-    PWM_SetDutyCycle(RIGHT_DRIVE_PIN, pwmDutyCycle);
+    if (speed * SPEED_TO_PWM > 1000) return ERROR;
+    PWM_SetDutyCycle(LEFT_DRIVE_PIN, (speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_L)); // bitshifting done to prevent float division or integer imprecision
     left_speed = speed;
     return SUCCESS;
 }
@@ -164,13 +181,24 @@ char DT_SpinCC(int16_t speed) {
     return (DT_SetRightDrive(speed) && DT_SetLeftDrive(-speed));
 }
 
-#ifdef DRIVETRAIN_TEST
-#define DELAY(x) for (int i = 0; i < x; i++) asm("nop");
+#ifdef DRIVETRAIN_MAIN
+#include <stdio.h>
+#define DELAY(x) for (int i=0;i<(400000*x);i++) asm("nop");
 void main(void) {
+    printf("\r\nDrivetrain.c test harness successfully compiled");
+    BOARD_Init();
+    PWM_Init();
     DT_Init();
+    printf("\r\nDrivetrain successfully initalized");
+    
+    DT_DriveFwd(100);
+    
     while (1) {
-        DT_DriveFwd(1000);
-        // remainder of the test harness
+        DELAY(5);
+        printf("\r\n");
+        printf("\r\nH_Bridge Port: %x", ReadHBridge());
+        printf("\r\nRight Duty Cycle: %d", GetRightPWM());
+        printf("\r\nLeft Duty Cycle: %d", GetLeftPWM());
     }
 }
 #endif // DRIVETRAIN_TEST
