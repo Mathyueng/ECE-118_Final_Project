@@ -12,6 +12,7 @@
 #include "IO_Ports.h"
 #include "ES_Timers.h"
 #include "ES_Configure.h"
+#include "ES_Events.h"
 
 //#define PING_MAIN
 #define PING_BASIC_TEST
@@ -24,13 +25,13 @@
 #define PING_10US
 #define PING_1MS
 
-#define D_OVER_EW_RATIO 1000 / 148 // D/EW, adjusted for taking in ms instead of us
+#define D_OVER_EW_RATIO 148 // D/EW, adjusted for taking in ms instead of us
 #define PING_SENSOR_PORT PORTY
 #define TRIGGER_PIN PIN3
 #define ECHO_PIN PIN4
 #define PING_TIMER 
 
-#define TIMER_uS_PER_TICK 25
+#define TIMER_TICKS_PER_uS 40
 
 typedef enum {
     IDLE,
@@ -40,7 +41,6 @@ typedef enum {
 } PingState;
 
 static PingState state;
-static unsigned int FreeRunningTimer;
 static uint16_t start_time;
 
 void PingInit(void) {
@@ -70,32 +70,43 @@ void SetTrigger(uint8_t in) {
  * when it has a distance it has detected from the ping sensor, it will return that distance in increments of 6-7 inches
  */
 int16_t PingAndReportDistance(void) { // function for Problem 6, part c
+    static uint32_t start_time_in_uS;
+    uint32_t FRT_in_uS = ES_Timer_GetTime() * 1000 + TMR1 / TIMER_TICKS_PER_uS;
     switch (state) {
         case IDLE:
-            SetTrigger(1); // set output pin TRIGGER to 1
-            start_time = FreeRunningTimer;
-            state = TRIGGER;
-            break;
+            if (FRT_in_uS - start_time_in_uS >= 60000) {
+                SetTrigger(1); // set output pin TRIGGER to 1
+                start_time_in_uS = FRT_in_uS;
+                state = TRIGGER;
+            }
+                break;
         case TRIGGER:
-            if (FreeRunningTimer - start_time >= 100) {
+            if (FRT_in_uS - start_time_in_uS >= 10) {
                 SetTrigger(0);
                 state = WAITING;
             }
-            break;
+                break;
         case WAITING:
             if (ReadEcho()) {
-                start_time = FreeRunningTimer;
+                start_time_in_uS = FRT_in_uS;
                 state = ECHO;
             }
             break;
         case ECHO:
             if (!ReadEcho()) {
+                ES_Event thisEvent;
+                thisEvent.EventType = PING;
+                thisEvent.EventParam = (FRT_in_uS - start_time_in_uS) * D_OVER_EW_RATIO;
+#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
+//                PostGenericService(thisEvent);
+#else
+                SaveEvent(thisEvent);
+#endif
                 state = IDLE;
-                return (FreeRunningTimer - start_time) * (D_OVER_EW_RATIO / (1000 / TIMER_uS_PER_TICK));
             }
             break;
     }
-    return 1;
+    return SUCCESS;
 }
 
 
