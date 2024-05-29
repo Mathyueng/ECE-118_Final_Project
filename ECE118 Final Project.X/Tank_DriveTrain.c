@@ -13,7 +13,12 @@
 #include "AD.h"
 #include "math.h"
 
+#define DEBUG
 #define DRIVETRAIN_MAIN
+
+#ifdef DEBUG
+#include <stdio.h>
+#endif
 
 #define DRIVE_MULTIPLIER_R 1
 #define DRIVE_MULTIPLIER_L 1
@@ -59,9 +64,13 @@ uint8_t GetLeftPWM() {
 char DT_Init(void) {
     PWM_AddPins(RIGHT_DRIVE_PIN | LEFT_DRIVE_PIN);
     PWM_SetFrequency(MIN_PWM_FREQ);
-    IO_PortsClearPortBits(H_BRIDGE_PORT, 0xFF);
-    IO_PortsSetPortOutputs(H_BRIDGE_PORT, R_H_BRIDGE_IN1 | R_H_BRIDGE_IN2 | L_H_BRIDGE_IN1 | L_H_BRIDGE_IN2);
+    IO_PortsClearPortBits(H_BRIDGE_PORT, 0xFFFF);
+//    IO_PortsSetPortOutputs(H_BRIDGE_PORT, R_H_BRIDGE_IN1 | R_H_BRIDGE_IN2 | L_H_BRIDGE_IN1 | L_H_BRIDGE_IN2);
+    IO_PortsSetPortOutputs(H_BRIDGE_PORT, 0x01E0);
     IO_PortsWritePort(H_BRIDGE_PORT, 0);
+#ifdef DEBUG
+    printf("\r\nPort Initialization Successful...\r\n");
+#endif
     DT_SetRightDrive(0);
     DT_SetLeftDrive(0);
     return SUCCESS;
@@ -75,14 +84,22 @@ char DT_Init(void) {
  * @author Aarush Banerjee 5.19.2024 */
 char DT_SetRightDrive(int16_t speed) {
     if (speed < 0) {
-        IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | R_H_BRIDGE_IN2) & !(R_H_BRIDGE_IN1)));
+        IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | R_H_BRIDGE_IN2) & ~(R_H_BRIDGE_IN1)));
+//        IO_PortsWritePort(H_BRIDGE_PORT, PIN5 | PIN6);       // inserted for debugging purposes 
         speed *= -1;
     } else {
-        IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | R_H_BRIDGE_IN1) & !(R_H_BRIDGE_IN2)));
+        IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | R_H_BRIDGE_IN1) & ~(R_H_BRIDGE_IN2)));
+//        IO_PortsWritePort(H_BRIDGE_PORT, PIN5 | PIN6);       // inserted for debugging purposes
     }
-    if (speed * SPEED_TO_PWM > 1000) return ERROR;
+    if (speed * SPEED_TO_PWM > MAX_PWM) return ERROR;
+#ifdef DEBUG
+    printf("\r\nDuty cycle for right motor: %d", speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_R);
+#endif
     PWM_SetDutyCycle(RIGHT_DRIVE_PIN, (speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_R)); // bitshifting done to prevent float division or integer imprecision
     right_speed = speed;
+#ifdef DEBUG
+    printf("\r\nRight Speed: %d...\r\n", DT_GetRightDrive());
+#endif
     return SUCCESS;
 }
 
@@ -94,14 +111,22 @@ char DT_SetRightDrive(int16_t speed) {
  * @author Aarush Banerjee 5.19.2024 */
 char DT_SetLeftDrive(int16_t speed) {
     if (speed < 0) {
-        IO_PortsWritePort(H_BRIDGE_PORT, IO_PortsReadPort(H_BRIDGE_PORT) | L_H_BRIDGE_IN2 & !(L_H_BRIDGE_IN1));
+        IO_PortsWritePort(H_BRIDGE_PORT, (IO_PortsReadPort(H_BRIDGE_PORT) | L_H_BRIDGE_IN2) & ~(L_H_BRIDGE_IN1));
+//        IO_PortsWritePort(H_BRIDGE_PORT, PIN7 | PIN8);       // inserted for debugging purposes 
         speed *= -1;
     } else {
-        IO_PortsWritePort(H_BRIDGE_PORT, IO_PortsReadPort(H_BRIDGE_PORT) | L_H_BRIDGE_IN1 & !(L_H_BRIDGE_IN2));
+        IO_PortsWritePort(H_BRIDGE_PORT, (IO_PortsReadPort(H_BRIDGE_PORT) | L_H_BRIDGE_IN1) & ~(L_H_BRIDGE_IN2));
+//        IO_PortsWritePort(H_BRIDGE_PORT, PIN7 | PIN8);       // inserted for debugging purposes
     }
-    if (speed * SPEED_TO_PWM > 1000) return ERROR;
+    if (speed * SPEED_TO_PWM > MAX_PWM) return ERROR;
+#ifdef DEBUG
+    printf("\r\nDuty cycle for left motor: %d", speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_L);
+#endif
     PWM_SetDutyCycle(LEFT_DRIVE_PIN, (speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_L)); // bitshifting done to prevent float division or integer imprecision
     left_speed = speed;
+#ifdef DEBUG
+    printf("\r\nLeft Speed: %d...\r\n", DT_GetLeftDrive());
+#endif
     return SUCCESS;
 }
 
@@ -182,7 +207,6 @@ char DT_SpinCC(int16_t speed) {
 }
 
 #ifdef DRIVETRAIN_MAIN
-#include <stdio.h>
 #define DELAY(x) for (int i=0;i<(400000*x);i++) asm("nop");
 void main(void) {
     printf("\r\nDrivetrain.c test harness successfully compiled");
@@ -191,14 +215,32 @@ void main(void) {
     DT_Init();
     printf("\r\nDrivetrain successfully initalized");
     
-    DT_DriveFwd(100);
-    
     while (1) {
-        DELAY(5);
+        int speed = 50;
+        int turningRad = 8000;
+        int delay = 1;
+        DT_DriveFwd(speed);
+        DELAY(delay);
+        DT_DriveFwd(-speed);
+        DELAY(delay);
+        DT_DriveRight(speed,turningRad);
+        DELAY(delay);
+        DT_DriveRight(-speed,turningRad);
+        DELAY(delay);
+        DT_DriveLeft(speed,turningRad);
+        DELAY(delay);
+        DT_DriveLeft(-speed,turningRad);
+        DELAY(delay);
+        DT_SpinCC(speed);
+        DELAY(delay);
+        DT_SpinCC(-speed);
+        DELAY(delay);
+#ifdef DEBUG
         printf("\r\n");
         printf("\r\nH_Bridge Port: %x", ReadHBridge());
         printf("\r\nRight Duty Cycle: %d", GetRightPWM());
         printf("\r\nLeft Duty Cycle: %d", GetLeftPWM());
+#endif
     }
 }
 #endif // DRIVETRAIN_TEST
