@@ -46,7 +46,6 @@ typedef enum {
     /* User-defined events start here */
     BATTERY_CONNECTED,
     BATTERY_DISCONNECTED,
-    TAPE_EVENT,
     TAPE_ON,
     TAPE_OFF,
     PING,
@@ -67,7 +66,6 @@ static const char *EventNames[] = {
 	"ES_TIMERSTOPPED",
 	"BATTERY_CONNECTED",
 	"BATTERY_DISCONNECTED",
-	"TAPE_EVENT",
 	"TAPE_ON",
 	"TAPE_OFF",
     "PING",
@@ -83,14 +81,14 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST  TapeCheckEvents
+#define EVENT_CHECK_LIST  CheckAllEvents
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the
 // corresponding timer expires. All 16 must be defined. If you are not using
 // a timers, then you can use TIMER_UNUSED
 #define TIMER_UNUSED ((pPostFunc)0)
-#define TIMER0_RESP_FUNC PostTapeService
+#define TIMER0_RESP_FUNC TIMER_UNUSED
 #define TIMER1_RESP_FUNC TIMER_UNUSED
 #define TIMER2_RESP_FUNC TIMER_UNUSED
 #define TIMER3_RESP_FUNC TIMER_UNUSED

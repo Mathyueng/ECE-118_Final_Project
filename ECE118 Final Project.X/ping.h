@@ -15,12 +15,15 @@
  */
 /* ************************************************************************** */
 
+#include "xc.h"
+#include "BOARD.h"
+
 #ifndef _EXAMPLE_FILE_NAME_H    /* Guard against multiple inclusion */
 #define _EXAMPLE_FILE_NAME_H
 
-void PingInit(void);
+void Ping_Init(void);
 
-int16_t PingAndReportDistance(void);
+uint8_t Ping_StateMachine(void);
 
 #endif /* _EXAMPLE_FILE_NAME_H */
 

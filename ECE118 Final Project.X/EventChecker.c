@@ -27,26 +27,19 @@
  ******************************************************************************/
 
 #include "ES_Configure.h"
-#include "EventChecker.h"
+#include "ES_Timers.h"
+#include "tape.h"
+#include "ping.h"
 #include "ES_Events.h"
 #include "serial.h"
 #include "IO_Ports.h"
 #include "AD.h"
 
 /*******************************************************************************
- * MODULE #DEFINES                                                             *
- ******************************************************************************/
-#define TAPE_PORT PORTZ
-#define TAPE_PIN_1 PIN3
-#define TAPE_PIN_2 PIN4
-#define TAPE_PIN_3 PIN5
-#define TAPE_PIN_4 PIN6
-
-/*******************************************************************************
  * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
  ******************************************************************************/
 
-//#define EVENTCHECKER_TEST
+#define EVENTCHECKER_TEST
 
 #ifdef EVENTCHECKER_TEST
 #include <stdio.h>
@@ -70,87 +63,18 @@ static ES_Event storedEvent;
    events would be placed here. Private variables should be STATIC so that they
    are limited in scope to this module. */
 
-// initialize history of tape sensor to say we're off tape
-static uint8_t prevT1 = 0;
-static uint8_t prevT2 = 0;
-static uint8_t prevT3 = 0;
-static uint8_t prevT4 = 0;
-
 /*******************************************************************************
  * PUBLIC FUNCTIONS                                                            *
  ******************************************************************************/
 
-uint8_t TapeInit(void) {
-    IO_PortsSetPortInputs(TAPE_PORT, TAPE_PIN_1 | TAPE_PIN_2 | TAPE_PIN_3 | TAPE_PIN_4);
+uint8_t InitAllEventCheckers(void) {
+    Tape_Init();
+    Ping_Init();
 }
 
-/**
- * @Function TapeCheckEvents(void)
- * @param none
- * @return TRUE or FALSE
- * @brief This function is a prototype event checker that checks the battery voltage
- *        against a fixed threshold (#defined in the .c file). Note that you need to
- *        keep track of previous history, and that the actual battery voltage is checked
- *        only once at the beginning of the function. The function will post an event
- *        of either BATTERY_CONNECTED or BATTERY_DISCONNECTED if the power switch is turned
- *        on or off with the USB cord plugged into the Uno32. Returns TRUE if there was an 
- *        event, FALSE otherwise.
- * @note Use this code as a template for your other event checkers, and modify as necessary.
- * @author Gabriel H Elkaim, 2013.09.27 09:18
- * @modified Gabriel H Elkaim/Max Dunne, 2016.09.12 20:08 */
-uint8_t TapeCheckEvents(void) {
-    
-    uint8_t curT1 = (prevT1 << 1) | !(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_1);
-    uint8_t curT2 = (prevT2 << 1) | !(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_2);
-    uint8_t curT3 = (prevT3 << 1) | !(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_3);
-    uint8_t curT4 = (prevT4 << 1) | !(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_4);
-    
-    uint8_t returnVal = FALSE;
-
-    uint8_t tapeOff = 
-            ((curT1 && !prevT1) << 3) |
-            ((curT2 && !prevT2) << 2) |
-            ((curT3 && !prevT3) << 1) |
-            ((curT4 && !prevT4) << 0);
-    
-    uint8_t tapeOn =
-            ((!curT1 && prevT1) << 3) |
-            ((!curT2 && prevT2) << 2) |
-            ((!curT3 && prevT3) << 1) |
-            ((!curT4 && prevT4) << 0);
-    
-    if (tapeOn) {
-        ES_Event thisEvent;
-        thisEvent.EventType = TAPE_ON;
-        thisEvent.EventParam = tapeOn;
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif   
-        returnVal = TRUE;
-    }
-    
-    // TAPE_OFF detection
-    if (tapeOff) {
-        ES_Event thisEvent;
-        thisEvent.EventType = TAPE_OFF;
-        thisEvent.EventParam = tapeOff & 0x0F;
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif 
-        returnVal = TRUE;
-    }
-    
-    // update history
-    prevT1 = curT1;
-    prevT2 = curT2;
-    prevT3 = curT3;
-    prevT4 = curT4;
-    
-    return (returnVal);
+uint8_t CheckAllEvents(void) {
+//    Tape_CheckEvents();
+    Ping_StateMachine();
 }
 
 /* 
@@ -183,7 +107,8 @@ void PrintEvent(void);
 void main(void) {
     BOARD_Init();
     /* user initialization code goes here */
-    TapeInit();
+    ES_Timer_Init();
+    InitAllEventCheckers();
     // Do not alter anything below this line
     int i;
 
