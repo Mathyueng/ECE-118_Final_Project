@@ -18,9 +18,9 @@
 
 
 //defines for keyboard input
-#define USE_KEYBOARD_INPUT
+//#define USE_KEYBOARD_INPUT
 //What State machine are we testing
-#define POSTFUNCTION_FOR_KEYBOARD_INPUT PostTopHSM
+//#define POSTFUNCTION_FOR_KEYBOARD_INPUT PostTopHSM
 
 //define for TattleTale
 #define USE_TATTLETALE
@@ -49,6 +49,7 @@ typedef enum {
     TAPE_ON,
     TAPE_OFF,
     PING,
+    PING_OFF,
     WALL_FRONT,
     WALL_PARALLEL_R,
     WALL_PARALLEL_L,
@@ -75,6 +76,7 @@ static const char *EventNames[] = {
 	"TAPE_ON",
 	"TAPE_OFF",
 	"PING",
+    "PING_OFF",
 	"WALL_FRONT",
 	"WALL_PARALLEL_R",
 	"WALL_PARALLEL_L",
@@ -93,7 +95,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST 
+#define EVENT_CHECK_LIST CheckAllEvents
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the

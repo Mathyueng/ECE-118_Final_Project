@@ -35,9 +35,9 @@ static ES_Event storedEvent;
 #include <stdio.h>
 #endif
 
-#define NOPS_FOR_10US 1020
-#define PING_10US
-#define PING_1MS
+#define PING_LOW_THRESHOLD 13
+#define PING_HIGH_THRESHOLD 20
+
 
 #define D_OVER_EW_RATIO 148 // D/EW, adjusted for taking in ms instead of us
 #define PING_SENSOR_PORT PORTW
@@ -53,6 +53,11 @@ typedef enum {
     WAITING,
     ECHO
 } PingState;
+
+typedef enum {
+    PINGED,
+    UNPINGED
+} PingStatus;
 
 static PingState state;
 static uint16_t start_time;
@@ -74,6 +79,7 @@ void Ping_Init(void) {
     state = IDLE;
     IO_PortsSetPortOutputs(PING_SENSOR_PORT, TRIGGER_PIN);
     IO_PortsSetPortInputs(PING_SENSOR_PORT, ECHO_PIN);
+    SetTrigger(0);
 }
 
 
@@ -89,11 +95,19 @@ void Ping_Init(void) {
  * when it has a distance it has detected from the ping sensor, it will return that distance in increments of 6-7 inches
  */
 uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
+//    printf("\r\nPing called");
     static uint32_t start_time_in_uS = 0;
+    static PingStatus status = UNPINGED;
+    static uint16_t prevDist = 0;
     uint32_t FRT_in_uS = (ES_Timer_GetTime() * 1000) + (TMR1 / TIMER_TICKS_PER_uS);
     uint8_t returnVal = FALSE;
     switch (state) {
         case IDLE:
+#ifdef DEBUG
+//            printf("\r\nIDLE");
+//            printf("\r\nFRT: %d", FRT_in_uS);
+//            printf("\r\nstart: %d", start_time_in_uS);
+#endif
             if (FRT_in_uS - start_time_in_uS >= 60000) {
                 SetTrigger(1); // set output pin TRIGGER to 1
                 start_time_in_uS = FRT_in_uS;
@@ -101,35 +115,58 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
             }
             break;
         case TRIGGER:
+#ifdef DEBUG
+//            printf("\r\nTRIGGER");
+#endif
             if (FRT_in_uS - start_time_in_uS >= 10) {
                 SetTrigger(0);
                 state = WAITING;
             }
             break;
         case WAITING:
+#ifdef DEBUG
+//            printf("\r\nWAITING");
+#endif
             if (ReadEcho()) {
                 start_time_in_uS = FRT_in_uS;
                 state = ECHO;
             }
             break;
         case ECHO:
+#ifdef DEBUG
+//            printf("\r\nECHO");
+#endif
             if (!ReadEcho()) {
                 ES_Event thisEvent;
-                thisEvent.EventType = PING;
                 thisEvent.EventParam = (FRT_in_uS - start_time_in_uS) / D_OVER_EW_RATIO;
 #ifdef DEBUG
                 printf("\r\nFinal distance in inches: %d", thisEvent.EventParam);
 #endif
-                if (thisEvent.EventParam <= 10) {
+                if (abs(thisEvent.EventParam - prevDist) <= 5) { // if our new reading isn't an outlier
+                    if (thisEvent.EventParam <= PING_LOW_THRESHOLD && status == UNPINGED) {
+                        thisEvent.EventType = PING;
+                        status = PINGED;
 #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//                    PostGenericService(thisEvent);
+//                        PostGenericService(thisEvent);
 #else
-                    SaveEvent(thisEvent);
+                        SaveEvent(thisEvent);
 #endif   
-                returnVal = TRUE;
+                        returnVal = TRUE;
+                    }
+                    if (thisEvent.EventParam >= PING_HIGH_THRESHOLD && status == PINGED) {
+                        thisEvent.EventType = PING_OFF;
+                        status = UNPINGED;
+#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
+//                        PostGenericService(thisEvent);
+#else
+                        SaveEvent(thisEvent);
+#endif   
+                        returnVal = TRUE;
+                    }
                 }
+                prevDist = thisEvent.EventParam;
                 state = IDLE;
-            }
+                }
             break;
     }
     return returnVal;

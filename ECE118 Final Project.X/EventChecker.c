@@ -39,7 +39,7 @@
  * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
  ******************************************************************************/
 
-//#define EVENTCHECKER_TEST
+#define EVENTCHECKER_TEST
 
 #ifdef EVENTCHECKER_TEST
 #include <stdio.h>
@@ -108,6 +108,7 @@ void main(void) {
     BOARD_Init();
     /* user initialization code goes here */
     ES_Timer_Init();
+    printf("\r\nTimer intialized");
     InitAllEventCheckers();
     // Do not alter anything below this line
     int i;
