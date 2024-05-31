@@ -24,6 +24,8 @@
  02/24/97 14:28 jec  Began Coding
 ****************************************************************************/
 
+#include "BOARD.h"
+
 #ifndef ES_Timers_H
 #define ES_Timers_H
 
@@ -91,5 +93,3 @@ uint32_t         ES_Timer_GetTime(void);
 
 #endif   /* ES_Timers_H */
 /*------------------------------ End of file ------------------------------*/
-
-

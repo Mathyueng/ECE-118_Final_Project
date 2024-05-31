@@ -26,7 +26,7 @@ void main(void)
     RC_Init();
 //    SERIAL_Init();
     TIMERS_Init();
-
+    printf("\nAll Inits complete.\n");
     // now initialize the Events and Services Framework and start it running
     ErrorType = ES_Initialize();
     if (ErrorType == Success) {
