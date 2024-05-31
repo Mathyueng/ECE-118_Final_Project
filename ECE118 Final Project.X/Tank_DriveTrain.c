@@ -13,7 +13,7 @@
 #include "AD.h"
 #include "math.h"
 
-//#define DEBUG
+#define DEBUG
 //#define DRIVETRAIN_MAIN
 
 #ifdef DEBUG
@@ -83,7 +83,6 @@ char DT_Init(void) {
  * @brief  sets the right wheel to the indicated speed, in milli-inches/second; negative values spin in reverse
  * @author Aarush Banerjee 5.19.2024 */
 char DT_SetRightDrive(int16_t speed) {
-    right_speed = speed;
     if (speed < 0) {
         IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | R_H_BRIDGE_IN2) & ~(R_H_BRIDGE_IN1)));
 //        IO_PortsWritePort(H_BRIDGE_PORT, PIN5 | PIN6);       // inserted for debugging purposes 
@@ -97,6 +96,7 @@ char DT_SetRightDrive(int16_t speed) {
     printf("\r\nDuty cycle for right motor: %d", speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_R);
 #endif
     PWM_SetDutyCycle(RIGHT_DRIVE_PIN, (speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_R)); // bitshifting done to prevent float division or integer imprecision
+    right_speed = speed;
 #ifdef DEBUG
     printf("\r\nRight Speed: %d...\r\n", DT_GetRightDrive());
 #endif
@@ -110,7 +110,6 @@ char DT_SetRightDrive(int16_t speed) {
  * @brief  sets the left wheel to the indicated speed, in milli-inches/second; negative values spin in reverse
  * @author Aarush Banerjee 5.19.2024 */
 char DT_SetLeftDrive(int16_t speed) {
-    left_speed = speed;
     if (speed < 0) {
         IO_PortsWritePort(H_BRIDGE_PORT, (IO_PortsReadPort(H_BRIDGE_PORT) | L_H_BRIDGE_IN2) & ~(L_H_BRIDGE_IN1));
 //        IO_PortsWritePort(H_BRIDGE_PORT, PIN7 | PIN8);       // inserted for debugging purposes 
@@ -124,6 +123,7 @@ char DT_SetLeftDrive(int16_t speed) {
     printf("\r\nDuty cycle for left motor: %d", speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_L);
 #endif
     PWM_SetDutyCycle(LEFT_DRIVE_PIN, (speed * SPEED_TO_PWM * DRIVE_MULTIPLIER_L)); // bitshifting done to prevent float division or integer imprecision
+    left_speed = speed;
 #ifdef DEBUG
     printf("\r\nLeft Speed: %d...\r\n", DT_GetLeftDrive());
 #endif
@@ -216,8 +216,8 @@ void main(void) {
     printf("\r\nDrivetrain successfully initalized");
     
     while (1) {
-        int speed = 100;
-        int turningRad = 50;
+        int speed = 50;
+        int turningRad = 8000;
         int delay = 1;
         DT_DriveFwd(speed);
         DELAY(delay);
@@ -231,10 +231,10 @@ void main(void) {
         DELAY(delay);
         DT_DriveLeft(-speed,turningRad);
         DELAY(delay);
-//        DT_SpinCC(speed);
-//        DELAY(delay);
-//        DT_SpinCC(-speed);
-//        DELAY(delay);
+        DT_SpinCC(speed);
+        DELAY(delay);
+        DT_SpinCC(-speed);
+        DELAY(delay);
 #ifdef DEBUG
         printf("\r\n");
         printf("\r\nH_Bridge Port: %x", ReadHBridge());

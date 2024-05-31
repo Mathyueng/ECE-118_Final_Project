@@ -29,15 +29,16 @@
       <itemPath>Stepper.h</itemPath>
       <itemPath>Tank_DriveTrain.h</itemPath>
       <itemPath>TapeService.h</itemPath>
-      <itemPath>TemplateFSM.h</itemPath>
-      <itemPath>TemplateHSM.h</itemPath>
       <itemPath>TemplateService.h</itemPath>
-      <itemPath>TemplateSubHSM.h</itemPath>
       <itemPath>ping.h</itemPath>
       <itemPath>pwm.h</itemPath>
       <itemPath>serial.h</itemPath>
       <itemPath>timers.h</itemPath>
-      <itemPath>tape.h</itemPath>
+      <itemPath>TopHSM.h</itemPath>
+      <itemPath>BlackLoopSubHSM.h</itemPath>
+      <itemPath>BlueLoopSubHSM.h</itemPath>
+      <itemPath>RoamSubHSM.h</itemPath>
+      <itemPath>DumpSubHSM.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -68,15 +69,16 @@
       <itemPath>Stepper.c</itemPath>
       <itemPath>Tank_DriveTrain.c</itemPath>
       <itemPath>TapeService.c</itemPath>
-      <itemPath>TemplateFSM.c</itemPath>
-      <itemPath>TemplateHSM.c</itemPath>
       <itemPath>TemplateService.c</itemPath>
-      <itemPath>TemplateSubHSM.c</itemPath>
       <itemPath>ping.c</itemPath>
       <itemPath>pwm.c</itemPath>
       <itemPath>serial.c</itemPath>
       <itemPath>timers.c</itemPath>
-      <itemPath>tape.c</itemPath>
+      <itemPath>TopHSM.c</itemPath>
+      <itemPath>BlackLoopSubHSM.c</itemPath>
+      <itemPath>BlueLoopSubHSM.c</itemPath>
+      <itemPath>RoamSubHSM.c</itemPath>
+      <itemPath>DumpSubHSM.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -92,7 +94,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.10</languageToolchainVersion>
+        <languageToolchainVersion>4.35</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -116,7 +118,7 @@
         </subordinates>
       </compileType>
       <makeCustomizationType>
-        <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
+        <makeCustomizationPreStepEnabled>true</makeCustomizationPreStepEnabled>
         <makeUseCleanTarget>false</makeUseCleanTarget>
         <makeCustomizationPreStep></makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
@@ -133,7 +135,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
-        <property key="extra-include-directories" value=".;..\ECE118\include"/>
+        <property key="extra-include-directories" value=".;..\ECE118\include;..\ECE118"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
@@ -261,7 +263,7 @@
         <property key="stack-smashing" value=""/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
-      <item path="ES_Main.c" ex="true" overriding="false">
+      <item path="ES_Main.c" ex="false" overriding="false">
         <C32>
         </C32>
         <C32-AR>

@@ -44,12 +44,6 @@ else
 COMPARISON_BUILD=
 endif
 
-ifdef SUB_IMAGE_ADDRESS
-
-else
-SUB_IMAGE_ADDRESS_COMMAND=
-endif
-
 # Object Directory
 OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 
@@ -57,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c TemplateFSM.c TemplateHSM.c TemplateService.c TemplateSubHSM.c ping.c pwm.c serial.c timers.c tape.c
+SOURCEFILES_QUOTED_IF_SPACED=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c TemplateService.c ping.c pwm.c serial.c timers.c TopHSM.c BlackLoopSubHSM.c BlueLoopSubHSM.c RoamSubHSM.c DumpSubHSM.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/TemplateFSM.o ${OBJECTDIR}/TemplateHSM.o ${OBJECTDIR}/TemplateService.o ${OBJECTDIR}/TemplateSubHSM.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/tape.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/AD.o.d ${OBJECTDIR}/BOARD.o.d ${OBJECTDIR}/ES_CheckEvents.o.d ${OBJECTDIR}/ES_Framework.o.d ${OBJECTDIR}/ES_KeyboardInput.o.d ${OBJECTDIR}/ES_PostList.o.d ${OBJECTDIR}/ES_Queue.o.d ${OBJECTDIR}/ES_TattleTale.o.d ${OBJECTDIR}/ES_Timers.o.d ${OBJECTDIR}/EventChecker.o.d ${OBJECTDIR}/IO_Ports.o.d ${OBJECTDIR}/LED.o.d ${OBJECTDIR}/RC_Servo.o.d ${OBJECTDIR}/Stepper.o.d ${OBJECTDIR}/Tank_DriveTrain.o.d ${OBJECTDIR}/TapeService.o.d ${OBJECTDIR}/TemplateFSM.o.d ${OBJECTDIR}/TemplateHSM.o.d ${OBJECTDIR}/TemplateService.o.d ${OBJECTDIR}/TemplateSubHSM.o.d ${OBJECTDIR}/ping.o.d ${OBJECTDIR}/pwm.o.d ${OBJECTDIR}/serial.o.d ${OBJECTDIR}/timers.o.d ${OBJECTDIR}/tape.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/TemplateService.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/BlackLoopSubHSM.o ${OBJECTDIR}/BlueLoopSubHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/AD.o.d ${OBJECTDIR}/BOARD.o.d ${OBJECTDIR}/ES_CheckEvents.o.d ${OBJECTDIR}/ES_Framework.o.d ${OBJECTDIR}/ES_KeyboardInput.o.d ${OBJECTDIR}/ES_Main.o.d ${OBJECTDIR}/ES_PostList.o.d ${OBJECTDIR}/ES_Queue.o.d ${OBJECTDIR}/ES_TattleTale.o.d ${OBJECTDIR}/ES_Timers.o.d ${OBJECTDIR}/EventChecker.o.d ${OBJECTDIR}/IO_Ports.o.d ${OBJECTDIR}/LED.o.d ${OBJECTDIR}/RC_Servo.o.d ${OBJECTDIR}/Stepper.o.d ${OBJECTDIR}/Tank_DriveTrain.o.d ${OBJECTDIR}/TapeService.o.d ${OBJECTDIR}/TemplateService.o.d ${OBJECTDIR}/ping.o.d ${OBJECTDIR}/pwm.o.d ${OBJECTDIR}/serial.o.d ${OBJECTDIR}/timers.o.d ${OBJECTDIR}/TopHSM.o.d ${OBJECTDIR}/BlackLoopSubHSM.o.d ${OBJECTDIR}/BlueLoopSubHSM.o.d ${OBJECTDIR}/RoamSubHSM.o.d ${OBJECTDIR}/DumpSubHSM.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/TemplateFSM.o ${OBJECTDIR}/TemplateHSM.o ${OBJECTDIR}/TemplateService.o ${OBJECTDIR}/TemplateSubHSM.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/tape.o
+OBJECTFILES=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/TemplateService.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/BlackLoopSubHSM.o ${OBJECTDIR}/BlueLoopSubHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o
 
 # Source Files
-SOURCEFILES=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c TemplateFSM.c TemplateHSM.c TemplateService.c TemplateSubHSM.c ping.c pwm.c serial.c timers.c tape.c
+SOURCEFILES=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c TemplateService.c ping.c pwm.c serial.c timers.c TopHSM.c BlackLoopSubHSM.c BlueLoopSubHSM.c RoamSubHSM.c DumpSubHSM.c
 
 
 
@@ -84,7 +78,23 @@ LDLIBSOPTIONS=
 # fixDeps replaces a bunch of sed/cat/printf statements that slow down the build
 FIXDEPS=fixDeps
 
-.build-conf:  ${BUILD_SUBPROJECTS}
+# The following macros may be used in the pre and post step lines
+_/_=\\
+ShExtension=.bat
+Device=PIC32MX320F128H
+ProjectDir="E:\College Work\Year 5\Quarter 03\ECE 118\Final Project\ece118-final-project-part-2-electric-boogaloo\ECE118 Final Project.X"
+ProjectName=ECE118_Final_Project
+ConfName=default
+ImagePath="dist\default\${IMAGE_TYPE}\ECE118_Final_Project.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}"
+ImageDir="dist\default\${IMAGE_TYPE}"
+ImageName="ECE118_Final_Project.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}"
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+IsDebug="true"
+else
+IsDebug="false"
+endif
+
+.build-conf:  .pre ${BUILD_SUBPROJECTS}
 ifneq ($(INFORMATION_MESSAGE), )
 	@echo $(INFORMATION_MESSAGE)
 endif
@@ -107,306 +117,330 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/AD.o: AD.c  .generated_files/flags/default/22f8cbf5715d4ce8d838b6ef0ad7c1bfba3f6e86 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/AD.o: AD.c  .generated_files/flags/default/61afbd130f382372fcf02a4529e06bd3a0d84027 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/AD.o.d 
 	@${RM} ${OBJECTDIR}/AD.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/AD.o.d" -o ${OBJECTDIR}/AD.o AD.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/AD.o.d" -o ${OBJECTDIR}/AD.o AD.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/BOARD.o: BOARD.c  .generated_files/flags/default/bed12f696335179741790340c5e18a677305b1f0 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/BOARD.o: BOARD.c  .generated_files/flags/default/14f26d8f93538c37311612eb2dc1191dbb957958 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/BOARD.o.d 
 	@${RM} ${OBJECTDIR}/BOARD.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/BOARD.o.d" -o ${OBJECTDIR}/BOARD.o BOARD.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/BOARD.o.d" -o ${OBJECTDIR}/BOARD.o BOARD.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_CheckEvents.o: ES_CheckEvents.c  .generated_files/flags/default/618c0fefbdf8925559878beee3a2e4a1ee7df219 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_CheckEvents.o: ES_CheckEvents.c  .generated_files/flags/default/d23cd69d985bdb4419f5e0eff54d3e5a44f86a3f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_CheckEvents.o.d 
 	@${RM} ${OBJECTDIR}/ES_CheckEvents.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_CheckEvents.o.d" -o ${OBJECTDIR}/ES_CheckEvents.o ES_CheckEvents.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_CheckEvents.o.d" -o ${OBJECTDIR}/ES_CheckEvents.o ES_CheckEvents.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_Framework.o: ES_Framework.c  .generated_files/flags/default/b5ae2b6442583223a8a34bb404183345faf28150 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_Framework.o: ES_Framework.c  .generated_files/flags/default/c5e5a944a2d4041bfae5f0a201083583455b3c91 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_Framework.o.d 
 	@${RM} ${OBJECTDIR}/ES_Framework.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_Framework.o.d" -o ${OBJECTDIR}/ES_Framework.o ES_Framework.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_Framework.o.d" -o ${OBJECTDIR}/ES_Framework.o ES_Framework.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_KeyboardInput.o: ES_KeyboardInput.c  .generated_files/flags/default/924a4f350f7322c49237882e786099b526cebecc .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_KeyboardInput.o: ES_KeyboardInput.c  .generated_files/flags/default/594098cb0728396c63198a210974c7f3551994b8 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_KeyboardInput.o.d 
 	@${RM} ${OBJECTDIR}/ES_KeyboardInput.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_KeyboardInput.o.d" -o ${OBJECTDIR}/ES_KeyboardInput.o ES_KeyboardInput.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_KeyboardInput.o.d" -o ${OBJECTDIR}/ES_KeyboardInput.o ES_KeyboardInput.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_PostList.o: ES_PostList.c  .generated_files/flags/default/45f1c1c82d436c7468c9b5b8c72984a1b0f5ac3 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_Main.o: ES_Main.c  .generated_files/flags/default/4c0f269589fd87488b81ade8fd2ec29de95a4709 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/ES_Main.o.d 
+	@${RM} ${OBJECTDIR}/ES_Main.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_Main.o.d" -o ${OBJECTDIR}/ES_Main.o ES_Main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/ES_PostList.o: ES_PostList.c  .generated_files/flags/default/1457a7d5377a72a8b4cb2bfdea7d5b96aeb359d1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_PostList.o.d 
 	@${RM} ${OBJECTDIR}/ES_PostList.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_PostList.o.d" -o ${OBJECTDIR}/ES_PostList.o ES_PostList.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_PostList.o.d" -o ${OBJECTDIR}/ES_PostList.o ES_PostList.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_Queue.o: ES_Queue.c  .generated_files/flags/default/262c4aec2691166fe8d24e004e3adacb0f298d0 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_Queue.o: ES_Queue.c  .generated_files/flags/default/6aa4210366a516481ed561261d72839c7fe41bb5 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_Queue.o.d 
 	@${RM} ${OBJECTDIR}/ES_Queue.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_Queue.o.d" -o ${OBJECTDIR}/ES_Queue.o ES_Queue.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_Queue.o.d" -o ${OBJECTDIR}/ES_Queue.o ES_Queue.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_TattleTale.o: ES_TattleTale.c  .generated_files/flags/default/f04ee6dff575af0b8babb9e432b225179583b6fd .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_TattleTale.o: ES_TattleTale.c  .generated_files/flags/default/2d6d34f8e091543c531cd82aff8c9a44faeebf75 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_TattleTale.o.d 
 	@${RM} ${OBJECTDIR}/ES_TattleTale.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_TattleTale.o.d" -o ${OBJECTDIR}/ES_TattleTale.o ES_TattleTale.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_TattleTale.o.d" -o ${OBJECTDIR}/ES_TattleTale.o ES_TattleTale.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_Timers.o: ES_Timers.c  .generated_files/flags/default/1d76c5523c26715dd019cc8bda7f793f16441660 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_Timers.o: ES_Timers.c  .generated_files/flags/default/632fd075bf1d03966e96c4421b26b0689817f4de .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_Timers.o.d 
 	@${RM} ${OBJECTDIR}/ES_Timers.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_Timers.o.d" -o ${OBJECTDIR}/ES_Timers.o ES_Timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_Timers.o.d" -o ${OBJECTDIR}/ES_Timers.o ES_Timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/EventChecker.o: EventChecker.c  .generated_files/flags/default/82aec0cc44007301af213de375ee02d91d19d65c .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/EventChecker.o: EventChecker.c  .generated_files/flags/default/6aa667544f2c0c3faf9782aad4d95221295fde9 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/EventChecker.o.d 
 	@${RM} ${OBJECTDIR}/EventChecker.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/EventChecker.o.d" -o ${OBJECTDIR}/EventChecker.o EventChecker.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/EventChecker.o.d" -o ${OBJECTDIR}/EventChecker.o EventChecker.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/IO_Ports.o: IO_Ports.c  .generated_files/flags/default/f66296247961ebfb241b9f231706510ecc1bd7fd .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/IO_Ports.o: IO_Ports.c  .generated_files/flags/default/8b297c8a247fa185f0c90848fe286d4ee67abf8c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/IO_Ports.o.d 
 	@${RM} ${OBJECTDIR}/IO_Ports.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/IO_Ports.o.d" -o ${OBJECTDIR}/IO_Ports.o IO_Ports.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/IO_Ports.o.d" -o ${OBJECTDIR}/IO_Ports.o IO_Ports.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/LED.o: LED.c  .generated_files/flags/default/cc90725d6b5478962cbba5072ea141e9876edc59 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/LED.o: LED.c  .generated_files/flags/default/f84ee7084a7b0b4a38e0a752ecc1be734d6b5148 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/LED.o.d 
 	@${RM} ${OBJECTDIR}/LED.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/LED.o.d" -o ${OBJECTDIR}/LED.o LED.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/LED.o.d" -o ${OBJECTDIR}/LED.o LED.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/RC_Servo.o: RC_Servo.c  .generated_files/flags/default/68b99ebccf1dde9215b3019c7e1840b79c68d386 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/RC_Servo.o: RC_Servo.c  .generated_files/flags/default/d3131acb99b3acc715349d76273de64d2a12e5b8 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/RC_Servo.o.d 
 	@${RM} ${OBJECTDIR}/RC_Servo.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/RC_Servo.o.d" -o ${OBJECTDIR}/RC_Servo.o RC_Servo.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/RC_Servo.o.d" -o ${OBJECTDIR}/RC_Servo.o RC_Servo.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/Stepper.o: Stepper.c  .generated_files/flags/default/464db92f8dbe0064cd9b09955e0b4aa22fb9014b .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/Stepper.o: Stepper.c  .generated_files/flags/default/bb006efa44bd3c68c808b5c3ca175bdce36409b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/Stepper.o.d 
 	@${RM} ${OBJECTDIR}/Stepper.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/Stepper.o.d" -o ${OBJECTDIR}/Stepper.o Stepper.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/Stepper.o.d" -o ${OBJECTDIR}/Stepper.o Stepper.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/Tank_DriveTrain.o: Tank_DriveTrain.c  .generated_files/flags/default/ac3c448a3128169962ef2fd5e635bb48539069ce .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/Tank_DriveTrain.o: Tank_DriveTrain.c  .generated_files/flags/default/2010947a18495fd8a3eb2fce62c729eef1719a66 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/Tank_DriveTrain.o.d 
 	@${RM} ${OBJECTDIR}/Tank_DriveTrain.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/Tank_DriveTrain.o.d" -o ${OBJECTDIR}/Tank_DriveTrain.o Tank_DriveTrain.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/Tank_DriveTrain.o.d" -o ${OBJECTDIR}/Tank_DriveTrain.o Tank_DriveTrain.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/TapeService.o: TapeService.c  .generated_files/flags/default/a18e788552d1c46835b8e85b5d962adf62a8bd00 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/TapeService.o: TapeService.c  .generated_files/flags/default/43b6ea7ef11937e72b45f5f778bbf6a45e5e4ddf .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/TapeService.o.d 
 	@${RM} ${OBJECTDIR}/TapeService.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/TapeService.o.d" -o ${OBJECTDIR}/TapeService.o TapeService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TapeService.o.d" -o ${OBJECTDIR}/TapeService.o TapeService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/TemplateFSM.o: TemplateFSM.c  .generated_files/flags/default/f626d5fa3fc92bcd772d08a1f7a382d10808d635 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/TemplateFSM.o.d 
-	@${RM} ${OBJECTDIR}/TemplateFSM.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/TemplateFSM.o.d" -o ${OBJECTDIR}/TemplateFSM.o TemplateFSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/TemplateHSM.o: TemplateHSM.c  .generated_files/flags/default/1cafcb92e8c37e0141634683a623fbb76f5c9cba .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/TemplateHSM.o.d 
-	@${RM} ${OBJECTDIR}/TemplateHSM.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/TemplateHSM.o.d" -o ${OBJECTDIR}/TemplateHSM.o TemplateHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/TemplateService.o: TemplateService.c  .generated_files/flags/default/440775159b34976515d879bcba87b7f23b046316 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/TemplateService.o: TemplateService.c  .generated_files/flags/default/64e2eb9b99d70f64be5fcea8feb66598d1dace95 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/TemplateService.o.d 
 	@${RM} ${OBJECTDIR}/TemplateService.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/TemplateService.o.d" -o ${OBJECTDIR}/TemplateService.o TemplateService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TemplateService.o.d" -o ${OBJECTDIR}/TemplateService.o TemplateService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/TemplateSubHSM.o: TemplateSubHSM.c  .generated_files/flags/default/5f7599080da01d397094346d19ac93ffa8cf0822 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/TemplateSubHSM.o.d 
-	@${RM} ${OBJECTDIR}/TemplateSubHSM.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/TemplateSubHSM.o.d" -o ${OBJECTDIR}/TemplateSubHSM.o TemplateSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/ping.o: ping.c  .generated_files/flags/default/522722c715e1fbfb6177f42d0ebc80d5485c1b04 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ping.o: ping.c  .generated_files/flags/default/3f62a0b503b866bc2719edf30ff3a207379cd490 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ping.o.d 
 	@${RM} ${OBJECTDIR}/ping.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ping.o.d" -o ${OBJECTDIR}/ping.o ping.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ping.o.d" -o ${OBJECTDIR}/ping.o ping.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/pwm.o: pwm.c  .generated_files/flags/default/c1f93cda39ea9385f042c1bae5a82ef8af7256fe .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/pwm.o: pwm.c  .generated_files/flags/default/8d29c6ecaced2a2c83460797a6d528dba9019bc2 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/pwm.o.d 
 	@${RM} ${OBJECTDIR}/pwm.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/pwm.o.d" -o ${OBJECTDIR}/pwm.o pwm.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/pwm.o.d" -o ${OBJECTDIR}/pwm.o pwm.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/serial.o: serial.c  .generated_files/flags/default/9d901dcda7d7247b7f868e0319fad722341e923 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/serial.o: serial.c  .generated_files/flags/default/fd0350ab5a9682a63f86f151cc07965287b5efc6 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/serial.o.d 
 	@${RM} ${OBJECTDIR}/serial.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/serial.o.d" -o ${OBJECTDIR}/serial.o serial.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/serial.o.d" -o ${OBJECTDIR}/serial.o serial.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/timers.o: timers.c  .generated_files/flags/default/4eb5171ad7986cb2c9a78462e530e79e852fe0e3 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/timers.o: timers.c  .generated_files/flags/default/3760c73b27bd2479f36c94e1f37e8d11482981d3 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/timers.o.d 
 	@${RM} ${OBJECTDIR}/timers.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/timers.o.d" -o ${OBJECTDIR}/timers.o timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/timers.o.d" -o ${OBJECTDIR}/timers.o timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/tape.o: tape.c  .generated_files/flags/default/ebed8d4408dff31c8373691ce83a21f076a56ed6 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/TopHSM.o: TopHSM.c  .generated_files/flags/default/d7f9e51b8e9fd646a903e98da5a93669fe1ebe04 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/tape.o.d 
-	@${RM} ${OBJECTDIR}/tape.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/tape.o.d" -o ${OBJECTDIR}/tape.o tape.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	@${RM} ${OBJECTDIR}/TopHSM.o.d 
+	@${RM} ${OBJECTDIR}/TopHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TopHSM.o.d" -o ${OBJECTDIR}/TopHSM.o TopHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/BlackLoopSubHSM.o: BlackLoopSubHSM.c  .generated_files/flags/default/d2b80162a324711769ca95c6bcd28f5ba6f24597 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/BlackLoopSubHSM.o.d 
+	@${RM} ${OBJECTDIR}/BlackLoopSubHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/BlackLoopSubHSM.o.d" -o ${OBJECTDIR}/BlackLoopSubHSM.o BlackLoopSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/BlueLoopSubHSM.o: BlueLoopSubHSM.c  .generated_files/flags/default/9840d73f46c6364cab1d2b754ece2ae4938c9c2f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/BlueLoopSubHSM.o.d 
+	@${RM} ${OBJECTDIR}/BlueLoopSubHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/BlueLoopSubHSM.o.d" -o ${OBJECTDIR}/BlueLoopSubHSM.o BlueLoopSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/RoamSubHSM.o: RoamSubHSM.c  .generated_files/flags/default/7d0735768e28adc63245db51e5c05d4e97e03223 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/RoamSubHSM.o.d 
+	@${RM} ${OBJECTDIR}/RoamSubHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/RoamSubHSM.o.d" -o ${OBJECTDIR}/RoamSubHSM.o RoamSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/DumpSubHSM.o: DumpSubHSM.c  .generated_files/flags/default/69ac006b81bfc49063a9cad4ef4557d8d6db333b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/DumpSubHSM.o.d 
+	@${RM} ${OBJECTDIR}/DumpSubHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/DumpSubHSM.o.d" -o ${OBJECTDIR}/DumpSubHSM.o DumpSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 else
-${OBJECTDIR}/AD.o: AD.c  .generated_files/flags/default/740aea067ef0f33eadf02b022409a32e2ea63627 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/AD.o: AD.c  .generated_files/flags/default/a58e75d1d6ec63820c52a3f1c954b9bba4783b8a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/AD.o.d 
 	@${RM} ${OBJECTDIR}/AD.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/AD.o.d" -o ${OBJECTDIR}/AD.o AD.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/AD.o.d" -o ${OBJECTDIR}/AD.o AD.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/BOARD.o: BOARD.c  .generated_files/flags/default/7ecd7a7e048fb26fc6e449377fa7b0e518986693 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/BOARD.o: BOARD.c  .generated_files/flags/default/958faac41eff4978fe4c08c565f88b4396a6a9f9 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/BOARD.o.d 
 	@${RM} ${OBJECTDIR}/BOARD.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/BOARD.o.d" -o ${OBJECTDIR}/BOARD.o BOARD.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/BOARD.o.d" -o ${OBJECTDIR}/BOARD.o BOARD.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_CheckEvents.o: ES_CheckEvents.c  .generated_files/flags/default/76661dbbe6624b4a27d29cb2f3d4f26421a662fa .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_CheckEvents.o: ES_CheckEvents.c  .generated_files/flags/default/c6c529ffd090e7a9f21a2e5d3e81feda6423b979 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_CheckEvents.o.d 
 	@${RM} ${OBJECTDIR}/ES_CheckEvents.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_CheckEvents.o.d" -o ${OBJECTDIR}/ES_CheckEvents.o ES_CheckEvents.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_CheckEvents.o.d" -o ${OBJECTDIR}/ES_CheckEvents.o ES_CheckEvents.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_Framework.o: ES_Framework.c  .generated_files/flags/default/2df853d6d1be03b510ab19a9475675c28a0b509e .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_Framework.o: ES_Framework.c  .generated_files/flags/default/1c4587ca263c18ad8eb59901f5be104d9ecb4c29 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_Framework.o.d 
 	@${RM} ${OBJECTDIR}/ES_Framework.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_Framework.o.d" -o ${OBJECTDIR}/ES_Framework.o ES_Framework.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_Framework.o.d" -o ${OBJECTDIR}/ES_Framework.o ES_Framework.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_KeyboardInput.o: ES_KeyboardInput.c  .generated_files/flags/default/5f22c8de4e733c36e5601b5ca5d81fac6af4f71a .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_KeyboardInput.o: ES_KeyboardInput.c  .generated_files/flags/default/ae311057609807cc2ee5d0348bff904e61700c62 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_KeyboardInput.o.d 
 	@${RM} ${OBJECTDIR}/ES_KeyboardInput.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_KeyboardInput.o.d" -o ${OBJECTDIR}/ES_KeyboardInput.o ES_KeyboardInput.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_KeyboardInput.o.d" -o ${OBJECTDIR}/ES_KeyboardInput.o ES_KeyboardInput.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_PostList.o: ES_PostList.c  .generated_files/flags/default/71f028bef52568cd16db7025d11b09078ea01b3a .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_Main.o: ES_Main.c  .generated_files/flags/default/95164fc7714b138ff0b4c86b09857ea0c23f36a6 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/ES_Main.o.d 
+	@${RM} ${OBJECTDIR}/ES_Main.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_Main.o.d" -o ${OBJECTDIR}/ES_Main.o ES_Main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/ES_PostList.o: ES_PostList.c  .generated_files/flags/default/c5dbfeaacca54658907301c071c0658af3899374 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_PostList.o.d 
 	@${RM} ${OBJECTDIR}/ES_PostList.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_PostList.o.d" -o ${OBJECTDIR}/ES_PostList.o ES_PostList.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_PostList.o.d" -o ${OBJECTDIR}/ES_PostList.o ES_PostList.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_Queue.o: ES_Queue.c  .generated_files/flags/default/bc7872b57aef49b803c352af08fc778381182fc0 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_Queue.o: ES_Queue.c  .generated_files/flags/default/1228157b958b7fe7d84b728bdb3b2f023283165b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_Queue.o.d 
 	@${RM} ${OBJECTDIR}/ES_Queue.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_Queue.o.d" -o ${OBJECTDIR}/ES_Queue.o ES_Queue.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_Queue.o.d" -o ${OBJECTDIR}/ES_Queue.o ES_Queue.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_TattleTale.o: ES_TattleTale.c  .generated_files/flags/default/f88365c53260e754d920625312303a8bd5acb50 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_TattleTale.o: ES_TattleTale.c  .generated_files/flags/default/c19e16091d3565129b67a8349a6b8480720042de .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_TattleTale.o.d 
 	@${RM} ${OBJECTDIR}/ES_TattleTale.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_TattleTale.o.d" -o ${OBJECTDIR}/ES_TattleTale.o ES_TattleTale.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_TattleTale.o.d" -o ${OBJECTDIR}/ES_TattleTale.o ES_TattleTale.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/ES_Timers.o: ES_Timers.c  .generated_files/flags/default/96e04a599f66c61ffb1e3a76bcaa829d14e0cab0 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ES_Timers.o: ES_Timers.c  .generated_files/flags/default/9c310c4cbc1be87db7f949df0273770030fbcdea .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ES_Timers.o.d 
 	@${RM} ${OBJECTDIR}/ES_Timers.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ES_Timers.o.d" -o ${OBJECTDIR}/ES_Timers.o ES_Timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_Timers.o.d" -o ${OBJECTDIR}/ES_Timers.o ES_Timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/EventChecker.o: EventChecker.c  .generated_files/flags/default/95d99295c5a0903f0491b4eadcc767842691e824 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/EventChecker.o: EventChecker.c  .generated_files/flags/default/35d37d5ba94fc9ec8bebbdab48190f1a7a9d44a1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/EventChecker.o.d 
 	@${RM} ${OBJECTDIR}/EventChecker.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/EventChecker.o.d" -o ${OBJECTDIR}/EventChecker.o EventChecker.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/EventChecker.o.d" -o ${OBJECTDIR}/EventChecker.o EventChecker.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/IO_Ports.o: IO_Ports.c  .generated_files/flags/default/a3fc1d11818eda6584f88295e8804b42813b5a9d .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/IO_Ports.o: IO_Ports.c  .generated_files/flags/default/609f5bb561ac178d035e19f0aabec3cd7c713f47 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/IO_Ports.o.d 
 	@${RM} ${OBJECTDIR}/IO_Ports.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/IO_Ports.o.d" -o ${OBJECTDIR}/IO_Ports.o IO_Ports.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/IO_Ports.o.d" -o ${OBJECTDIR}/IO_Ports.o IO_Ports.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/LED.o: LED.c  .generated_files/flags/default/313906d31405da2b9ac055eea9f8c808652f4a8c .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/LED.o: LED.c  .generated_files/flags/default/ff77c1019ee07c296d30ac7c2335689335212617 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/LED.o.d 
 	@${RM} ${OBJECTDIR}/LED.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/LED.o.d" -o ${OBJECTDIR}/LED.o LED.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/LED.o.d" -o ${OBJECTDIR}/LED.o LED.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/RC_Servo.o: RC_Servo.c  .generated_files/flags/default/bc641d05edbf01d7204d2e19f1966a5bf021bc76 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/RC_Servo.o: RC_Servo.c  .generated_files/flags/default/cf5e09e14b9eea128822ec7c2851a868c5899985 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/RC_Servo.o.d 
 	@${RM} ${OBJECTDIR}/RC_Servo.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/RC_Servo.o.d" -o ${OBJECTDIR}/RC_Servo.o RC_Servo.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/RC_Servo.o.d" -o ${OBJECTDIR}/RC_Servo.o RC_Servo.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/Stepper.o: Stepper.c  .generated_files/flags/default/510e3a6aab01fa26d83d779b374bddaa2f47e831 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/Stepper.o: Stepper.c  .generated_files/flags/default/2111fb70eb779e901701bc93ea058e795811eff .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/Stepper.o.d 
 	@${RM} ${OBJECTDIR}/Stepper.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/Stepper.o.d" -o ${OBJECTDIR}/Stepper.o Stepper.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/Stepper.o.d" -o ${OBJECTDIR}/Stepper.o Stepper.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/Tank_DriveTrain.o: Tank_DriveTrain.c  .generated_files/flags/default/69bd299b06da8f6f4a6505c99e88040f5f71fa0c .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/Tank_DriveTrain.o: Tank_DriveTrain.c  .generated_files/flags/default/465b887014befd4ec07dbd6b3a00029ff26be67d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/Tank_DriveTrain.o.d 
 	@${RM} ${OBJECTDIR}/Tank_DriveTrain.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/Tank_DriveTrain.o.d" -o ${OBJECTDIR}/Tank_DriveTrain.o Tank_DriveTrain.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/Tank_DriveTrain.o.d" -o ${OBJECTDIR}/Tank_DriveTrain.o Tank_DriveTrain.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/TapeService.o: TapeService.c  .generated_files/flags/default/e7ce788fd070fe681050edcec6621d05b0146cb0 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/TapeService.o: TapeService.c  .generated_files/flags/default/9eff3de9da1b5aba83e29bb883e8cfd9d5f37a12 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/TapeService.o.d 
 	@${RM} ${OBJECTDIR}/TapeService.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/TapeService.o.d" -o ${OBJECTDIR}/TapeService.o TapeService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TapeService.o.d" -o ${OBJECTDIR}/TapeService.o TapeService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/TemplateFSM.o: TemplateFSM.c  .generated_files/flags/default/28638edc2985e51c7c5fac294365c344105bbdfd .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/TemplateFSM.o.d 
-	@${RM} ${OBJECTDIR}/TemplateFSM.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/TemplateFSM.o.d" -o ${OBJECTDIR}/TemplateFSM.o TemplateFSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/TemplateHSM.o: TemplateHSM.c  .generated_files/flags/default/4d2761e0599acd69fbd746f8891f3c1b1a3b0eb1 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/TemplateHSM.o.d 
-	@${RM} ${OBJECTDIR}/TemplateHSM.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/TemplateHSM.o.d" -o ${OBJECTDIR}/TemplateHSM.o TemplateHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/TemplateService.o: TemplateService.c  .generated_files/flags/default/ee322fc6df92a7c43f608c57ce9aafb7ab64c99 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/TemplateService.o: TemplateService.c  .generated_files/flags/default/d07fb163d2a50b4fbb2a7bdf4a3d87102ae8325d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/TemplateService.o.d 
 	@${RM} ${OBJECTDIR}/TemplateService.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/TemplateService.o.d" -o ${OBJECTDIR}/TemplateService.o TemplateService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TemplateService.o.d" -o ${OBJECTDIR}/TemplateService.o TemplateService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/TemplateSubHSM.o: TemplateSubHSM.c  .generated_files/flags/default/4fe8b903c83f9ca5eb759b827660fcd9da441609 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/TemplateSubHSM.o.d 
-	@${RM} ${OBJECTDIR}/TemplateSubHSM.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/TemplateSubHSM.o.d" -o ${OBJECTDIR}/TemplateSubHSM.o TemplateSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/ping.o: ping.c  .generated_files/flags/default/b3a3fd9da9a6616afe776c3a83df6278aa175a00 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/ping.o: ping.c  .generated_files/flags/default/2799bf8a8bfb27b521e9254046ed5c1b0316cdac .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ping.o.d 
 	@${RM} ${OBJECTDIR}/ping.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/ping.o.d" -o ${OBJECTDIR}/ping.o ping.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ping.o.d" -o ${OBJECTDIR}/ping.o ping.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/pwm.o: pwm.c  .generated_files/flags/default/904ae4816977a6c7114e71635a5a6d7e750c8a33 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/pwm.o: pwm.c  .generated_files/flags/default/52350a4d18d42edfe4f5de0fa028cbecd23e6b73 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/pwm.o.d 
 	@${RM} ${OBJECTDIR}/pwm.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/pwm.o.d" -o ${OBJECTDIR}/pwm.o pwm.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/pwm.o.d" -o ${OBJECTDIR}/pwm.o pwm.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/serial.o: serial.c  .generated_files/flags/default/1c15592f504d1cf3155d47d89cc2dee72d43b034 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/serial.o: serial.c  .generated_files/flags/default/9cbba0011e9b9eaab1b0ee0f1990c4d06b1c075d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/serial.o.d 
 	@${RM} ${OBJECTDIR}/serial.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/serial.o.d" -o ${OBJECTDIR}/serial.o serial.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/serial.o.d" -o ${OBJECTDIR}/serial.o serial.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/timers.o: timers.c  .generated_files/flags/default/cba36179ca1a0052d84822c1347090f29a39de29 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/timers.o: timers.c  .generated_files/flags/default/b8814bc58e70bed2ca650641c4a677df740b29e8 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/timers.o.d 
 	@${RM} ${OBJECTDIR}/timers.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/timers.o.d" -o ${OBJECTDIR}/timers.o timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/timers.o.d" -o ${OBJECTDIR}/timers.o timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/tape.o: tape.c  .generated_files/flags/default/eaec56b1adab1d002c267dc31fa8c082e448e953 .generated_files/flags/default/5c6b98b8923ce30ee24d180da03fe6585119c89b
+${OBJECTDIR}/TopHSM.o: TopHSM.c  .generated_files/flags/default/3061da0bfaa4aa9a03a0b81c191ba7d7b29309d3 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/tape.o.d 
-	@${RM} ${OBJECTDIR}/tape.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -MP -MMD -MF "${OBJECTDIR}/tape.o.d" -o ${OBJECTDIR}/tape.o tape.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	@${RM} ${OBJECTDIR}/TopHSM.o.d 
+	@${RM} ${OBJECTDIR}/TopHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TopHSM.o.d" -o ${OBJECTDIR}/TopHSM.o TopHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/BlackLoopSubHSM.o: BlackLoopSubHSM.c  .generated_files/flags/default/ab9189ca0d97c5a43ff01ec2aaee45a36fcaeec8 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/BlackLoopSubHSM.o.d 
+	@${RM} ${OBJECTDIR}/BlackLoopSubHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/BlackLoopSubHSM.o.d" -o ${OBJECTDIR}/BlackLoopSubHSM.o BlackLoopSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/BlueLoopSubHSM.o: BlueLoopSubHSM.c  .generated_files/flags/default/a2ef34548612c86d6acfb94042458ef04b3f1d21 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/BlueLoopSubHSM.o.d 
+	@${RM} ${OBJECTDIR}/BlueLoopSubHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/BlueLoopSubHSM.o.d" -o ${OBJECTDIR}/BlueLoopSubHSM.o BlueLoopSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/RoamSubHSM.o: RoamSubHSM.c  .generated_files/flags/default/9b061dcaa5f32f543f0a64f8ddc05e9e22f027c1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/RoamSubHSM.o.d 
+	@${RM} ${OBJECTDIR}/RoamSubHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/RoamSubHSM.o.d" -o ${OBJECTDIR}/RoamSubHSM.o RoamSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/DumpSubHSM.o: DumpSubHSM.c  .generated_files/flags/default/b7c23ffe14ca3c96c0753843b7388d409e1c6aa .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/DumpSubHSM.o.d 
+	@${RM} ${OBJECTDIR}/DumpSubHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/DumpSubHSM.o.d" -o ${OBJECTDIR}/DumpSubHSM.o DumpSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 endif
 
@@ -430,6 +464,11 @@ ${DISTDIR}/ECE118_Final_Project.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}
 	${MP_CC_DIR}\\xc32-bin2hex ${DISTDIR}/ECE118_Final_Project.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} 
 endif
 
+.pre:
+	@echo "--------------------------------------"
+	@echo "User defined pre-build step: []"
+	@
+	@echo "--------------------------------------"
 
 # Subprojects
 .build-subprojects:
@@ -446,7 +485,7 @@ endif
 # Enable dependency checking
 .dep.inc: .depcheck-impl
 
-DEPFILES=$(shell mplabwildcard ${POSSIBLE_DEPFILES})
+DEPFILES=$(wildcard ${POSSIBLE_DEPFILES})
 ifneq (${DEPFILES},)
 include ${DEPFILES}
 endif

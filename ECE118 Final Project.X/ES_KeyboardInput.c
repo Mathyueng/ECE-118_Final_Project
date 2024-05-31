@@ -146,7 +146,7 @@ void KeyboardInput_PrintEvents(void)
     printf("\r\nPrinting all events available in the system\n");
     for (curEvent = 0; curEvent < NUMBEROFEVENTS; curEvent++) {
         printf("%2d: %-25s", curEvent, EventNames[curEvent]);
-        //while(!IsTransmitEmpty());
+        while(!IsTransmitEmpty());
         if (((curEvent + 3) % 3) == 0) {
             printf("\r\n");
         }
