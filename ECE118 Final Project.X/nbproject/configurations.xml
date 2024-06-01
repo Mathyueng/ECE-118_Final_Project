@@ -40,6 +40,7 @@
       <itemPath>RoamSubHSM.h</itemPath>
       <itemPath>DumpSubHSM.h</itemPath>
       <itemPath>tape.h</itemPath>
+      <itemPath>Parallel.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -81,6 +82,7 @@
       <itemPath>RoamSubHSM.c</itemPath>
       <itemPath>DumpSubHSM.c</itemPath>
       <itemPath>tape.c</itemPath>
+      <itemPath>Parallel.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

@@ -3,16 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/dumlam/Downloads/ece118-final-project-part-2-electric-boogaloo-main/ece118-final-project-part-2-electric-boogaloo-main/ECE118%20Final%20Project.X/TapeService.c</file>
-            <file>file:/C:/Users/dumlam/Downloads/ece118-final-project-part-2-electric-boogaloo-main/ece118-final-project-part-2-electric-boogaloo-main/ECE118%20Final%20Project.X/ES_Configure.h</file>
-            <file>file:/C:/Users/dumlam/Downloads/ece118-final-project-part-2-electric-boogaloo-main/ece118-final-project-part-2-electric-boogaloo-main/ECE118%20Final%20Project.X/nbproject/Makefile-default.mk</file>
-            <file>file:/C:/Users/dumlam/Downloads/ece118-final-project-part-2-electric-boogaloo-main/ece118-final-project-part-2-electric-boogaloo-main/ECE118%20Final%20Project.X/DumpSubHSM.c</file>
-            <file>file:/C:/Users/dumlam/Downloads/ece118-final-project-part-2-electric-boogaloo-main/ece118-final-project-part-2-electric-boogaloo-main/ECE118%20Final%20Project.X/RoamSubHSM.c</file>
-            <file>file:/C:/Users/dumlam/Downloads/ece118-final-project-part-2-electric-boogaloo-main/ece118-final-project-part-2-electric-boogaloo-main/ECE118%20Final%20Project.X/BlackLoopSubHSM.c</file>
-            <file>file:/C:/Users/dumlam/Downloads/ece118-final-project-part-2-electric-boogaloo-main/ece118-final-project-part-2-electric-boogaloo-main/ECE118%20Final%20Project.X/ES_KeyboardInput.c</file>
-            <file>file:/C:/Users/dumlam/Downloads/ece118-final-project-part-2-electric-boogaloo-main/ece118-final-project-part-2-electric-boogaloo-main/ECE118%20Final%20Project.X/TapeService.h</file>
-            <file>file:/C:/Users/dumlam/Downloads/ece118-final-project-part-2-electric-boogaloo-main/ece118-final-project-part-2-electric-boogaloo-main/ECE118%20Final%20Project.X/BlueLoopSubHSM.c</file>
-            <file>file:/C:/Users/dumlam/Downloads/ece118-final-project-part-2-electric-boogaloo-main/ece118-final-project-part-2-electric-boogaloo-main/ECE118%20Final%20Project.X/TopHSM.c</file>
+            <file>file:/C:/Users/aanbaner/Desktop/ece118-final-project-part-2-electric-boogaloo/ECE118%20Final%20Project.X/ES_Timers.h</file>
+            <file>file:/C:/Users/aanbaner/Desktop/ece118-final-project-part-2-electric-boogaloo/ECE118%20Final%20Project.X/ES_Configure.h</file>
+            <file>file:/C:/Users/aanbaner/Desktop/ece118-final-project-part-2-electric-boogaloo/ECE118%20Final%20Project.X/Parallel.c</file>
+            <file>file:/C:/Users/aanbaner/Desktop/ece118-final-project-part-2-electric-boogaloo/ECE118%20Final%20Project.X/ES_Main.c</file>
+            <file>file:/C:/Users/aanbaner/Desktop/ece118-final-project-part-2-electric-boogaloo/ECE118%20Final%20Project.X/Parallel.h</file>
+            <file>file:/C:/Users/aanbaner/Desktop/ece118-final-project-part-2-electric-boogaloo/ECE118%20Final%20Project.X/AD.h</file>
+            <file>file:/C:/Users/aanbaner/Desktop/ece118-final-project-part-2-electric-boogaloo/ECE118%20Final%20Project.X/ping.c</file>
+            <file>file:/C:/Users/aanbaner/Desktop/ece118-final-project-part-2-electric-boogaloo/ECE118%20Final%20Project.X/ES_Timers.c</file>
+            <file>file:/C:/Users/aanbaner/Desktop/ece118-final-project-part-2-electric-boogaloo/ECE118%20Final%20Project.X/EventChecker.c</file>
+            <file>file:/C:/Users/aanbaner/Desktop/ece118-final-project-part-2-electric-boogaloo/ECE118%20Final%20Project.X/timers.c</file>
         </group>
     </open-files>
 </project-private>
