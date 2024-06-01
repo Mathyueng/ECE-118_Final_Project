@@ -14,7 +14,7 @@
 
 #define PARALLEL_PIN_R AD_PORTV3
 #define PARALLEL_PIN_L AD_PORTV4
-#define PARALLEL_THRESHOLD 10
+#define PARALLEL_THRESHOLD 75
 
 #define MOV_AVG_LENGTH 5
 
@@ -79,8 +79,8 @@ uint8_t Parallel_CheckEvents(void) {
     uint16_t curLsignal = movingAvg(&readingsL, AD_ReadADPin(PARALLEL_PIN_L), avgSignalL);
     
 #ifdef DEBUG
-    printf("\r\ncurrent Right: %d", curRsignal);
-    printf("\r\ncurrent Left: %d", curLsignal);
+    if (abs(curLsignal - avgSignalL) <= PARALLEL_THRESHOLD) printf("\r\ncurrent Right: %d", curRsignal);
+//    printf("\r\ncurrent Left: %d\r\n", curLsignal);
 #endif
     
     if ((curRsignal < avgSignalR) && (abs(curRsignal - avgSignalR) <= PARALLEL_THRESHOLD)) {
