@@ -34,6 +34,7 @@
 #include "serial.h"
 #include "IO_Ports.h"
 #include "AD.h"
+#include "Parallel.h"
 
 /*******************************************************************************
  * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
@@ -68,13 +69,17 @@ static ES_Event storedEvent;
  ******************************************************************************/
 
 uint8_t InitAllEventCheckers(void) {
-    Tape_Init();
+    Parallel_Init();
     Ping_Init();
+    Tape_Init();    
+    Track_Init();
+    Wall_Init();
 }
 
 uint8_t CheckAllEvents(void) {
-//    Tape_CheckEvents();
-    Ping_StateMachine();
+    Tape_CheckEvents();
+//    Ping_StateMachine();
+    Parallel_CheckEvents();
 }
 
 /* 

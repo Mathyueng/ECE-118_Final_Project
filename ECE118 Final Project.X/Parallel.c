@@ -8,19 +8,24 @@
 #include "xc.h"
 #include "AD.h"
 #include "Tank_DriveTrain.h"
+#include "Parallel.h"
 #include "pwm.h"
 #include "ES_Configure.h"
 #include "ES_Events.h"
 
-#define PARALLEL_PIN_R AD_PORTV3
-#define PARALLEL_PIN_L AD_PORTV4
-#define PARALLEL_THRESHOLD 75
+#define PARALLEL_PIN_R1 AD_PORTV3
+#define PARALLEL_PIN_R2 AD_PORTV4
+#define PARALLEL_PIN_L1 AD_PORTV5
+#define PARALLEL_PIN_L2 AD_PORTV6
+
+#define PARALLEL_LOW_THRESHOLD 75
+#define PARALLEL_HIGH_THRESHOLD 225
 
 #define MOV_AVG_LENGTH 5
 
 #define EVENTCHECKER_TEST
-#define DEBUG
-#define PARALLEL_TEST
+//#define DEBUG
+//#define PARALLEL_TEST
 
 #ifdef EVENTCHECKER_TEST
 #include <stdio.h>
@@ -30,83 +35,106 @@ static const char *eventName;
 static ES_Event storedEvent;
 #endif
 
-typedef struct {
-    uint16_t array[MOV_AVG_LENGTH];
-    uint8_t head;
-    uint8_t tail;
-} buffer;
+static uint32_t prevRsignal = 0;
+static uint32_t prevLsignal = 0;
+static uint8_t leftWallP = 0;
+static uint8_t rightWallP = 0;
 
-static uint32_t avgSignalR = 0;
-static uint32_t avgSignalL = 0;
-static buffer readingsR;
-static buffer readingsL;
+uint32_t ReadRight() {
+    return abs(AD_ReadADPin(PARALLEL_PIN_R1) - AD_ReadADPin(PARALLEL_PIN_R2));
+}
+
+uint32_t ReadLeft() {
+    return abs(AD_ReadADPin(PARALLEL_PIN_L1) - AD_ReadADPin(PARALLEL_PIN_L2));
+}
 
 void Parallel_Init() {
-    AD_AddPins(PARALLEL_PIN_R | PARALLEL_PIN_L);
-    for (int i = 0; i< 0; i++) {
-        readingsR.array[i] = AD_ReadADPin(PARALLEL_PIN_R);
-        avgSignalR += readingsR.array[i];
-    }
-    for (int i = 0; i< 0; i++) {
-        readingsL.array[i] = AD_ReadADPin(PARALLEL_PIN_L);
-        avgSignalL += readingsL.array[i];
-    }
-    readingsR.head = 0;
-    readingsR.tail = 1;
-    readingsL.head = 0;
-    readingsL.tail = 1;
+    AD_AddPins(PARALLEL_PIN_R1 | PARALLEL_PIN_L1 | PARALLEL_PIN_R2 | PARALLEL_PIN_L2);
+    prevRsignal = ReadRight();
+    prevLsignal = ReadLeft();
+    leftWallP = 0;
+    rightWallP = 0;
 }
 
 void circularInc(uint8_t* index) {
     *index = ++(*index) % MOV_AVG_LENGTH;
 }
 
-uint32_t movingAvg(buffer* buf, uint16_t input, uint32_t signal) {
-    buf->array[buf->head] = input;
-    uint32_t returnVal = signal;
-    returnVal += buf->array[buf->head];
-    returnVal -= buf->array[buf->tail];
-    circularInc(&(buf->head));
-    circularInc(&(buf->tail));
-    
-    return returnVal;
-}
-
 uint8_t Parallel_CheckEvents(void) {
+    
     uint8_t returnVal = FALSE;
     
-    uint16_t curRsignal = movingAvg(&readingsR, AD_ReadADPin(PARALLEL_PIN_R), avgSignalR);
-    uint16_t curLsignal = movingAvg(&readingsL, AD_ReadADPin(PARALLEL_PIN_L), avgSignalL);
+    uint32_t curRsignal = ReadRight();
+    uint32_t curLsignal = ReadLeft();
     
 #ifdef DEBUG
-    if (abs(curLsignal - avgSignalL) <= PARALLEL_THRESHOLD) printf("\r\ncurrent Right: %d", curRsignal);
-//    printf("\r\ncurrent Left: %d\r\n", curLsignal);
+    printf("\r\n");
+//    if (abs(curRsignal - avgSignalR) <= PARALLEL_THRESHOLD) printf("\r\ncurrent Right: %d", curRsignal);
+    printf("\r\ncurrent right: %d", curRsignal);
+    printf("\r\nright 1: %d", AD_ReadADPin(PARALLEL_PIN_R1));
+    printf("\r\nright 2: %d", AD_ReadADPin(PARALLEL_PIN_R2));
 #endif
     
-    if ((curRsignal < avgSignalR) && (abs(curRsignal - avgSignalR) <= PARALLEL_THRESHOLD)) {
+    if (!rightWallP && (curRsignal < PARALLEL_LOW_THRESHOLD)) {
+#ifdef DEBUG
+        printf("PARALLEL TO THE RIGHT WALL");
+#endif
         ES_Event thisEvent;
         thisEvent.EventType = WALL_PARALLEL_R;
+        thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
 #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
 //        PostGenericService(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif
+        rightWallP = 1;
         returnVal = TRUE;
-    }
-    
-    if ((curLsignal < avgSignalL) && (abs(curLsignal - avgSignalL) <= PARALLEL_THRESHOLD)) {
+    } else if (rightWallP && (curRsignal > PARALLEL_HIGH_THRESHOLD)) {
+#ifdef DEBUG
+        printf("NO LONGER PARALLEL TO THE RIGHT WALL");
+#endif
+        ES_Event thisEvent;
+        thisEvent.EventType = WALL_OFF_R;
+        thisEvent.EventParam = (AD_ReadADPin(PARALLEL_PIN_R1) > AD_ReadADPin(PARALLEL_PIN_R2));
+#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
+//        PostGenericService(thisEvent);
+#else
+        SaveEvent(thisEvent);
+        rightWallP = 0;
+        returnVal = TRUE;
+#endif
+    } else if (!leftWallP && (curLsignal < PARALLEL_LOW_THRESHOLD)) {
+#ifdef DEBUG
+        printf("PARALLEL TO THE LEFT WALL");
+#endif
         ES_Event thisEvent;
         thisEvent.EventType = WALL_PARALLEL_L;
+        thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
 #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
 //        PostGenericService(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif   
+        leftWallP = 1;
+        returnVal = TRUE;
+    } else if (leftWallP && (curLsignal > PARALLEL_HIGH_THRESHOLD)) {
+#ifdef DEBUG
+        printf("NO LONGER PARALLEL PARALLEL TO THE LEFT WALL");
+#endif
+        ES_Event thisEvent;
+        thisEvent.EventType = WALL_OFF_L;
+        thisEvent.EventParam = (AD_ReadADPin(PARALLEL_PIN_L1) > AD_ReadADPin(PARALLEL_PIN_L2));
+#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
+//        PostGenericService(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif   
+        leftWallP = 0;
         returnVal = TRUE;
     }
     
-    avgSignalR = curRsignal;
-    avgSignalL = curLsignal;
+    prevRsignal = curRsignal;
+    prevLsignal = curLsignal;
     
     return returnVal;
 }
@@ -121,7 +149,7 @@ void main (void) {
     
     while (1) {
         if (Parallel_CheckEvents()) {
-            printf("\r\nParallel Event");
+            printf("\r\nParallel Event"); 
         }
     }
     

@@ -42,7 +42,7 @@ static uint8_t prevT4 = 0;
  ******************************************************************************/
 
 uint8_t Tape_Init(void) {
-    IO_PortsSetPortInputs(TAPE_PORT, TAPE_PIN_1 | TAPE_PIN_2 | TAPE_PIN_3 | TAPE_PIN_4);
+    IO_PortsSetPortInputs(TAPE_PORT, TAPE_PIN_1 | TAPE_PIN_2 | TAPE_PIN_3 | TAPE_PIN_4 | (IO_PortsReadPort(TAPE_PORT)));
     prevT1 = 0;
     prevT2 = 0;
     prevT3 = 0;
