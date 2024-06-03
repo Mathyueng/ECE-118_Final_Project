@@ -115,6 +115,10 @@ char DT_DriveLeft(int16_t speed, uint16_t radius);
 char DT_SpinCC(int16_t speed);
 
 
+char DT_ExtendArm(void);
+
+char DT_RetractArm(void);
+
 #endif /* TANK_DRIVE_H */
 
 /* *****************************************************************************

@@ -22,8 +22,8 @@
 #define TRACK_HIGH_THRESHOLD 700
 
 //#define EVENTCHECKER_TEST
-#define DEBUG
-#define TRACK_TEST
+//#define DEBUG
+//#define TRACK_TEST
 
 #ifdef EVENTCHECKER_TEST
 #include <stdio.h>

@@ -35,6 +35,8 @@
 #include "IO_Ports.h"
 #include "AD.h"
 #include "Parallel.h"
+#include "Track.h"
+#include "Wall.h"
 
 /*******************************************************************************
  * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
