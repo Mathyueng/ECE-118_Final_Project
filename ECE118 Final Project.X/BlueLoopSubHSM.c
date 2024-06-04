@@ -52,18 +52,18 @@ typedef enum {
 } BlueLoopSubHSMState_t;
 
 static const char *StateNames[] = {
-	"InitPSubState",
-	"Turn_Left_90_1",
-	"Forward",
-	"Turn_Left_90_2",
-	"Forward_Half_1",
-	"Swivel",
-	"Forward_Half_2",
-	"Turn_Left_90_3",
-	"Forward_Final",
-	"Avoid_Right",
-	"Reverse",
-	"Avoid_Left",
+    "InitPSubState",
+    "Turn_Left_90_1",
+    "Forward",
+    "Turn_Left_90_2",
+    "Forward_Half_1",
+    "Swivel",
+    "Forward_Half_2",
+    "Turn_Left_90_3",
+    "Forward_Final",
+    "Avoid_Right",
+    "Reverse",
+    "Avoid_Left",
 };
 
 
@@ -82,6 +82,7 @@ static const char *StateNames[] = {
 
 static BlueLoopSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
+int Swivel_Flag = 0;
 
 
 /*******************************************************************************
@@ -100,7 +101,8 @@ static uint8_t MyPriority;
  * @author J. Edward Carryer, 2011.10.23 19:25 */
 uint8_t InitBlueLoopSubHSM(void) {
     ES_Event returnEvent;
-
+    LED_SetBank(LED_BANK2, 0x0);
+    LED_SetBank(LED_BANK3, 0x0);
     CurrentState = InitPSubState;
     returnEvent = RunBlueLoopSubHSM(INIT_EVENT);
     if (returnEvent.EventType == ES_NO_EVENT) {
@@ -129,7 +131,6 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
     BlueLoopSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
-
     switch (CurrentState) {
         case InitPSubState: // If current state is initial Psedudo State
             if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
@@ -142,6 +143,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
                 nextState = Turn_Left_90_1;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
+                break;
             }
             break;
 
@@ -149,31 +151,36 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case ES_TIMEOUT:
-                    //Logic for Turn Left 90 1 timer param
-                    nextState = Forward;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                case TAPE_ON:
+                    if (ThisEvent.EventParam == 6) { // FR BR (0110, 6)
+                        //Logic for Turn Left 90 1 timer param
+                        nextState = Forward;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case ES_EXIT:
                     break;
-                case ES_NO_EVENT:
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
             break;
 
         case Forward: // Move Forward South
+            // code for moving forward needed here
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_InitTimer(BLUE_LOOP_TIMER, TIMER_2_SEC);
                     break;
                 case ES_TIMEOUT:
-                    //Logic for Forward timer param
-                    nextState = Turn_Left_90_2;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                    if (ThisEvent.EventParam == BLUE_LOOP_TIMER) {
+                        nextState = Turn_Left_90_2;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case ES_EXIT:
                     break;
-                case ES_NO_EVENT:
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
@@ -183,37 +190,42 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case ES_TIMEOUT:
-                    //Logic for Turn Left 90 2 timer param
-                    nextState = Forward_Half_1;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                case TAPE_ON:
+                    if (ThisEvent.EventParam == 3) { // BR BL (0011, 3)
+                        //Logic for Turn Left 90 2 timer param
+                        nextState = Forward_Half_1;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case ES_EXIT:
                     break;
-                case ES_NO_EVENT:
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
             break;
 
         case Forward_Half_1: // Move Forward East
+            // code to drive forward needed here
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_InitTimer(BLUE_LOOP_TIMER, TIMER_4_SEC);
                     break;
                 case ES_TIMEOUT:
-                    //Logic for Half Way Timer param
-                    ES_Timer_InitTimer (BLUE_LOOP_TIMER, TIMER_5_TICKS);    // start timer for 5 sec (modify if needed for debug)
-                    nextState = Swivel;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                    if (ThisEvent.EventParam == BLUE_LOOP_TIMER) {
+                        nextState = Swivel;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case PING:
                     //Logic for Turn Left 90 timer param
                     nextState = Avoid_Right;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    break;
                 case ES_EXIT:
                     break;
-                case ES_NO_EVENT:
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
@@ -222,15 +234,31 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
         case Swivel: // in the first state, replace this with correct names
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    Swivel_Flag = 0;
+                    ES_Timer_InitTimer(BLUE_LOOP_TIMER, TIMER_2_SEC); // bounce timer
                     break;
                 case ES_TIMEOUT:
-                    //Logic for Swivel timer param
-                    nextState = Forward_Half_2;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                    if (ThisEvent.EventParam == BLUE_LOOP_TIMER) {
+                        if (Swivel_Flag == 5) {
+                            nextState = Forward_Half_2;
+                            makeTransition = TRUE;
+                            ThisEvent.EventType = ES_NO_EVENT;
+                        } else {
+                            if ((Swivel_Flag % 2) == 0) {
+                                // code to go the other direction
+                            } else {
+                                // code to go other other direction
+                            }
+                            Swivel_Flag += 1; // Flag increment
+#ifdef DEBUG
+                            printf("\tSwivel_Flag = %d\n", Swivel_Flag);
+#endif
+                            ES_Timer_InitTimer(BLUE_LOOP_TIMER, TIMER_2_SEC); // restarts timer
+                        }
+                    }
+                    break;
                 case ES_EXIT:
                     break;
-                case ES_NO_EVENT:
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
@@ -241,18 +269,20 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     break;
                 case TAPE_ON:
-                    //Logic for TAPE_ON param
-                    nextState = Turn_Left_90_3;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                    if (ThisEvent.EventParam == 0b1100) { // FL FR (1100, C)
+                        nextState = Turn_Left_90_3;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    }
                 case PING:
                     //Logic for Turn Left 90 timer param
                     nextState = Avoid_Right;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    break;
                 case ES_EXIT:
                     break;
-                case ES_NO_EVENT:
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
@@ -262,14 +292,15 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case ES_TIMEOUT:
-                    //Logic for Turn Left 90 3 timer param
-                    nextState = Forward_Final;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                case TAPE_ON:
+                    if (ThisEvent.EventParam == 6) { // FR BR (0110, 6)
+                        nextState = Forward_Final;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case ES_EXIT:
                     break;
-                case ES_NO_EVENT:
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
@@ -289,20 +320,24 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
         case Avoid_Right: // in the first state, replace this with correct names
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_InitTimer(BLUE_LOOP_TIMER, TIMER_4_SEC);
                     break;
                 case ES_TIMEOUT:
                     //Logic for Turn Left 90 timer param
-                    nextState = Forward_Half_1;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                    if (ThisEvent.EventParam == BLUE_LOOP_TIMER) {
+                        nextState = Forward_Half_1;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case TAPE_ON:
                     //Logic for Tape Sensor param
                     nextState = Reverse;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    break;
                 case ES_EXIT:
                     break;
-                case ES_NO_EVENT:
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
@@ -317,9 +352,9 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
                     nextState = Avoid_Left;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    break;
                 case ES_EXIT:
                     break;
-                case ES_NO_EVENT:
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
@@ -330,13 +365,14 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     break;
                 case ES_TIMEOUT:
-                    //Logic for Avoid Left timer param
-                    nextState = Forward;
-                    makeTransition = Turn_Left_90_3;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                    if (ThisEvent.EventParam == BLUE_LOOP_TIMER) {
+                        nextState = Forward;
+                        makeTransition = Turn_Left_90_3;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case ES_EXIT:
                     break;
-                case ES_NO_EVENT:
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
@@ -352,6 +388,9 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
         CurrentState = nextState;
         RunBlueLoopSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
+
+    LED_SetBank(LED_BANK2, CurrentState);
+    LED_SetBank(LED_BANK3, CurrentState);
 
     ES_Tail(); // trace call stack end
     return ThisEvent;

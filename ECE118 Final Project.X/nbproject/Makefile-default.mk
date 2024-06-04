@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c TemplateService.c ping.c pwm.c serial.c timers.c TopHSM.c BlackLoopSubHSM.c BlueLoopSubHSM.c RoamSubHSM.c DumpSubHSM.c tape.c Parallel.c Track.c Wall.c
+SOURCEFILES_QUOTED_IF_SPACED=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c TemplateService.c ping.c pwm.c serial.c timers.c TopHSM.c BlackLoopSubHSM.c BlueLoopSubHSM.c RoamSubHSM.c DumpSubHSM.c tape.c Parallel.c Track.c Wall.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/TemplateService.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/BlackLoopSubHSM.o ${OBJECTDIR}/BlueLoopSubHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/tape.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/Track.o ${OBJECTDIR}/Wall.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/AD.o.d ${OBJECTDIR}/BOARD.o.d ${OBJECTDIR}/ES_CheckEvents.o.d ${OBJECTDIR}/ES_Framework.o.d ${OBJECTDIR}/ES_KeyboardInput.o.d ${OBJECTDIR}/ES_Main.o.d ${OBJECTDIR}/ES_PostList.o.d ${OBJECTDIR}/ES_Queue.o.d ${OBJECTDIR}/ES_TattleTale.o.d ${OBJECTDIR}/ES_Timers.o.d ${OBJECTDIR}/EventChecker.o.d ${OBJECTDIR}/IO_Ports.o.d ${OBJECTDIR}/LED.o.d ${OBJECTDIR}/RC_Servo.o.d ${OBJECTDIR}/Stepper.o.d ${OBJECTDIR}/Tank_DriveTrain.o.d ${OBJECTDIR}/TapeService.o.d ${OBJECTDIR}/TemplateService.o.d ${OBJECTDIR}/ping.o.d ${OBJECTDIR}/pwm.o.d ${OBJECTDIR}/serial.o.d ${OBJECTDIR}/timers.o.d ${OBJECTDIR}/TopHSM.o.d ${OBJECTDIR}/BlackLoopSubHSM.o.d ${OBJECTDIR}/BlueLoopSubHSM.o.d ${OBJECTDIR}/RoamSubHSM.o.d ${OBJECTDIR}/DumpSubHSM.o.d ${OBJECTDIR}/tape.o.d ${OBJECTDIR}/Parallel.o.d ${OBJECTDIR}/Track.o.d ${OBJECTDIR}/Wall.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/TemplateService.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/BlackLoopSubHSM.o ${OBJECTDIR}/BlueLoopSubHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/tape.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/Track.o ${OBJECTDIR}/Wall.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/AD.o.d ${OBJECTDIR}/BOARD.o.d ${OBJECTDIR}/ES_CheckEvents.o.d ${OBJECTDIR}/ES_Framework.o.d ${OBJECTDIR}/ES_KeyboardInput.o.d ${OBJECTDIR}/ES_PostList.o.d ${OBJECTDIR}/ES_Queue.o.d ${OBJECTDIR}/ES_TattleTale.o.d ${OBJECTDIR}/ES_Timers.o.d ${OBJECTDIR}/EventChecker.o.d ${OBJECTDIR}/IO_Ports.o.d ${OBJECTDIR}/LED.o.d ${OBJECTDIR}/RC_Servo.o.d ${OBJECTDIR}/Stepper.o.d ${OBJECTDIR}/Tank_DriveTrain.o.d ${OBJECTDIR}/TapeService.o.d ${OBJECTDIR}/TemplateService.o.d ${OBJECTDIR}/ping.o.d ${OBJECTDIR}/pwm.o.d ${OBJECTDIR}/serial.o.d ${OBJECTDIR}/timers.o.d ${OBJECTDIR}/TopHSM.o.d ${OBJECTDIR}/BlackLoopSubHSM.o.d ${OBJECTDIR}/BlueLoopSubHSM.o.d ${OBJECTDIR}/RoamSubHSM.o.d ${OBJECTDIR}/DumpSubHSM.o.d ${OBJECTDIR}/tape.o.d ${OBJECTDIR}/Parallel.o.d ${OBJECTDIR}/Track.o.d ${OBJECTDIR}/Wall.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/TemplateService.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/BlackLoopSubHSM.o ${OBJECTDIR}/BlueLoopSubHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/tape.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/Track.o ${OBJECTDIR}/Wall.o
+OBJECTFILES=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/TemplateService.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/BlackLoopSubHSM.o ${OBJECTDIR}/BlueLoopSubHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/tape.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/Track.o ${OBJECTDIR}/Wall.o
 
 # Source Files
-SOURCEFILES=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c TemplateService.c ping.c pwm.c serial.c timers.c TopHSM.c BlackLoopSubHSM.c BlueLoopSubHSM.c RoamSubHSM.c DumpSubHSM.c tape.c Parallel.c Track.c Wall.c
+SOURCEFILES=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c TemplateService.c ping.c pwm.c serial.c timers.c TopHSM.c BlackLoopSubHSM.c BlueLoopSubHSM.c RoamSubHSM.c DumpSubHSM.c tape.c Parallel.c Track.c Wall.c
 
 
 
@@ -146,12 +146,6 @@ ${OBJECTDIR}/ES_KeyboardInput.o: ES_KeyboardInput.c  .generated_files/flags/defa
 	@${RM} ${OBJECTDIR}/ES_KeyboardInput.o.d 
 	@${RM} ${OBJECTDIR}/ES_KeyboardInput.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_KeyboardInput.o.d" -o ${OBJECTDIR}/ES_KeyboardInput.o ES_KeyboardInput.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/ES_Main.o: ES_Main.c  .generated_files/flags/default/4c0f269589fd87488b81ade8fd2ec29de95a4709 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/ES_Main.o.d 
-	@${RM} ${OBJECTDIR}/ES_Main.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_Main.o.d" -o ${OBJECTDIR}/ES_Main.o ES_Main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 ${OBJECTDIR}/ES_PostList.o: ES_PostList.c  .generated_files/flags/default/1457a7d5377a72a8b4cb2bfdea7d5b96aeb359d1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
@@ -333,12 +327,6 @@ ${OBJECTDIR}/ES_KeyboardInput.o: ES_KeyboardInput.c  .generated_files/flags/defa
 	@${RM} ${OBJECTDIR}/ES_KeyboardInput.o.d 
 	@${RM} ${OBJECTDIR}/ES_KeyboardInput.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_KeyboardInput.o.d" -o ${OBJECTDIR}/ES_KeyboardInput.o ES_KeyboardInput.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/ES_Main.o: ES_Main.c  .generated_files/flags/default/95164fc7714b138ff0b4c86b09857ea0c23f36a6 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/ES_Main.o.d 
-	@${RM} ${OBJECTDIR}/ES_Main.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/ES_Main.o.d" -o ${OBJECTDIR}/ES_Main.o ES_Main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 ${OBJECTDIR}/ES_PostList.o: ES_PostList.c  .generated_files/flags/default/c5dbfeaacca54658907301c071c0658af3899374 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 

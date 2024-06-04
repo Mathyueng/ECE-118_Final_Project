@@ -25,7 +25,7 @@
 /*******************************************************************************
  * MODULE #INCLUDE                                                             *
  ******************************************************************************/
-
+#include "EventChecker.h"
 #include "ES_Configure.h"
 #include "ES_Timers.h"
 #include "tape.h"
@@ -42,7 +42,6 @@
  * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
  ******************************************************************************/
 
-//#define EVENTCHECKER_TEST
 
 #ifdef EVENTCHECKER_TEST
 #include <stdio.h>

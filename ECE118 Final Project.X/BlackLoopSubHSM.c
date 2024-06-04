@@ -44,10 +44,10 @@ typedef enum {
 } BlackLoopSubHSMState_t;
 
 static const char *StateNames[] = {
-	"InitPSubState",
-	"Turn_Left_90",
-	"Forward",
-	"Avoid",
+    "InitPSubState",
+    "Turn_Left_90",
+    "Forward",
+    "Avoid",
 };
 
 
@@ -84,7 +84,7 @@ static uint8_t MyPriority;
  * @author J. Edward Carryer, 2011.10.23 19:25 */
 uint8_t InitBlackLoopSubHSM(void) {
     ES_Event returnEvent;
-
+    LED_SetBank(LED_BANK3, 0x0);
     CurrentState = InitPSubState;
     returnEvent = RunBlackLoopSubHSM(INIT_EVENT);
     if (returnEvent.EventType == ES_NO_EVENT) {
@@ -126,17 +126,20 @@ ES_Event RunBlackLoopSubHSM(ES_Event ThisEvent) {
                 nextState = Turn_Left_90;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
+                break;
             }
             break;
 
-        case Turn_Left_90: // in the first state, replace this with correct names
+        case Turn_Left_90: // Turn 90 to West
+            // insert code to turn 90 degrees
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case WALL_PARALLEL_R:   // bot parallel w/ wall
+                case WALL_PARALLEL_R: // bot parallel w/ wall
                     nextState = Forward;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    break;
                 case ES_EXIT:
                     break;
                 case ES_NO_EVENT:
@@ -146,13 +149,15 @@ ES_Event RunBlackLoopSubHSM(ES_Event ThisEvent) {
             break;
 
         case Forward: // in the first state, replace this with correct names
+            // code to move directly forward needed
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case PING:  // obstacle detected
+                case PING: // obstacle detected
                     nextState = Avoid;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    break;
                 case ES_EXIT:
                     break;
                 case ES_NO_EVENT:
@@ -164,11 +169,15 @@ ES_Event RunBlackLoopSubHSM(ES_Event ThisEvent) {
         case Avoid: // turn Left to get out of the way of the obstacle
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_InitTimer(BLACK_LOOP_TIMER, TIMER_4_SEC);
                     break;
-                case ES_TIMEOUT:    // return to going forward
-                    nextState = Forward;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                case ES_TIMEOUT: // return to going forward
+                    if (ThisEvent.EventParam == BLACK_LOOP_TIMER) {
+                        nextState = Forward;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case ES_EXIT:
                     break;
                 case ES_NO_EVENT:
@@ -187,6 +196,8 @@ ES_Event RunBlackLoopSubHSM(ES_Event ThisEvent) {
         CurrentState = nextState;
         RunBlackLoopSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
+
+    LED_SetBank(LED_BANK3, CurrentState);
 
     ES_Tail(); // trace call stack end
     return ThisEvent;

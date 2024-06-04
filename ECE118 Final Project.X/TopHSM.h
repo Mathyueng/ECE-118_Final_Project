@@ -25,18 +25,30 @@
  * PUBLIC #INCLUDES                                                            *
  ******************************************************************************/
 
+#include "xc.h"
+#include "stdio.h"
+#include "LED.h"
+
 #include "ES_Configure.h"       // defines ES_Event, INIT_EVENT, ENTRY_EVENT, and EXIT_EVENT
 #include "Tank_DriveTrain.h"    // defines Drive Train Functions
 
 /*******************************************************************************
  * PUBLIC #DEFINES                                                             *
  ******************************************************************************/
-#define TIMER_0_TICKS 500 // 0.5 s
-#define TIMER_1_TICKS 1000 // 1 s
-#define TIMER_2_TICKS 2000 // 2 s
-#define TIMER_3_TICKS 3000 // 3 s
-#define TIMER_4_TICKS 4000 // 4 s
-#define TIMER_5_TICKS 5000 // 5 s
+#define TIMER_QUART_SEC 250     // 0.25 s
+#define TIMER_HALF_SEC  500     // 0.5 s
+#define TIMER_1_SEC     1000    // 1 s
+#define TIMER_2_SEC     2000    // 2 s
+#define TIMER_3_SEC     3000    // 3 s
+#define TIMER_4_SEC     4000    // 4 s
+#define TIMER_5_SEC     5000    // 5 s
+#define TIMER_6_SEC     6000    // 6 s
+#define TIMER_7_SEC     7000    // 7 s
+#define TIMER_8_SEC     8000    // 8 s
+#define TIMER_9_SEC     9000    // 9 s
+#define TIMER_10_SEC    10000   // 10 s
+
+#define DEBUG
 
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *

@@ -30,9 +30,9 @@ void main(void)
     LED_AddBanks (LED_BANK2);
     LED_AddBanks (LED_BANK3);
 
-    LED_SetBank(LED_BANK1, 0x00);
-    LED_SetBank(LED_BANK2, 0x00);
-    LED_SetBank(LED_BANK3, 0x00);
+    LED_SetBank(LED_BANK1, 0x0);
+    LED_SetBank(LED_BANK2, 0x0);
+    LED_SetBank(LED_BANK3, 0x0);
 
     printf("\nAll Inits complete.\n");
     // now initialize the Events and Services Framework and start it running

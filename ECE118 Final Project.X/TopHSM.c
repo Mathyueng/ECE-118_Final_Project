@@ -31,7 +31,6 @@
 #include "ES_Configure.h"
 #include "ES_Framework.h"
 #include "BOARD.h"
-#include "LED.h"
 #include "TopHSM.h"
 
 #include "BlackLoopSubHSM.h" //#include all sub state machines called
@@ -58,11 +57,11 @@ typedef enum {
 } TopHSMState_t;
 
 static const char *StateNames[] = {
-	"InitPState",
-	"Roaming",
-	"Black_Looping",
-	"Blue_Looping",
-	"Dumping",
+    "InitPState",
+    "Roaming",
+    "Black_Looping",
+    "Blue_Looping",
+    "Dumping",
 };
 
 
@@ -158,6 +157,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 nextState = Roaming;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
+                break;
             }
             break;
 
@@ -173,7 +173,9 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     nextState = Black_Looping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    break;
                 case ES_EXIT:
+                    InitRoamSubHSM();
                     break;
                 default:
                     break;
@@ -190,11 +192,12 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     break;
                 case TAPE_ON:
                     //logic for front right and front left tape sensor
-                    if (ThisEvent.EventParam == 'C'){   // front right and front left only
+                    if (ThisEvent.EventParam == 0b1100) { // FR FL (1100, C)
                         nextState = Blue_Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
+                    break;
                 case ES_EXIT:
                     InitBlackLoopSubHSM();
                     break;
@@ -215,8 +218,11 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     nextState = Dumping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    ES_Timer_InitTimer(DUMP_FINISH_TIMER, TIMER_7_SEC);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    break;
                 case ES_EXIT:
-                    InitBlueLoopSubHSM();                    
+                    InitBlueLoopSubHSM();
                     break;
                 default:
                     break;
@@ -232,12 +238,14 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     break;
                 case ES_TIMEOUT:
-                    //Logic for Dump Timer Expired 
-                    nextState = Black_Looping;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                    if (ThisEvent.EventParam = DUMP_FINISH_TIMER) {
+                        nextState = Black_Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case ES_EXIT:
-                    InitDumpSubHSM();                    
+                    InitDumpSubHSM();
                     break;
                 default:
                     break;
@@ -253,7 +261,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
         CurrentState = nextState;
         RunTopHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
-    LED_SetBank(LED_BANK1, CurrentState & 0x0F);
+    //    LED_SetBank(LED_BANK1, CurrentState);
 
     ES_Tail(); // trace call stack end
     return ThisEvent;

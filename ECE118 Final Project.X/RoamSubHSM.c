@@ -39,18 +39,19 @@
 typedef enum {
     InitPSubState,
     FindTape,
-    Rotate,
+    Rotate_Tape,
     Forward,
-    Rotate_Left_90,
-            
+    Rotate_Parallel_Wall,
+    Avoid
 } RoamSubHSMState_t;
 
 static const char *StateNames[] = {
-	"InitPSubState",
-	"FindTape",
-    "Rotate",
+    "InitPSubState",
+    "FindTape",
+    "Rotate_Tape",
     "Forward",
-    "Rotate_Left_90"
+    "Rotate_Parallel_Wall",
+    "Avoid"
 };
 
 
@@ -69,6 +70,7 @@ static const char *StateNames[] = {
 
 static RoamSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
+static int Roam_Flag = 0;
 
 
 /*******************************************************************************
@@ -85,10 +87,9 @@ static uint8_t MyPriority;
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitRoamSubHSM(void)
-{
+uint8_t InitRoamSubHSM(void) {
     ES_Event returnEvent;
-
+    LED_SetBank(LED_BANK1, 0x0);
     CurrentState = InitPSubState;
     returnEvent = RunRoamSubHSM(INIT_EVENT);
     if (returnEvent.EventType == ES_NO_EVENT) {
@@ -112,95 +113,113 @@ uint8_t InitRoamSubHSM(void)
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunRoamSubHSM(ES_Event ThisEvent)
-{
-    uint8_t makeTransition = FALSE; // use to flag transition
+ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
+    uint8_t makeTransition = FALSE; // use to Roam_Flag transition
     RoamSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
 
     switch (CurrentState) {
-    case InitPSubState: // If current state is initial Psedudo State
-        if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
-        {
-            // this is where you would put any actions associated with the
-            // transition from the initial pseudo-state into the actual
-            // initial state
+        case InitPSubState: // If current state is initial Psedudo State
+            if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
+            {
+                // this is where you would put any actions associated with the
+                // transition from the initial pseudo-state into the actual
+                // initial state
 
-            // now put the machine into the actual initial state
-            nextState = FindTape;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
-        }
-        break;
-
-    case FindTape: // in the first state, replace this with correct names
-        switch (ThisEvent.EventType) {
-        case ES_NO_EVENT:
-            break;
-        case TAPE_ON:
-            nextState = Rotate;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
-            break;
-        default: // all unhandled events pass the event back up to the next level
-            break;
-        }
-        break;
-
-    case Rotate: // in the first state, replace this with correct names
-        switch (ThisEvent.EventType) {
-        case ES_NO_EVENT:
-            break;
-        case TAPE_ON:
-            // Add Params here to specify front two sensors
-            if (ThisEvent.EventParam == 6) {
-                printf("\r\nRight\r\n");
-                nextState = Forward;
+                // now put the machine into the actual initial state
+                nextState = FindTape;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
             }
-            if (ThisEvent.EventParam == 9) {
-                printf("\r\nLeft\r\n");                
-                nextState = Forward;
-                makeTransition = TRUE;
-                ThisEvent.EventType = ES_NO_EVENT;                
+            break;
+
+        case FindTape: // in the first state, replace this with correct names
+            switch (ThisEvent.EventType) {
+                case ES_NO_EVENT:
+                    break;
+                case TAPE_ON:
+                    nextState = Rotate_Tape;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case WALL_ON:
+                    nextState = Rotate_Parallel_Wall;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case PING:
+                    nextState = Avoid;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                default: // all unhandled events pass the event back up to the next level
+                    break;
             }
             break;
-        default: // all unhandled events pass the event back up to the next level
-            break;
-        }
-        break;
 
-    case Forward: // in the first state, replace this with correct names
-        switch (ThisEvent.EventType) {
-        case ES_NO_EVENT:
+        case Forward: // in the first state, replace this with correct names
+            switch (ThisEvent.EventType) {
+                case ES_NO_EVENT:
+                    break;
+                case TAPE_ON: // if we find corner of tape first
+                    if (ThisEvent.EventParam == 0b1100) { // FL FR (1100, C)
+                        nextState = Rotate_Tape;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+
+                default: // all unhandled events pass the event back up to the next level
+                    break;
+            }
             break;
-        case TAPE_ON:   // if we find corner of tape first
-            nextState = Rotate_Left_90;
+        case Rotate_Tape: // Turn until parallel w/ Tape
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    Roam_Flag = 0;
+                    ES_Timer_InitTimer(BUFFER_TIMER, TIMER_QUART_SEC);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == BUFFER_TIMER) {
+                        Roam_Flag = 1;
+#ifdef DEBUG
+                        printf("\r\nRoam_Flag Active\r\n");
+#endif
+                    }
+                    break;
+                case TAPE_ON:
+                    // Add Params here to specify
+                    if (ThisEvent.EventParam == 0b1110) { // FL FR BR (1110, E)
+                        if (Roam_Flag) {
+                            nextState = Forward;
+                            makeTransition = TRUE;
+                            ThisEvent.EventType = ES_NO_EVENT;
+                        }
+                    }
+                    break;
+                default: // all unhandled events pass the event back up to the next level
+                    break;
+            }
             break;
-        
-        default: // all unhandled events pass the event back up to the next level
+
+        case Rotate_Parallel_Wall: // Turn until parallel w/ Wall
+            switch (ThisEvent.EventType) {
+                case ES_NO_EVENT:
+                    break;
+                case WALL_PARALLEL_L: // Turn till parallel w/ wall on left side
+                    // Add Params here to specify 
+                    nextState = Forward;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                default: // all unhandled events pass the event back up to the next level
+                    break;
+            }
             break;
-        }
-        break;
-    case Rotate_Left_90: // in the first state, replace this with correct names
-        switch (ThisEvent.EventType) {
-        case ES_NO_EVENT:
+
+        default: // all unhandled states fall into here
             break;
-        case TAPE_ON:
-            // Add Params here to specify 
-            nextState = Forward;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
-            break;
-        default: // all unhandled events pass the event back up to the next level
-            break;
-        }
-        break;
-        
-    default: // all unhandled states fall into here
-        break;
     } // end switch on Current State
 
     if (makeTransition == TRUE) { // making a state transition, send EXIT and ENTRY
@@ -209,11 +228,12 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent)
         CurrentState = nextState;
         RunRoamSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
-
+    
+//    LED_SetBank(LED_BANK2, CurrentState);
+    LED_SetBank(LED_BANK1, CurrentState);
     ES_Tail(); // trace call stack end
     return ThisEvent;
 }
-
 
 /*******************************************************************************
  * PRIVATE FUNCTIONS                                                           *

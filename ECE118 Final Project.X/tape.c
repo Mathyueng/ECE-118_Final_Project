@@ -7,7 +7,10 @@
 
 
 #include "xc.h"
+#include <stdio.h>
 #include "tape.h"
+
+#include "EventChecker.h"
 #include "ES_Configure.h"
 #include "ES_Events.h"
 #include "serial.h"
@@ -26,7 +29,13 @@
 /*******************************************************************************
  * PRIVATE MODULE VARIABLES                                                    *
  ******************************************************************************/
+#ifdef EVENTCHECKER_TEST
+#include <stdio.h>
+#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
 
+static const char *eventName;
+static ES_Event storedEvent;
+#endif
 /* Any private module level variable that you might need for keeping track of
    events would be placed here. Private variables should be STATIC so that they
    are limited in scope to this module. */
@@ -78,6 +87,9 @@ uint8_t Tape_CheckEvents(void) {
             ((!curT4 && prevT4) << 0);
     
     if (tapeOn) {
+#ifdef DEBUG
+        printf ("TapeEvent");
+#endif
         ES_Event thisEvent;
         thisEvent.EventType = TAPE_ON;
         thisEvent.EventParam = tapeOn;

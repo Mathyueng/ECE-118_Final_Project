@@ -63,7 +63,7 @@ typedef enum {
     WALL_ON,
     WALL_OFF,
     /* User-defined events end here */
-    NUMBEROFEVENTS
+    NUMBEROFEVENTS,
 } ES_EventTyp_t;
 
 static const char *EventNames[] = {
@@ -77,21 +77,25 @@ static const char *EventNames[] = {
 	"ES_TIMEOUT",
 	"ES_TIMERACTIVE",
 	"ES_TIMERSTOPPED",
-	"BATTERY_CONNECTED",
-	"BATTERY_DISCONNECTED",
-	"TAPE_ON",
-	"TAPE_OFF",
-	"PING",
+    "BATTERY_CONNECTED",
+    "BATTERY_DISCONNECTED",
+    "TAPE_ON",
+    "TAPE_OFF",
+    "PING",
     "PING_OFF",
-	"WALL_FRONT",
-	"WALL_PARALLEL_R",
-	"WALL_PARALLEL_L",
+    "WALL_FRONT",
+    "WALL_PARALLEL_R",
+    "WALL_PARALLEL_L",
     "WALL_OFF_R",
     "WALL_OFF_L",
-	"TRACK_WIRE_R",
-	"TRACK_WIRE_L",
-	"TRACK_WIRE_EQUAL",
-	"NUMBEROFEVENTS"
+    "TRACK_WIRE_R",
+    "TRACK_WIRE_L",
+    "TRACK_OFF_R",
+    "TRACK_OFF_L",
+    "TRACK_WIRE_EQUAL",
+    "WALL_ON",
+    "WALL_OFF",
+	"NUMBEROFEVENTS",
 };
 
 
@@ -114,9 +118,9 @@ static const char *EventNames[] = {
 #define TIMER1_RESP_FUNC PostTopHSM
 #define TIMER2_RESP_FUNC PostTopHSM
 #define TIMER3_RESP_FUNC PostTopHSM
-#define TIMER4_RESP_FUNC TIMER_UNUSED
-#define TIMER5_RESP_FUNC TIMER_UNUSED
-#define TIMER6_RESP_FUNC TIMER_UNUSED
+#define TIMER4_RESP_FUNC PostTopHSM
+#define TIMER5_RESP_FUNC PostTopHSM
+#define TIMER6_RESP_FUNC PostTopHSM
 #define TIMER7_RESP_FUNC TIMER_UNUSED
 #define TIMER8_RESP_FUNC TIMER_UNUSED
 #define TIMER9_RESP_FUNC TIMER_UNUSED
@@ -134,10 +138,13 @@ static const char *EventNames[] = {
 // definitions for the response functions to make it easire to check that
 // the timer number matches where the timer event will be routed
 
-//#define GENERIC_NAMED_TIMER 0   /*make sure this is enabled above and posting to the correct state machine*/
-#define TAPE_SERVICE_TIMER  0   /* Defined for Tape Sensors */
-#define BLUE_LOOP_TIMER     1   /* Defined for Blue Loop Use*/
-#define BLACK_LOOP_TIMER    2   /* Defined for Black Loop Use*/
+#define TAPE_SERVICE_TIMER  0   /* Defined for Tape Sensors         */
+#define BLUE_LOOP_TIMER     1   /* Defined for Blue Loop Use        */
+#define BLACK_LOOP_TIMER    2   /* Defined for Black Loop Use       */
+#define DUMP_FINISH_TIMER   3   /* Defined for Dump Finish Use      */
+#define BUFFER_TIMER        4   /* Defined for Buffering turn sens  */
+#define DUMP_TIMER          5   /* Defined for Dumping Use          */
+#define AVOID_TIMER         6   /* Defined for Avoidance            */
 
 
 /****************************************************************************/

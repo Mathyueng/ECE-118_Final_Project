@@ -38,13 +38,18 @@
  ******************************************************************************/
 typedef enum {
     InitPSubState,
-    StartDump,
-    EndDump
+    Reverse,
+    Lower_Arm,
+    Forward,
+    Reverse_Rollers
 } DumpSubHSMState_t;
 
 static const char *StateNames[] = {
-	"InitPSubState",
-	"StartDump",
+    "InitPSubState",
+    "Reverse",
+    "Lower_Arm",
+    "Forward",
+    "Reverse_Rollers"
 };
 
 
@@ -79,10 +84,9 @@ static uint8_t MyPriority;
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitDumpSubHSM(void)
-{
+uint8_t InitDumpSubHSM(void) {
     ES_Event returnEvent;
-
+    LED_SetBank(LED_BANK2, 0x0);
     CurrentState = InitPSubState;
     returnEvent = RunDumpSubHSM(INIT_EVENT);
     if (returnEvent.EventType == ES_NO_EVENT) {
@@ -106,43 +110,105 @@ uint8_t InitDumpSubHSM(void)
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunDumpSubHSM(ES_Event ThisEvent)
-{
+ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
     DumpSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
 
     switch (CurrentState) {
-    case InitPSubState: // If current state is initial Psedudo State
-        if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
-        {
-            // this is where you would put any actions associated with the
-            // transition from the initial pseudo-state into the actual
-            // initial state
+        case InitPSubState: // If current state is initial Psedudo State
+            if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
+            {
+                // this is where you would put any actions associated with the
+                // transition from the initial pseudo-state into the actual
+                // initial state
 
-            // now put the machine into the actual initial state
-            nextState = StartDump;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
-        }
-        break;
+                // now put the machine into the actual initial state
+                nextState = Reverse;
+                makeTransition = TRUE;
+                ThisEvent.EventType = ES_NO_EVENT;
+                break;
+            }
+            break;
 
-    case StartDump: // in the first state, replace this with correct names
-        switch (ThisEvent.EventType) {
-        case ES_ENTRY:
+        case Reverse: // in the first state, replace this with correct names
+            // code to move backwards needed
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+//                    ES_Timer_InitTimer(DUMP_FINISH_TIMER, TIMER_7_SEC);
+//                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == DUMP_TIMER) {
+                        nextState = Lower_Arm;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_EXIT:
+                    break;
+                case ES_NO_EVENT:
+                    break;
+                default: // all unhandled events pass the event back up to the next level
+                    break;
+            }
             break;
-        case ES_EXIT:
+
+        case Lower_Arm: // in the first state, replace this with correct names
+            // code to lower RC Servo Arm needed
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == DUMP_TIMER) {
+                        nextState = Forward;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_EXIT:
+                    break;
+                case ES_NO_EVENT:
+                    break;
+                default: // all unhandled events pass the event back up to the next level
+                    break;
+            }
             break;
-        case ES_NO_EVENT:
+
+        case Forward:
+            // code to move forward needed
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    break;
+                case TRACK_WIRE_EQUAL:
+                    nextState = Reverse_Rollers;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_EXIT:
+                    break;
+                case ES_NO_EVENT:
+                    break;
+                default:
+                    break;
+            }
+
+        case Reverse_Rollers:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    // code to reverse roller
+                    break;
+                case ES_EXIT:
+                    break;
+                case ES_NO_EVENT:
+                    break;
+                default:
+                    break;
+            }
+        default: // all unhandled states fall into here
             break;
-        default: // all unhandled events pass the event back up to the next level
-            break;
-        }
-        break;
-        
-    default: // all unhandled states fall into here
-        break;
     } // end switch on Current State
 
     if (makeTransition == TRUE) { // making a state transition, send EXIT and ENTRY
@@ -151,6 +217,8 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent)
         CurrentState = nextState;
         RunDumpSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
+
+    LED_SetBank(LED_BANK2, CurrentState);
 
     ES_Tail(); // trace call stack end
     return ThisEvent;
