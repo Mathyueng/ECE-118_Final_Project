@@ -1,7 +1,7 @@
 /*
  * File: BlueloopSubHSM.c
  * Author: J. Edward Carryer
- * Modified: Gabriel H Elkaim
+ * Modified: Gabriel H Elkaim, Duc Lam, Matthew Eng
  *
  * Template file to set up a Heirarchical State Machine to work with the Events and
  * Services Framework (ES_Framework) on the Uno32 for the CMPE-118/L class. Note that
@@ -145,7 +145,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Turn_Left_90_1: // in the first state, replace this with correct names
+        case Turn_Left_90_1: // Turn 90 Left To South
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
@@ -162,7 +162,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Forward: // in the first state, replace this with correct names
+        case Forward: // Move Forward South
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
@@ -179,7 +179,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Turn_Left_90_2: // in the first state, replace this with correct names
+        case Turn_Left_90_2: // Turn 90 Left To East
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
@@ -196,12 +196,13 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Forward_Half_1: // in the first state, replace this with correct names
+        case Forward_Half_1: // Move Forward East
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
                 case ES_TIMEOUT:
                     //Logic for Half Way Timer param
+                    ES_Timer_InitTimer (BLUE_LOOP_TIMER, TIMER_5_TICKS);    // start timer for 5 sec (modify if needed for debug)
                     nextState = Swivel;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -235,7 +236,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Forward_Half_2: // in the first state, replace this with correct names
+        case Forward_Half_2: // Continue Heading East
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
@@ -257,7 +258,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Turn_Left_90_3: // in the first state, replace this with correct names
+        case Turn_Left_90_3: // Turn 90 North
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
@@ -274,7 +275,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Forward_Final: // Should be the final case, leave by TRACK_WIRE_EQUAL
+        case Forward_Final: // Head North (Should be the final case, leave by TRACK_WIRE_EQUAL)
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
@@ -307,7 +308,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Reverse: // in the first state, replace this with correct names
+        case Reverse: // If we hit Tape while AVOID
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
@@ -324,7 +325,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Avoid_Left: // in the first state, replace this with correct names
+        case Avoid_Left: // Fallback Avoid if we hit Tape
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;

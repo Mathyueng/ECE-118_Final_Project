@@ -1,5 +1,5 @@
 /*
- * File: TemplateSubHSM.c
+ * File: TopHSM.c
  * Author: J. Edward Carryer
  * Modified: Gabriel Elkaim and Soja-Marie Morgens
  *
@@ -31,6 +31,7 @@
 #include "ES_Configure.h"
 #include "ES_Framework.h"
 #include "BOARD.h"
+#include "LED.h"
 #include "TopHSM.h"
 
 #include "BlackLoopSubHSM.h" //#include all sub state machines called
@@ -157,7 +158,6 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 nextState = Roaming;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
-                ;
             }
             break;
 
@@ -190,10 +190,13 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     break;
                 case TAPE_ON:
                     //logic for front right and front left tape sensor
-                    nextState = Blue_Looping;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                    if (ThisEvent.EventParam == 'C'){   // front right and front left only
+                        nextState = Blue_Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                 case ES_EXIT:
+                    InitBlackLoopSubHSM();
                     break;
                 default:
                     break;
@@ -213,6 +216,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                 case ES_EXIT:
+                    InitBlueLoopSubHSM();                    
                     break;
                 default:
                     break;
@@ -233,6 +237,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                 case ES_EXIT:
+                    InitDumpSubHSM();                    
                     break;
                 default:
                     break;
@@ -248,6 +253,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
         CurrentState = nextState;
         RunTopHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
+    LED_SetBank(LED_BANK1, CurrentState & 0x0F);
 
     ES_Tail(); // trace call stack end
     return ThisEvent;

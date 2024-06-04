@@ -1,5 +1,5 @@
 /*
- * File:   TemplateEventChecker.c
+ * File:   EventChecker.c
  * Author: Gabriel Hugh Elkaim
  *
  * Template file to set up typical EventCheckers for the  Events and Services
@@ -79,9 +79,11 @@ uint8_t InitAllEventCheckers(void) {
 }
 
 uint8_t CheckAllEvents(void) {
-    Tape_CheckEvents();
-//    Ping_StateMachine();
     Parallel_CheckEvents();
+    Ping_StateMachine();
+    Tape_CheckEvents();    
+    Track_CheckEvents();
+    Wall_CheckEvents();
 }
 
 /* 

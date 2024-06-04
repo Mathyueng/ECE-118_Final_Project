@@ -133,8 +133,7 @@ ES_Event RunBlackLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case ES_TIMEOUT:
-                    //Logic for Turn Left 90 timer param
+                case WALL_PARALLEL_R:   // bot parallel w/ wall
                     nextState = Forward;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -150,8 +149,7 @@ ES_Event RunBlackLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case ES_TIMEOUT:
-                    //Logic for Turn Left 90 timer param
+                case PING:  // obstacle detected
                     nextState = Avoid;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -163,12 +161,11 @@ ES_Event RunBlackLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Avoid: // in the first state, replace this with correct names
+        case Avoid: // turn Left to get out of the way of the obstacle
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case ES_TIMEOUT:
-                    //Logic for Turn Left 90 timer param
+                case ES_TIMEOUT:    // return to going forward
                     nextState = Forward;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;

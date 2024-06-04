@@ -1,5 +1,5 @@
 /*
- * File: TemplateHSM.h
+ * File: TopHSM.h
  * Author: J. Edward Carryer
  * Modified: Gabriel H Elkaim
  *
@@ -25,12 +25,18 @@
  * PUBLIC #INCLUDES                                                            *
  ******************************************************************************/
 
-#include "ES_Configure.h"   // defines ES_Event, INIT_EVENT, ENTRY_EVENT, and EXIT_EVENT
+#include "ES_Configure.h"       // defines ES_Event, INIT_EVENT, ENTRY_EVENT, and EXIT_EVENT
+#include "Tank_DriveTrain.h"    // defines Drive Train Functions
 
 /*******************************************************************************
  * PUBLIC #DEFINES                                                             *
  ******************************************************************************/
-
+#define TIMER_0_TICKS 500 // 0.5 s
+#define TIMER_1_TICKS 1000 // 1 s
+#define TIMER_2_TICKS 2000 // 2 s
+#define TIMER_3_TICKS 3000 // 3 s
+#define TIMER_4_TICKS 4000 // 4 s
+#define TIMER_5_TICKS 5000 // 5 s
 
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *

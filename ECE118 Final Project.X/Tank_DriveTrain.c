@@ -15,7 +15,7 @@
 #include "math.h"
 
 //#define DEBUG
-#define DRIVETRAIN_MAIN
+//#define DRIVETRAIN_MAIN
 
 #ifdef DEBUG
 #include <stdio.h>

@@ -18,9 +18,9 @@
 
 
 //defines for keyboard input
-//#define USE_KEYBOARD_INPUT
+#define USE_KEYBOARD_INPUT
 //What State machine are we testing
-//#define POSTFUNCTION_FOR_KEYBOARD_INPUT PostTopHSM
+#define POSTFUNCTION_FOR_KEYBOARD_INPUT PostTopHSM
 
 //define for TattleTale
 #define USE_TATTLETALE
@@ -63,7 +63,7 @@ typedef enum {
     WALL_ON,
     WALL_OFF,
     /* User-defined events end here */
-    NUMBEROFEVENTS,
+    NUMBEROFEVENTS
 } ES_EventTyp_t;
 
 static const char *EventNames[] = {
@@ -91,7 +91,7 @@ static const char *EventNames[] = {
 	"TRACK_WIRE_R",
 	"TRACK_WIRE_L",
 	"TRACK_WIRE_EQUAL",
-	"NUMBEROFEVENTS",
+	"NUMBEROFEVENTS"
 };
 
 
@@ -99,7 +99,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This are the name of the Event checking function header file.
-#define EVENT_CHECK_HEADER "ES_Configure.h"
+#define EVENT_CHECK_HEADER "EventChecker.h"
 
 /****************************************************************************/
 // This is the list of event checking functions
@@ -111,9 +111,9 @@ static const char *EventNames[] = {
 // a timers, then you can use TIMER_UNUSED
 #define TIMER_UNUSED ((pPostFunc)0)
 #define TIMER0_RESP_FUNC PostTapeService
-#define TIMER1_RESP_FUNC TIMER_UNUSED
-#define TIMER2_RESP_FUNC TIMER_UNUSED
-#define TIMER3_RESP_FUNC TIMER_UNUSED
+#define TIMER1_RESP_FUNC PostTopHSM
+#define TIMER2_RESP_FUNC PostTopHSM
+#define TIMER3_RESP_FUNC PostTopHSM
 #define TIMER4_RESP_FUNC TIMER_UNUSED
 #define TIMER5_RESP_FUNC TIMER_UNUSED
 #define TIMER6_RESP_FUNC TIMER_UNUSED
@@ -135,7 +135,9 @@ static const char *EventNames[] = {
 // the timer number matches where the timer event will be routed
 
 //#define GENERIC_NAMED_TIMER 0   /*make sure this is enabled above and posting to the correct state machine*/
-#define TAPE_SERVICE_TIMER 0    /* Defined for Tape Sensors */
+#define TAPE_SERVICE_TIMER  0   /* Defined for Tape Sensors */
+#define BLUE_LOOP_TIMER     1   /* Defined for Blue Loop Use*/
+#define BLACK_LOOP_TIMER    2   /* Defined for Black Loop Use*/
 
 
 /****************************************************************************/

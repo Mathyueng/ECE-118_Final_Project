@@ -38,12 +38,13 @@
  ******************************************************************************/
 typedef enum {
     InitPSubState,
-    SubFirstState,
+    StartDump,
+    EndDump
 } DumpSubHSMState_t;
 
 static const char *StateNames[] = {
 	"InitPSubState",
-	"SubFirstState",
+	"StartDump",
 };
 
 
@@ -121,15 +122,20 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent)
             // initial state
 
             // now put the machine into the actual initial state
-            nextState = SubFirstState;
+            nextState = StartDump;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 
-    case SubFirstState: // in the first state, replace this with correct names
+    case StartDump: // in the first state, replace this with correct names
         switch (ThisEvent.EventType) {
+        case ES_ENTRY:
+            break;
+        case ES_EXIT:
+            break;
         case ES_NO_EVENT:
+            break;
         default: // all unhandled events pass the event back up to the next level
             break;
         }

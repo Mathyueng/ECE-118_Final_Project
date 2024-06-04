@@ -38,12 +38,19 @@
  ******************************************************************************/
 typedef enum {
     InitPSubState,
-    SubFirstState,
+    FindTape,
+    Rotate,
+    Forward,
+    Rotate_Left_90,
+            
 } RoamSubHSMState_t;
 
 static const char *StateNames[] = {
 	"InitPSubState",
-	"SubFirstState",
+	"FindTape",
+    "Rotate",
+    "Forward",
+    "Rotate_Left_90"
 };
 
 
@@ -121,15 +128,72 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent)
             // initial state
 
             // now put the machine into the actual initial state
-            nextState = SubFirstState;
+            nextState = FindTape;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 
-    case SubFirstState: // in the first state, replace this with correct names
+    case FindTape: // in the first state, replace this with correct names
         switch (ThisEvent.EventType) {
         case ES_NO_EVENT:
+            break;
+        case TAPE_ON:
+            nextState = Rotate;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        default: // all unhandled events pass the event back up to the next level
+            break;
+        }
+        break;
+
+    case Rotate: // in the first state, replace this with correct names
+        switch (ThisEvent.EventType) {
+        case ES_NO_EVENT:
+            break;
+        case TAPE_ON:
+            // Add Params here to specify front two sensors
+            if (ThisEvent.EventParam == 6) {
+                printf("\r\nRight\r\n");
+                nextState = Forward;
+                makeTransition = TRUE;
+                ThisEvent.EventType = ES_NO_EVENT;
+            }
+            if (ThisEvent.EventParam == 9) {
+                printf("\r\nLeft\r\n");                
+                nextState = Forward;
+                makeTransition = TRUE;
+                ThisEvent.EventType = ES_NO_EVENT;                
+            }
+            break;
+        default: // all unhandled events pass the event back up to the next level
+            break;
+        }
+        break;
+
+    case Forward: // in the first state, replace this with correct names
+        switch (ThisEvent.EventType) {
+        case ES_NO_EVENT:
+            break;
+        case TAPE_ON:   // if we find corner of tape first
+            nextState = Rotate_Left_90;
+            break;
+        
+        default: // all unhandled events pass the event back up to the next level
+            break;
+        }
+        break;
+    case Rotate_Left_90: // in the first state, replace this with correct names
+        switch (ThisEvent.EventType) {
+        case ES_NO_EVENT:
+            break;
+        case TAPE_ON:
+            // Add Params here to specify 
+            nextState = Forward;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
         default: // all unhandled events pass the event back up to the next level
             break;
         }
