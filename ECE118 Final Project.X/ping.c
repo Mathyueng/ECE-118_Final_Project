@@ -6,6 +6,9 @@
  */
 
 
+#include "EventChecker.h"
+#include "TopHSM.h"
+
 #include "xc.h"
 #include "ping.h"
 #include "BOARD.h"
@@ -17,7 +20,7 @@
 //#define PING_MAIN
 #define PING_BASIC_TEST
 #define DEBUG
-#define EVENTCHECKER_TEST
+//#define EVENTCHECKER_TEST
 
 #ifdef EVENTCHECKER_TEST
 #include <stdio.h>
@@ -147,7 +150,7 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
                         thisEvent.EventType = PING;
                         status = PINGED;
 #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//                        PostGenericService(thisEvent);
+                        PostTopHSM(thisEvent);
 #else
                         SaveEvent(thisEvent);
 #endif   
@@ -157,7 +160,7 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
                         thisEvent.EventType = PING_OFF;
                         status = UNPINGED;
 #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//                        PostGenericService(thisEvent);
+                        PostTopHSM(thisEvent);
 #else
                         SaveEvent(thisEvent);
 #endif   

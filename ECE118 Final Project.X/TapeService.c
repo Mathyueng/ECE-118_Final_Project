@@ -34,7 +34,7 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 
-#define DEBUG 0
+//#define DEBUG
 
 #define ALL_PINS 0x07F8 // 0b0000 0111 1111 1000 All Digital Pins
 #define NONETRIPPED 0 // 8'b 0000 0000
@@ -134,7 +134,7 @@ uint8_t InitTapeService(uint8_t Priority)
     LED_AddBanks(LED_BANK2);
     LED_AddBanks(LED_BANK3);
     
-#if DEBUG
+#ifdef DEBUG
     printf("\r\nStarting Tape Service\r\n");
 #endif
     ES_Timer_InitTimer(TAPE_SERVICE_TIMER, TIMER_0_TICKS);
@@ -218,7 +218,7 @@ void TapeSensorCheck() {
     int F_R = FRONT_RIGHT_READ;
     int B_R = BACK_RIGHT_READ;
     int B_L = BACK_LEFT_READ;
-#if DEBUG
+#ifdef DEBUG
     printf("\r\n F_L: %d... \r\n F_R: %d... \r\n B_R: %d... \r\n B_L: %d... ", F_L, F_R, B_R, B_L);
 #endif
     curT1 = ((prevT1 << 1) | (!F_L));

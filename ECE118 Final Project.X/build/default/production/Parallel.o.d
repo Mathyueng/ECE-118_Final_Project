@@ -1,16 +1,25 @@
-build/default/production/Parallel.o: Parallel.c AD.h Tank_DriveTrain.h \
- BOARD.h Parallel.h pwm.h ES_Configure.h ES_Events.h
+build/default/production/Parallel.o: Parallel.c EventChecker.h \
+ ES_Configure.h BOARD.h TopHSM.h LED.h Tank_DriveTrain.h BOARD.h \
+ ES_Events.h AD.h Parallel.h pwm.h
 
-AD.h:
+EventChecker.h:
+
+ES_Configure.h:
+
+BOARD.h:
+
+TopHSM.h:
+
+LED.h:
 
 Tank_DriveTrain.h:
 
 BOARD.h:
 
+ES_Events.h:
+
+AD.h:
+
 Parallel.h:
 
 pwm.h:
-
-ES_Configure.h:
-
-ES_Events.h:

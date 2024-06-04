@@ -1,16 +1,25 @@
-build/default/production/ping.o: ping.c ping.h BOARD.h IO_Ports.h BOARD.h \
- ES_Timers.h ES_Configure.h ES_Events.h
+build/default/production/ping.o: ping.c EventChecker.h ES_Configure.h \
+ BOARD.h TopHSM.h LED.h Tank_DriveTrain.h BOARD.h ES_Events.h ping.h \
+ IO_Ports.h ES_Timers.h
 
-ping.h:
-
-BOARD.h:
-
-IO_Ports.h:
-
-BOARD.h:
-
-ES_Timers.h:
+EventChecker.h:
 
 ES_Configure.h:
 
+BOARD.h:
+
+TopHSM.h:
+
+LED.h:
+
+Tank_DriveTrain.h:
+
+BOARD.h:
+
 ES_Events.h:
+
+ping.h:
+
+IO_Ports.h:
+
+ES_Timers.h:

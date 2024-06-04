@@ -7,6 +7,9 @@
 
 #include <stdio.h>
 
+#include "EventChecker.h"
+#include "TopHSM.h"
+
 #include "xc.h"
 #include "AD.h"
 #include "Tank_DriveTrain.h"
@@ -21,11 +24,11 @@
 #define TRACK_LOW_THRESHOLD 350
 #define TRACK_HIGH_THRESHOLD 700
 
-//#define EVENTCHECKER_TEST
+//#define TrackMain
 //#define DEBUG
 //#define TRACK_TEST
 
-#ifdef EVENTCHECKER_TEST
+#ifdef TrackMain
 #include <stdio.h>
 #define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
 
@@ -74,8 +77,8 @@ uint8_t Track_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = TRACK_WIRE_EQUAL;
         thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_L1));
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef TrackMain           // keep this as is for test harness
+//        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif   
@@ -89,8 +92,8 @@ uint8_t Track_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = TRACK_WIRE_EQUAL;
         thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_L1));
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef TrackMain           // keep this as is for test harness
+//        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif   
@@ -104,8 +107,8 @@ uint8_t Track_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = TRACK_WIRE_R;
         thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef TrackMain           // keep this as is for test harness
+//        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif
@@ -118,8 +121,8 @@ uint8_t Track_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = WALL_OFF_R;
         thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_R1));
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef TrackMain           // keep this as is for test harness
+        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif
@@ -132,8 +135,8 @@ uint8_t Track_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = TRACK_WIRE_L;
         thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef TrackMain           // keep this as is for test harness
+        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif   
@@ -146,8 +149,8 @@ uint8_t Track_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = TRACK_OFF_L;
         thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_L1));
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef TrackMain           // keep this as is for test harness
+//        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif   
@@ -161,19 +164,54 @@ uint8_t Track_CheckEvents(void) {
     return returnVal;
 }
 
-#ifdef TRACK_TEST
-void main (void) {
+#ifdef TrackMain
+#include <stdio.h>
+#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
+
+static const char *eventName;
+static ES_Event storedEvent;
+#include <stdio.h>
+static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
+
+void PrintEvent(void);
+
+void main(void) {
     BOARD_Init();
-    AD_Init();
-    PWM_Init();
-    DT_Init();
-    Track_Init();
-    
+    /* user initialization code goes here */
+    ES_Timer_Init();
+    printf("\r\nTimer initialized");
+    Tape_Init();
+    // Do not alter anything below this line
+    int i;
+
+    printf("\r\nEvent checking test harness for %s", __FILE__);
+
     while (1) {
         if (Track_CheckEvents()) {
-//            printf("\r\nTrack Parallel"); 
+            PrintEvent();
+        }
+#ifdef DEBUG
+        printf("\r\nCheck");
+        PrintEvent();
+#endif
+
+        if (IsTransmitEmpty()) {
+#ifdef DEBUG
+            printf("\r\nEmptyCheck");
+#endif
+            for (i = 0; i< sizeof (EventList) >> 2; i++) {
+                if (EventList[i]() == TRUE) {
+                    PrintEvent();
+                    break;
+                }
+
+            }
         }
     }
-    
+}
+
+void PrintEvent(void) {
+    printf("\r\nFunc: %s\tEvent: %s\tParam: 0x%X", eventName,
+            EventNames[storedEvent.EventType], storedEvent.EventParam);
 }
 #endif

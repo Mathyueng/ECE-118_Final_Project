@@ -4,6 +4,8 @@
  *
  * Created on May 31, 2024, 8:37 AM
  */
+#include "EventChecker.h"
+#include "TopHSM.h"
 
 #include "xc.h"
 #include "AD.h"
@@ -23,17 +25,8 @@
 
 #define MOV_AVG_LENGTH 5
 
-#define EVENTCHECKER_TEST
+//#define ParallelMain
 //#define DEBUG
-//#define PARALLEL_TEST
-
-#ifdef EVENTCHECKER_TEST
-#include <stdio.h>
-#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
-
-static const char *eventName;
-static ES_Event storedEvent;
-#endif
 
 static uint32_t prevRsignal = 0;
 static uint32_t prevLsignal = 0;
@@ -82,8 +75,8 @@ uint8_t Parallel_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = WALL_PARALLEL_R;
         thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef ParallelMain           // keep this as is for test harness
+        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif
@@ -96,8 +89,8 @@ uint8_t Parallel_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = WALL_OFF_R;
         thisEvent.EventParam = (AD_ReadADPin(PARALLEL_PIN_R1) > AD_ReadADPin(PARALLEL_PIN_R2));
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef ParallelMain           // keep this as is for test harness
+        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
         rightWallP = 0;
@@ -110,8 +103,8 @@ uint8_t Parallel_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = WALL_PARALLEL_L;
         thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef ParallelMain           // keep this as is for test harness
+        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif   
@@ -124,8 +117,8 @@ uint8_t Parallel_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = WALL_OFF_L;
         thisEvent.EventParam = (AD_ReadADPin(PARALLEL_PIN_L1) > AD_ReadADPin(PARALLEL_PIN_L2));
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef ParallelMain           // keep this as is for test harness
+        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif   
@@ -139,19 +132,54 @@ uint8_t Parallel_CheckEvents(void) {
     return returnVal;
 }
 
-#ifdef PARALLEL_TEST
-void main (void) {
+#ifdef ParallelMain
+#include <stdio.h>
+#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
+
+static const char *eventName;
+static ES_Event storedEvent;
+#include <stdio.h>
+static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
+
+void PrintEvent(void);
+
+void main(void) {
     BOARD_Init();
-    AD_Init();
-    PWM_Init();
-    DT_Init();
-    Parallel_Init();
-    
+    /* user initialization code goes here */
+    ES_Timer_Init();
+    printf("\r\nTimer initialized");
+    Tape_Init();
+    // Do not alter anything below this line
+    int i;
+
+    printf("\r\nEvent checking test harness for %s", __FILE__);
+
     while (1) {
         if (Parallel_CheckEvents()) {
-            printf("\r\nParallel Event"); 
+            PrintEvent();
+        }
+#ifdef DEBUG
+        printf("\r\nCheck");
+        PrintEvent();
+#endif
+
+        if (IsTransmitEmpty()) {
+#ifdef DEBUG
+            printf("\r\nEmptyCheck");
+#endif
+            for (i = 0; i< sizeof (EventList) >> 2; i++) {
+                if (EventList[i]() == TRUE) {
+                    PrintEvent();
+                    break;
+                }
+
+            }
         }
     }
-    
+}
+
+void PrintEvent(void) {
+    printf("\r\nFunc: %s\tEvent: %s\tParam: 0x%X", eventName,
+            EventNames[storedEvent.EventType], storedEvent.EventParam);
 }
 #endif

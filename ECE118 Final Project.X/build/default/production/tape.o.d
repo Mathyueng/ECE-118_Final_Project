@@ -1,20 +1,29 @@
-build/default/production/tape.o: tape.c tape.h ES_Configure.h BOARD.h \
- EventChecker.h ES_Events.h serial.h IO_Ports.h BOARD.h AD.h
+build/default/production/tape.o: tape.c EventChecker.h ES_Configure.h \
+ BOARD.h TopHSM.h LED.h Tank_DriveTrain.h BOARD.h ES_Events.h tape.h \
+ ES_Timers.h serial.h IO_Ports.h AD.h
 
-tape.h:
+EventChecker.h:
 
 ES_Configure.h:
 
 BOARD.h:
 
-EventChecker.h:
+TopHSM.h:
+
+LED.h:
+
+Tank_DriveTrain.h:
+
+BOARD.h:
 
 ES_Events.h:
+
+tape.h:
+
+ES_Timers.h:
 
 serial.h:
 
 IO_Ports.h:
-
-BOARD.h:
 
 AD.h:

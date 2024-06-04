@@ -5,14 +5,14 @@
  * Created on May 29, 2024, 7:48 PM
  */
 
+#include "EventChecker.h"
+#include "TopHSM.h"
 
 #include "xc.h"
 #include <stdio.h>
 #include "tape.h"
-
-#include "EventChecker.h"
-#include "ES_Configure.h"
 #include "ES_Events.h"
+#include "ES_Timers.h"
 #include "serial.h"
 #include "IO_Ports.h"
 #include "AD.h"
@@ -20,6 +20,9 @@
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
+//#define TapeMain
+//#define DEBUG
+
 #define TAPE_PORT PORTZ
 #define TAPE_PIN_1 PIN3
 #define TAPE_PIN_2 PIN4
@@ -29,13 +32,7 @@
 /*******************************************************************************
  * PRIVATE MODULE VARIABLES                                                    *
  ******************************************************************************/
-#ifdef EVENTCHECKER_TEST
-#include <stdio.h>
-#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
 
-static const char *eventName;
-static ES_Event storedEvent;
-#endif
 /* Any private module level variable that you might need for keeping track of
    events would be placed here. Private variables should be STATIC so that they
    are limited in scope to this module. */
@@ -88,13 +85,13 @@ uint8_t Tape_CheckEvents(void) {
     
     if (tapeOn) {
 #ifdef DEBUG
-        printf ("TapeEvent");
+        printf ("\r\nTapeOn\r\n");
 #endif
         ES_Event thisEvent;
         thisEvent.EventType = TAPE_ON;
         thisEvent.EventParam = tapeOn;
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef TapeMain           // keep this as is for test harness
+        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif   
@@ -103,11 +100,14 @@ uint8_t Tape_CheckEvents(void) {
     
     // TAPE_OFF detection
     if (tapeOff) {
+#ifdef DEBUG
+        printf("\r\nTapeOff\r\n");
+#endif
         ES_Event thisEvent;
         thisEvent.EventType = TAPE_OFF;
         thisEvent.EventParam = tapeOff & 0x0F;
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef TapeMain           // keep this as is for test harness
+        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif 
@@ -122,3 +122,54 @@ uint8_t Tape_CheckEvents(void) {
     
     return (returnVal);
 }
+#ifdef TapeMain
+#include <stdio.h>
+#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
+
+static const char *eventName;
+static ES_Event storedEvent;
+#include <stdio.h>
+static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
+
+void PrintEvent(void);
+
+void main(void) {
+    BOARD_Init();
+    /* user initialization code goes here */
+    ES_Timer_Init();
+    printf("\r\nTimer initialized");
+    Tape_Init();
+    // Do not alter anything below this line
+    int i;
+
+    printf("\r\nEvent checking test harness for %s", __FILE__);
+
+    while (1) {
+        if (Tape_CheckEvents()) {
+            PrintEvent();
+        }
+#ifdef DEBUG
+        printf("\r\nCheck");
+        PrintEvent();
+#endif
+
+        if (IsTransmitEmpty()) {
+#ifdef DEBUG
+            printf("\r\nEmptyCheck");
+#endif
+            for (i = 0; i< sizeof (EventList) >> 2; i++) {
+                if (EventList[i]() == TRUE) {
+                    PrintEvent();
+                    break;
+                }
+
+            }
+        }
+    }
+}
+
+void PrintEvent(void) {
+    printf("\r\nFunc: %s\tEvent: %s\tParam: 0x%X", eventName,
+            EventNames[storedEvent.EventType], storedEvent.EventParam);
+}
+#endif

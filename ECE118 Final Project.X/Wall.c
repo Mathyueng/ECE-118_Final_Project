@@ -5,6 +5,8 @@
  * Created on 02 Jun 2024, 11:27 PM
  */
 
+#include "EventChecker.h"
+#include "TopHSM.h"
 
 #include "xc.h"
 #include "Wall.h"
@@ -20,6 +22,8 @@
 #define WALL_PORT PORTZ
 #define WALL_PIN_1 PIN7
 
+//#define WallMain
+//#define DEBUG
 /*******************************************************************************
  * PRIVATE MODULE VARIABLES                                                    *
  ******************************************************************************/
@@ -63,8 +67,8 @@ uint8_t Wall_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = WALL_ON;
         thisEvent.EventParam = wallOn;
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef WallMain           // keep this as is for test harness
+        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif   
@@ -76,8 +80,8 @@ uint8_t Wall_CheckEvents(void) {
         ES_Event thisEvent;
         thisEvent.EventType = WALL_OFF;
         thisEvent.EventParam = wallOff & 0x0F;
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-//        PostGenericService(thisEvent);
+#ifndef WallMain           // keep this as is for test harness
+        PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif 
@@ -89,3 +93,55 @@ uint8_t Wall_CheckEvents(void) {
 
     return (returnVal);
 }
+
+#ifdef WallMain
+#include <stdio.h>
+#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
+
+static const char *eventName;
+static ES_Event storedEvent;
+#include <stdio.h>
+static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
+
+void PrintEvent(void);
+
+void main(void) {
+    BOARD_Init();
+    /* user initialization code goes here */
+    ES_Timer_Init();
+    printf("\r\nTimer initialized");
+    Tape_Init();
+    // Do not alter anything below this line
+    int i;
+
+    printf("\r\nEvent checking test harness for %s", __FILE__);
+
+    while (1) {
+        if (Wall_CheckEvents()) {
+            PrintEvent();
+        }
+#ifdef DEBUG
+        printf("\r\nCheck");
+        PrintEvent();
+#endif
+
+        if (IsTransmitEmpty()) {
+#ifdef DEBUG
+            printf("\r\nEmptyCheck");
+#endif
+            for (i = 0; i< sizeof (EventList) >> 2; i++) {
+                if (EventList[i]() == TRUE) {
+                    PrintEvent();
+                    break;
+                }
+
+            }
+        }
+    }
+}
+
+void PrintEvent(void) {
+    printf("\r\nFunc: %s\tEvent: %s\tParam: 0x%X", eventName,
+            EventNames[storedEvent.EventType], storedEvent.EventParam);
+}
+#endif

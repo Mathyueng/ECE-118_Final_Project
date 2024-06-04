@@ -1,18 +1,27 @@
-build/default/production/Wall.o: Wall.c Wall.h ES_Configure.h BOARD.h \
- ES_Events.h serial.h IO_Ports.h BOARD.h AD.h
+build/default/production/Wall.o: Wall.c EventChecker.h ES_Configure.h \
+ BOARD.h TopHSM.h LED.h Tank_DriveTrain.h BOARD.h ES_Events.h Wall.h \
+ serial.h IO_Ports.h AD.h
 
-Wall.h:
+EventChecker.h:
 
 ES_Configure.h:
 
 BOARD.h:
 
+TopHSM.h:
+
+LED.h:
+
+Tank_DriveTrain.h:
+
+BOARD.h:
+
 ES_Events.h:
+
+Wall.h:
 
 serial.h:
 
 IO_Ports.h:
-
-BOARD.h:
 
 AD.h:
