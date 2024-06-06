@@ -42,7 +42,7 @@
  * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
  ******************************************************************************/
 
-
+//#define EVENTCHECKER_TEST
 #ifdef EVENTCHECKER_TEST
 #include <stdio.h>
 #define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)

@@ -49,7 +49,6 @@
 #define TIMER_9_SEC     9000    // 9 s
 #define TIMER_10_SEC    10000   // 10 s
 
-#define DEBUG
 
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *

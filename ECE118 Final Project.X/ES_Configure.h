@@ -114,7 +114,7 @@ static const char *EventNames[] = {
 // corresponding timer expires. All 16 must be defined. If you are not using
 // a timers, then you can use TIMER_UNUSED
 #define TIMER_UNUSED ((pPostFunc)0)
-#define TIMER0_RESP_FUNC PostTapeService
+#define TIMER0_RESP_FUNC PostTopHSM
 #define TIMER1_RESP_FUNC PostTopHSM
 #define TIMER2_RESP_FUNC PostTopHSM
 #define TIMER3_RESP_FUNC PostTopHSM
@@ -138,7 +138,7 @@ static const char *EventNames[] = {
 // definitions for the response functions to make it easire to check that
 // the timer number matches where the timer event will be routed
 
-#define TAPE_SERVICE_TIMER  0   /* Defined for Tape Sensors         */
+#define ROAM_LOOP_TIMER     0   /* Defined for Tape Sensors         */
 #define BLUE_LOOP_TIMER     1   /* Defined for Blue Loop Use        */
 #define BLACK_LOOP_TIMER    2   /* Defined for Black Loop Use       */
 #define DUMP_FINISH_TIMER   3   /* Defined for Dump Finish Use      */
@@ -156,14 +156,14 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // This macro determines that nuber of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 3
+#define NUM_SERVICES 2
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service
 // every Events and Services application must have a Service 0. Further 
 // services are added in numeric sequence (1,2,3,...) with increasing 
 // priorities
-// the header file with the public fuction prototypes
+// the header file with the public function prototypes
 #define SERV_0_HEADER "ES_KeyboardInput.h"
 // the name of the Init function
 #define SERV_0_INIT InitKeyboardInput
@@ -175,24 +175,24 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // These are the definitions for Service 1
 #if NUM_SERVICES > 1
-// the header file with the public fuction prototypes
-#define SERV_1_HEADER "TapeService.h"
+// the header file with the public function prototypes
+#define SERV_1_HEADER "TopHSM.h"
 // the name of the Init function
-#define SERV_1_INIT InitTapeService
+#define SERV_1_INIT InitTopHSM
 // the name of the run function
-#define SERV_1_RUN RunTapeService
+#define SERV_1_RUN RunTopHSM
 // How big should this services Queue be?
 #define SERV_1_QUEUE_SIZE 3
 #endif
 
 // These are the definitions for Service 2
 #if NUM_SERVICES > 2
-// the header file with the public fuction prototypes
-#define SERV_2_HEADER "TopHSM.h"
+// the header file with the public function prototypes
+#define SERV_2_HEADER "TapeService.h"
 // the name of the Init function
-#define SERV_2_INIT InitTopHSM
+#define SERV_2_INIT InitTapeService
 // the name of the run function
-#define SERV_2_RUN RunTopHSM
+#define SERV_2_RUN RunTapeService
 // How big should this services Queue be?
 #define SERV_2_QUEUE_SIZE 3
 #endif
@@ -202,7 +202,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // These are the definitions for Service 3
 #if NUM_SERVICES > 3
-// the header file with the public fuction prototypes
+// the header file with the public function prototypes
 #define SERV_3_HEADER "TestService.h"
 // the name of the Init function
 #define SERV_3_INIT TestServiceInit
@@ -215,7 +215,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // These are the definitions for Service 4
 #if NUM_SERVICES > 4
-// the header file with the public fuction prototypes
+// the header file with the public function prototypes
 #define SERV_4_HEADER "TestService.h"
 // the name of the Init function
 #define SERV_4_INIT TestServiceInit
@@ -228,7 +228,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // These are the definitions for Service 5
 #if NUM_SERVICES > 5
-// the header file with the public fuction prototypes
+// the header file with the public function prototypes
 #define SERV_5_HEADER "TestService.h"
 // the name of the Init function
 #define SERV_5_INIT TestServiceInit
@@ -241,7 +241,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // These are the definitions for Service 6
 #if NUM_SERVICES > 6
-// the header file with the public fuction prototypes
+// the header file with the public function prototypes
 #define SERV_6_HEADER "TestService.h"
 // the name of the Init function
 #define SERV_6_INIT TestServiceInit
@@ -254,7 +254,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // These are the definitions for Service 7
 #if NUM_SERVICES > 7
-// the header file with the public fuction prototypes
+// the header file with the public function prototypes
 #define SERV_7_HEADER "TestService.h"
 // the name of the Init function
 #define SERV_7_INIT TestServiceInit

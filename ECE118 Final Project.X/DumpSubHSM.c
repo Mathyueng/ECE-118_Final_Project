@@ -136,8 +136,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             // code to move backwards needed
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-//                    ES_Timer_InitTimer(DUMP_FINISH_TIMER, TIMER_7_SEC);
-//                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    DT_DriveFwd(REV_LOW_SPEED);
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
@@ -160,6 +159,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    DT_ExtendArm();
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
@@ -181,6 +181,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             // code to move forward needed
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    DT_DriveFwd(FWD_LOW_SPEED);                    
                     break;
                 case TRACK_WIRE_EQUAL:
                     nextState = Reverse_Rollers;
@@ -188,6 +189,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case ES_EXIT:
+                    DT_Stop();
                     break;
                 case ES_NO_EVENT:
                     break;

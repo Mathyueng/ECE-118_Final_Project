@@ -102,7 +102,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.35</languageToolchainVersion>
+        <languageToolchainVersion>4.10</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -271,7 +271,7 @@
         <property key="stack-smashing" value=""/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
-      <item path="ES_Main.c" ex="false" overriding="false">
+      <item path="ES_Main.c" ex="true" overriding="false">
         <C32>
         </C32>
         <C32-AR>

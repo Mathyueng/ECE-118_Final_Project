@@ -62,7 +62,7 @@ uint8_t Parallel_CheckEvents(void) {
     
 #ifdef DEBUG
     printf("\r\n");
-//    if (abs(curRsignal - avgSignalR) <= PARALLEL_THRESHOLD) printf("\r\ncurrent Right: %d", curRsignal);
+    //    if (abs(curRsignal - avgSignalR) <= PARALLEL_THRESHOLD) printf("\r\ncurrent Right: %d", curRsignal);
     printf("\r\ncurrent right: %d", curRsignal);
     printf("\r\nright 1: %d", AD_ReadADPin(PARALLEL_PIN_R1));
     printf("\r\nright 2: %d", AD_ReadADPin(PARALLEL_PIN_R2));
@@ -70,7 +70,7 @@ uint8_t Parallel_CheckEvents(void) {
     
     if (!rightWallP && (curRsignal < PARALLEL_LOW_THRESHOLD)) {
 #ifdef DEBUG
-        printf("PARALLEL TO THE RIGHT WALL");
+//        printf("PARALLEL TO THE RIGHT WALL");
 #endif
         ES_Event thisEvent;
         thisEvent.EventType = WALL_PARALLEL_R;

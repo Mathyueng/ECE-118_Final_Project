@@ -26,6 +26,8 @@ void main(void)
     RC_Init();
 //    SERIAL_Init();
     TIMERS_Init();
+    DT_Init();
+    
     LED_AddBanks (LED_BANK1);
     LED_AddBanks (LED_BANK2);
     LED_AddBanks (LED_BANK3);

@@ -139,11 +139,21 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
                 case ES_NO_EVENT:
                     break;
                 case TAPE_ON:
-                    nextState = Rotate_Tape;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                    if (ThisEvent.EventParam == 0b0111) {
+                        DT_Stop();
+                        nextState = Rotate_Tape;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    else if (ThisEvent.EventParam == 0b1011) {
+                        DT_Stop();
+                        nextState = Rotate_Tape;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
                 case WALL_ON:
+                    DT_Stop();
                     nextState = Rotate_Parallel_Wall;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -162,14 +172,18 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_NO_EVENT:
                     break;
+                case ES_ENTRY:
+                    break;
                 case TAPE_ON: // if we find corner of tape first
-                    if (ThisEvent.EventParam == 0b1100) { // FL FR (1100, C)
+                    if (ThisEvent.EventParam == 0b0011) { // FL FR (0011, 3)
                         nextState = Rotate_Tape;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-
+                case ES_EXIT:
+                    DT_Stop();
+                    break;
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
@@ -179,6 +193,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     Roam_Flag = 0;
                     ES_Timer_InitTimer(BUFFER_TIMER, TIMER_QUART_SEC);
+                    DT_SpinCC(FWD_MID_SPEED); // spin til 90 degrees
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == BUFFER_TIMER) {
@@ -190,7 +205,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
                     break;
                 case TAPE_ON:
                     // Add Params here to specify
-                    if (ThisEvent.EventParam == 0b1110) { // FL FR BR (1110, E)
+                    if (ThisEvent.EventParam == 0b0001) { // FL FR BR (0001, 1)
                         if (Roam_Flag) {
                             nextState = Forward;
                             makeTransition = TRUE;
@@ -207,11 +222,39 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_NO_EVENT:
                     break;
+                case ES_ENTRY:
+                    DT_SpinCC(REV_MID_SPEED);
+                    break;
                 case WALL_PARALLEL_L: // Turn till parallel w/ wall on left side
                     // Add Params here to specify 
                     nextState = Forward;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_EXIT:
+                    DT_Stop();
+                    break;
+                default: // all unhandled events pass the event back up to the next level
+                    break;
+            }
+            break;
+
+        case Avoid: // turn Left to get out of the way of the obstacle
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    ES_Timer_InitTimer(BLACK_LOOP_TIMER, TIMER_4_SEC);
+                    DT_DriveLeft(FWD_HI_SPEED, 11000);
+                    break;
+                case ES_TIMEOUT: // return to going forward
+                    if (ThisEvent.EventParam == BLACK_LOOP_TIMER) {
+                        nextState = Forward;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_EXIT:
+                    break;
+                case ES_NO_EVENT:
                     break;
                 default: // all unhandled events pass the event back up to the next level
                     break;
@@ -228,8 +271,8 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
         CurrentState = nextState;
         RunRoamSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
-    
-//    LED_SetBank(LED_BANK2, CurrentState);
+
+    //    LED_SetBank(LED_BANK2, CurrentState);
     LED_SetBank(LED_BANK1, CurrentState);
     ES_Tail(); // trace call stack end
     return ThisEvent;

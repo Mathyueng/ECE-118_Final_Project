@@ -15,7 +15,7 @@
 #include "math.h"
 
 //#define DEBUG
-//#define DRIVETRAIN_MAIN
+#define DRIVETRAIN_MAIN
 
 #ifdef DEBUG
 #include <stdio.h>
@@ -220,6 +220,7 @@ char DT_RetractArm(void) {
 
 #ifdef DRIVETRAIN_MAIN
 #define DELAY(x) for (int i=0;i<(400000*x);i++) asm("nop");
+#include <stdio.h>
 void main(void) {
     printf("\r\nDrivetrain.c test harness successfully compiled");
     BOARD_Init();
@@ -250,10 +251,10 @@ void main(void) {
         DT_DriveLeft(-speed,turningRad);
         DT_RetractArm();
         DELAY(delay);
-//        DT_SpinCC(speed);
-//        DELAY(delay);
-//        DT_SpinCC(-speed);
-//        DELAY(delay);
+        DT_SpinCC(speed);
+        DELAY(delay);
+        DT_SpinCC(-speed);
+        DELAY(delay);
 #ifdef DEBUG
         printf("\r\n");
         printf("\r\nH_Bridge Port: %x", ReadHBridge());

@@ -137,7 +137,7 @@ uint8_t InitTapeService(uint8_t Priority)
 #ifdef DEBUG
     printf("\r\nStarting Tape Service\r\n");
 #endif
-    ES_Timer_InitTimer(TAPE_SERVICE_TIMER, TIMER_0_TICKS);
+//    ES_Timer_InitTimer(TAPE_SERVICE_TIMER, TIMER_0_TICKS);
     if (ES_PostToService(MyPriority, ThisEvent) == TRUE) {
         return TRUE;
     } else {
@@ -186,7 +186,7 @@ ES_Event RunTapeService(ES_Event ThisEvent)
         break;
 
     case ES_TIMEOUT:
-        ES_Timer_InitTimer(TAPE_SERVICE_TIMER, TIMER_0_TICKS);
+//        ES_Timer_InitTimer(TAPE_SERVICE_TIMER, TIMER_0_TICKS);
         TapeSensorCheck();
         
 #ifndef SIMPLESERVICE_TEST           // keep this as is for test harness

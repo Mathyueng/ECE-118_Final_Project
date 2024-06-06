@@ -170,6 +170,7 @@ ES_Event RunBlackLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     ES_Timer_InitTimer(BLACK_LOOP_TIMER, TIMER_4_SEC);
+                    DT_DriveLeft(FWD_HI_SPEED, 11000);
                     break;
                 case ES_TIMEOUT: // return to going forward
                     if (ThisEvent.EventParam == BLACK_LOOP_TIMER) {
@@ -181,6 +182,7 @@ ES_Event RunBlackLoopSubHSM(ES_Event ThisEvent) {
                 case ES_EXIT:
                     break;
                 case ES_NO_EVENT:
+                    break;
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }

@@ -20,6 +20,23 @@
 #ifndef TANK_DRIVE_H    /* Guard against multiple inclusion */
 #define TANK_DRIVE_H
 
+// Public Defines
+
+// Speeds
+#define REV_HI_SPEED    -100
+#define REV_MID_SPEED   -80
+#define REV_LOW_SPEED   -40
+#define FULL_STOP       0
+#define FWD_LOW_SPEED   40
+#define FWD_MID_SPEED   80
+#define FWD_HI_SPEED    100
+
+// Angles
+#define NO_ANGLE        0
+#define SMALL_ANGLE     30
+#define MID_ANGLE       60
+#define RIGHT_ANGLE     90
+#define LARGE_ANGLE     120
 
 /* ************************************************************************** */
 /* ************************************************************************** */

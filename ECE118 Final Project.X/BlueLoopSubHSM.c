@@ -269,7 +269,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     break;
                 case TAPE_ON:
-                    if (ThisEvent.EventParam == 0b1100) { // FL FR (1100, C)
+                    if (ThisEvent.EventParam == 0b0011) { // FL FR (0011, 3)
                         nextState = Turn_Left_90_3;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
@@ -366,8 +366,8 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == BLUE_LOOP_TIMER) {
-                        nextState = Forward;
-                        makeTransition = Turn_Left_90_3;
+                        nextState = Turn_Left_90_3;
+                        makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;

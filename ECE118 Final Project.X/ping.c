@@ -18,8 +18,8 @@
 #include "ES_Events.h"
 
 //#define PING_MAIN
-#define PING_BASIC_TEST
-#define DEBUG
+//#define PING_BASIC_TEST
+//#define DEBUG
 //#define EVENTCHECKER_TEST
 
 #ifdef EVENTCHECKER_TEST
@@ -34,9 +34,6 @@ static ES_Event storedEvent;
 #include <stdio.h>
 #endif
 
-#ifdef PING_TEST
-#include <stdio.h>
-#endif
 
 #define PING_LOW_THRESHOLD 13
 #define PING_HIGH_THRESHOLD 20
@@ -107,9 +104,9 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
     switch (state) {
         case IDLE:
 #ifdef DEBUG
-//            printf("\r\nIDLE");
-//            printf("\r\nFRT: %d", FRT_in_uS);
-//            printf("\r\nstart: %d", start_time_in_uS);
+            printf("\r\nIDLE");
+            printf("\r\nFRT: %d", FRT_in_uS);
+            printf("\r\nstart: %d", start_time_in_uS);
 #endif
             if (FRT_in_uS - start_time_in_uS >= 60000) {
                 SetTrigger(1); // set output pin TRIGGER to 1
@@ -119,7 +116,7 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
             break;
         case TRIGGER:
 #ifdef DEBUG
-//            printf("\r\nTRIGGER");
+            printf("\r\nTRIGGER");
 #endif
             if (FRT_in_uS - start_time_in_uS >= 10) {
                 SetTrigger(0);
@@ -128,7 +125,7 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
             break;
         case WAITING:
 #ifdef DEBUG
-//            printf("\r\nWAITING");
+            printf("\r\nWAITING");
 #endif
             if (ReadEcho()) {
                 start_time_in_uS = FRT_in_uS;
@@ -137,7 +134,7 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
             break;
         case ECHO:
 #ifdef DEBUG
-//            printf("\r\nECHO");
+            printf("\r\nECHO");
 #endif
             if (!ReadEcho()) {
                 ES_Event thisEvent;
@@ -147,6 +144,7 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
 #endif
                 if (abs(thisEvent.EventParam - prevDist) <= 5) { // if our new reading isn't an outlier
                     if (thisEvent.EventParam <= PING_LOW_THRESHOLD && status == UNPINGED) {
+                        printf("\r\nPing\r\n");
                         thisEvent.EventType = PING;
                         status = PINGED;
 #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
@@ -157,6 +155,7 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
                         returnVal = TRUE;
                     }
                     if (thisEvent.EventParam >= PING_HIGH_THRESHOLD && status == PINGED) {
+                        printf("\r\nUnping\r\n");
                         thisEvent.EventType = PING_OFF;
                         status = UNPINGED;
 #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
@@ -180,7 +179,7 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
 
 int main(void) {
     BOARD_Init();
-    PingInit();
+    Ping_Init();
     printf("\r\nPing sensor test harness for %s", __FILE__);
     
 #ifdef PING_BASIC_TEST

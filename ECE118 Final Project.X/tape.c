@@ -22,12 +22,23 @@
  ******************************************************************************/
 //#define TapeMain
 //#define DEBUG
+#define INACTIVE
+
+#ifdef TapeMain
+#include <stdio.h>
+#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
+
+static const char *eventName;
+static ES_Event storedEvent;
+#include <stdio.h>
+static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
+#endif
 
 #define TAPE_PORT PORTZ
-#define TAPE_PIN_1 PIN3
-#define TAPE_PIN_2 PIN4
-#define TAPE_PIN_3 PIN5
-#define TAPE_PIN_4 PIN6
+#define TAPE_PIN_1 PIN3     // FL
+#define TAPE_PIN_2 PIN4     // FR
+#define TAPE_PIN_3 PIN5     // BR
+#define TAPE_PIN_4 PIN6     // BL
 
 /*******************************************************************************
  * PRIVATE MODULE VARIABLES                                                    *
@@ -68,28 +79,39 @@ uint8_t Tape_CheckEvents(void) {
     uint8_t curT2 = (prevT2 << 1) | !(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_2);
     uint8_t curT3 = (prevT3 << 1) | !(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_3);
     uint8_t curT4 = (prevT4 << 1) | !(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_4);
-    
+
     uint8_t returnVal = FALSE;
 
-    uint8_t tapeOff = 
+    uint8_t tapeOff =
             ((curT1 && !prevT1) << 3) |
             ((curT2 && !prevT2) << 2) |
             ((curT3 && !prevT3) << 1) |
             ((curT4 && !prevT4) << 0);
-    
+
     uint8_t tapeOn =
             ((!curT1 && prevT1) << 3) |
             ((!curT2 && prevT2) << 2) |
             ((!curT3 && prevT3) << 1) |
             ((!curT4 && prevT4) << 0);
-    
+
+    uint8_t tapeActive =
+            (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_1)) << 3) |
+            (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_2)) << 2) |
+            (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_3)) << 1) |
+            (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_4)) << 0);
+
     if (tapeOn) {
 #ifdef DEBUG
-        printf ("\r\nTapeOn\r\n");
+        printf("\r\nTapeOn\r\n");
 #endif
         ES_Event thisEvent;
         thisEvent.EventType = TAPE_ON;
-        thisEvent.EventParam = tapeOn;
+#ifdef INACTIVE
+        thisEvent.EventParam = tapeOn
+#else
+        thisEvent.EventParam = tapeActive;
+#endif
+
 #ifndef TapeMain           // keep this as is for test harness
         PostTopHSM(thisEvent);
 #else
@@ -97,7 +119,7 @@ uint8_t Tape_CheckEvents(void) {
 #endif   
         returnVal = TRUE;
     }
-    
+
     // TAPE_OFF detection
     if (tapeOff) {
 #ifdef DEBUG
@@ -105,7 +127,12 @@ uint8_t Tape_CheckEvents(void) {
 #endif
         ES_Event thisEvent;
         thisEvent.EventType = TAPE_OFF;
-        thisEvent.EventParam = tapeOff & 0x0F;
+#ifdef INACTIVE
+        thisEvent.EventParam = tapeOff; //  & 0x0F
+#else
+        thisEvent.EventParam = tapeActive;        
+#endif
+       
 #ifndef TapeMain           // keep this as is for test harness
         PostTopHSM(thisEvent);
 #else
@@ -113,23 +140,17 @@ uint8_t Tape_CheckEvents(void) {
 #endif 
         returnVal = TRUE;
     }
-    
+
     // update history
     prevT1 = curT1;
     prevT2 = curT2;
     prevT3 = curT3;
     prevT4 = curT4;
-    
+
     return (returnVal);
 }
 #ifdef TapeMain
-#include <stdio.h>
-#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
 
-static const char *eventName;
-static ES_Event storedEvent;
-#include <stdio.h>
-static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
 
 void PrintEvent(void);
 
@@ -152,11 +173,7 @@ void main(void) {
         printf("\r\nCheck");
         PrintEvent();
 #endif
-
         if (IsTransmitEmpty()) {
-#ifdef DEBUG
-            printf("\r\nEmptyCheck");
-#endif
             for (i = 0; i< sizeof (EventList) >> 2; i++) {
                 if (EventList[i]() == TRUE) {
                     PrintEvent();
@@ -168,8 +185,17 @@ void main(void) {
     }
 }
 
+uint8_t GetCurrentTape() {
+    return
+    (!(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_1) << 3) |
+            (!(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_2) << 2) |
+            (!(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_3) << 1) |
+            (!(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_4) << 0);
+}
+
 void PrintEvent(void) {
     printf("\r\nFunc: %s\tEvent: %s\tParam: 0x%X", eventName,
             EventNames[storedEvent.EventType], storedEvent.EventParam);
+    //    printf("\r\nCurrent Active Tape Sensors: %x", GetCurrentTape());
 }
 #endif
