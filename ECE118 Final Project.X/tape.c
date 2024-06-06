@@ -89,7 +89,7 @@ uint8_t Tape_CheckEvents(void) {
     if (curT4 != prevT4) printf("\r\ncurT4: %x", curT4);
 #endif
     
-    if ((curT1 != prevT1) || 
+    if (    (curT1 != prevT1) || 
             (curT2 != prevT2) || 
             (curT3 != prevT3) || 
             (curT4 != prevT4)) {

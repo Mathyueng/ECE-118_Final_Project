@@ -48,6 +48,7 @@ typedef enum {
     BATTERY_DISCONNECTED,
     TAPE_ON,
     TAPE_OFF,
+    TAPE_EVENT,
     PING,
     PING_OFF,
     WALL_FRONT,
@@ -67,20 +68,21 @@ typedef enum {
 } ES_EventTyp_t;
 
 static const char *EventNames[] = {
-	"ES_NO_EVENT",
-	"ES_ERROR",
-	"ES_INIT",
-	"ES_ENTRY",
-	"ES_EXIT",
-	"ES_KEYINPUT",
-	"ES_LISTEVENTS",
-	"ES_TIMEOUT",
-	"ES_TIMERACTIVE",
-	"ES_TIMERSTOPPED",
+    "ES_NO_EVENT",
+    "ES_ERROR",
+    "ES_INIT",
+    "ES_ENTRY",
+    "ES_EXIT",
+    "ES_KEYINPUT",
+    "ES_LISTEVENTS",
+    "ES_TIMEOUT",
+    "ES_TIMERACTIVE",
+    "ES_TIMERSTOPPED",
     "BATTERY_CONNECTED",
     "BATTERY_DISCONNECTED",
     "TAPE_ON",
     "TAPE_OFF",
+    "TAPE_EVENT",
     "PING",
     "PING_OFF",
     "WALL_FRONT",
@@ -95,7 +97,7 @@ static const char *EventNames[] = {
     "TRACK_WIRE_EQUAL",
     "WALL_ON",
     "WALL_OFF",
-	"NUMBEROFEVENTS",
+    "NUMBEROFEVENTS",
 };
 
 
@@ -121,8 +123,8 @@ static const char *EventNames[] = {
 #define TIMER4_RESP_FUNC PostTopHSM
 #define TIMER5_RESP_FUNC PostTopHSM
 #define TIMER6_RESP_FUNC PostTopHSM
-#define TIMER7_RESP_FUNC TIMER_UNUSED
-#define TIMER8_RESP_FUNC TIMER_UNUSED
+#define TIMER7_RESP_FUNC PostTapeService
+#define TIMER8_RESP_FUNC PostWallService
 #define TIMER9_RESP_FUNC TIMER_UNUSED
 #define TIMER10_RESP_FUNC TIMER_UNUSED
 #define TIMER11_RESP_FUNC TIMER_UNUSED
@@ -146,6 +148,8 @@ static const char *EventNames[] = {
 #define DUMP_TIMER          5   /* Defined for Dumping Use          */
 #define AVOID_TIMER         6   /* Defined for Avoidance            */
 
+#define TAPE_SERVICE_TIMER  7   /* Defined for Tape Service         */
+#define WALL_SERVICE_TIMER  8   /* Defined for Wall Service         */
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 
@@ -154,9 +158,9 @@ static const char *EventNames[] = {
 #define MAX_NUM_SERVICES 8
 
 /****************************************************************************/
-// This macro determines that nuber of services that are *actually* used in
+// This macro determines that number of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 2
+#define NUM_SERVICES 5
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service
@@ -203,11 +207,11 @@ static const char *EventNames[] = {
 // These are the definitions for Service 3
 #if NUM_SERVICES > 3
 // the header file with the public function prototypes
-#define SERV_3_HEADER "TestService.h"
+#define SERV_3_HEADER "WallService.h"
 // the name of the Init function
-#define SERV_3_INIT TestServiceInit
+#define SERV_3_INIT InitWallService
 // the name of the run function
-#define SERV_3_RUN TestServiceRun
+#define SERV_3_RUN RunWallService
 // How big should this services Queue be?
 #define SERV_3_QUEUE_SIZE 3
 #endif
@@ -216,11 +220,11 @@ static const char *EventNames[] = {
 // These are the definitions for Service 4
 #if NUM_SERVICES > 4
 // the header file with the public function prototypes
-#define SERV_4_HEADER "TestService.h"
+#define SERV_4_HEADER "TrackService.h"
 // the name of the Init function
-#define SERV_4_INIT TestServiceInit
+#define SERV_4_INIT InitTrackService
 // the name of the run function
-#define SERV_4_RUN TestServiceRun
+#define SERV_4_RUN RunTrackService
 // How big should this services Queue be?
 #define SERV_4_QUEUE_SIZE 3
 #endif

@@ -151,7 +151,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case TAPE_ON:
+                case TAPE_EVENT:
                     if (ThisEvent.EventParam == 6) { // FR BR (0110, 6)
                         //Logic for Turn Left 90 1 timer param
                         nextState = Forward;
@@ -190,7 +190,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case TAPE_ON:
+                case TAPE_EVENT:
                     if (ThisEvent.EventParam == 3) { // BR BL (0011, 3)
                         //Logic for Turn Left 90 2 timer param
                         nextState = Forward_Half_1;
@@ -268,7 +268,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case TAPE_ON:
+                case TAPE_EVENT:
                     if (ThisEvent.EventParam == 0b0011) { // FL FR (0011, 3)
                         nextState = Turn_Left_90_3;
                         makeTransition = TRUE;
@@ -292,7 +292,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case TAPE_ON:
+                case TAPE_EVENT:
                     if (ThisEvent.EventParam == 6) { // FR BR (0110, 6)
                         nextState = Forward_Final;
                         makeTransition = TRUE;
@@ -330,7 +330,7 @@ ES_Event RunBlueLoopSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case TAPE_ON:
+                case TAPE_EVENT:
                     //Logic for Tape Sensor param
                     nextState = Reverse;
                     makeTransition = TRUE;

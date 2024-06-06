@@ -73,9 +73,9 @@ uint8_t PostTapeService(ES_Event ThisEvent);
  * @author J. Edward Carryer, 2011.10.23 19:25 */
 ES_Event RunTapeService(ES_Event ThisEvent);
 
-unsigned char ReadTapeSensors(void);
+uint8_t ReadTapeSensors(void);
 
 
-void TapeSensorCheck(void);
+//void TapeSensorCheck(void);
 #endif /* TemplateService_H */
 

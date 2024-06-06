@@ -190,7 +190,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case TAPE_ON:
+                case TAPE_EVENT:
                     //logic for front right and front left tape sensor
                     if (ThisEvent.EventParam == 0b1100) { // FR FL (1100, C)
                         nextState = Blue_Looping;

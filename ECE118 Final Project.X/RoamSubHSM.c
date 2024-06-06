@@ -138,7 +138,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_NO_EVENT:
                     break;
-                case TAPE_ON:
+                case TAPE_EVENT:
                     if (ThisEvent.EventParam == 0b0111) {
                         DT_Stop();
                         nextState = Rotate_Tape;
@@ -174,7 +174,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_ENTRY:
                     break;
-                case TAPE_ON: // if we find corner of tape first
+                case TAPE_EVENT: // if we find corner of tape first
                     if (ThisEvent.EventParam == 0b0011) { // FL FR (0011, 3)
                         nextState = Rotate_Tape;
                         makeTransition = TRUE;
@@ -203,7 +203,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
 #endif
                     }
                     break;
-                case TAPE_ON:
+                case TAPE_EVENT:
                     // Add Params here to specify
                     if (ThisEvent.EventParam == 0b0001) { // FL FR BR (0001, 1)
                         if (Roam_Flag) {
