@@ -1,7 +1,7 @@
 /*
  * File: TopHSM.h
  * Author: J. Edward Carryer
- * Modified: Gabriel H Elkaim
+ * Modified: Gabriel H Elkaim, Duc Lam, Matthew Eng
  *
  * Template file to set up a Heirarchical State Machine to work with the Events and
  * Services Framework (ES_Framework) on the Uno32 for the CMPE-118/L class. Note that 

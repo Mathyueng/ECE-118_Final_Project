@@ -8,12 +8,15 @@
 #include "TopHSM.h"
 
 #include "xc.h"
-#include "AD.h"
-#include "Tank_DriveTrain.h"
+#include <stdio.h>
 #include "Parallel.h"
 #include "pwm.h"
 #include "ES_Configure.h"
 #include "ES_Events.h"
+#include "ES_Timers.h"
+#include "serial.h"
+#include "IO_Ports.h"
+#include "AD.h"
 
 #define PARALLEL_PIN_R1 AD_PORTV3
 #define PARALLEL_PIN_R2 AD_PORTV4
@@ -28,6 +31,15 @@
 //#define ParallelMain
 //#define DEBUG
 
+#ifdef ParallelMain
+#include <stdio.h>
+#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
+
+static const char *eventName;
+static ES_Event storedEvent;
+#include <stdio.h>
+static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
+#endif
 static uint32_t prevRsignal = 0;
 static uint32_t prevLsignal = 0;
 static uint8_t leftWallP = 0;
@@ -41,7 +53,7 @@ uint32_t ReadLeft() {
     return abs(AD_ReadADPin(PARALLEL_PIN_L1) - AD_ReadADPin(PARALLEL_PIN_L2));
 }
 
-void Parallel_Init() {
+void Parallel_Init(void) {
     AD_AddPins(PARALLEL_PIN_R1 | PARALLEL_PIN_L1 | PARALLEL_PIN_R2 | PARALLEL_PIN_L2);
     prevRsignal = ReadRight();
     prevLsignal = ReadLeft();
@@ -49,28 +61,29 @@ void Parallel_Init() {
     rightWallP = 0;
 }
 
-void circularInc(uint8_t* index) {
-    *index = ++(*index) % MOV_AVG_LENGTH;
-}
-
 uint8_t Parallel_CheckEvents(void) {
-    
+
     uint8_t returnVal = FALSE;
-    
+
     uint32_t curRsignal = ReadRight();
     uint32_t curLsignal = ReadLeft();
-    
 #ifdef DEBUG
-    printf("\r\n");
-    //    if (abs(curRsignal - avgSignalR) <= PARALLEL_THRESHOLD) printf("\r\ncurrent Right: %d", curRsignal);
-    printf("\r\ncurrent right: %d", curRsignal);
-    printf("\r\nright 1: %d", AD_ReadADPin(PARALLEL_PIN_R1));
-    printf("\r\nright 2: %d", AD_ReadADPin(PARALLEL_PIN_R2));
+    printf("curLsignal: %d\r\n", curLsignal);
 #endif
-    
+
+#ifdef DEBUG
+    //    printf("\r\n");
+    //    if (abs(curRsignal - avgSignalR) <= PARALLEL_THRESHOLD) printf("\r\ncurrent Right: %d", curRsignal);
+    //    printf("\r\ncurrent right: %d", curRsignal);
+    //    printf("\r\nright 1: %d", AD_ReadADPin(PARALLEL_PIN_R1));
+    //    printf("\r\nright 2: %d", AD_ReadADPin(PARALLEL_PIN_R2));
+    //    printf("\r\nleft 1: %d", AD_ReadADPin(PARALLEL_PIN_L1));
+    //    printf("\r\nleft 2: %d", AD_ReadADPin(PARALLEL_PIN_L2));    
+#endif
+
     if (!rightWallP && (curRsignal < PARALLEL_LOW_THRESHOLD)) {
 #ifdef DEBUG
-//        printf("PARALLEL TO THE RIGHT WALL");
+        //        printf("PARALLEL TO THE RIGHT WALL");
 #endif
         ES_Event thisEvent;
         thisEvent.EventType = WALL_PARALLEL_R;
@@ -79,7 +92,7 @@ uint8_t Parallel_CheckEvents(void) {
         PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
-#endif
+#endif 
         rightWallP = 1;
         returnVal = TRUE;
     } else if (rightWallP && (curRsignal > PARALLEL_HIGH_THRESHOLD)) {
@@ -93,12 +106,13 @@ uint8_t Parallel_CheckEvents(void) {
         PostTopHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
+#endif 
         rightWallP = 0;
         returnVal = TRUE;
-#endif
+
     } else if (!leftWallP && (curLsignal < PARALLEL_LOW_THRESHOLD)) {
 #ifdef DEBUG
-        printf("PARALLEL TO THE LEFT WALL");
+        printf("\r\nPARALLEL TO THE LEFT WALL\r\n");
 #endif
         ES_Event thisEvent;
         thisEvent.EventType = WALL_PARALLEL_L;
@@ -110,9 +124,12 @@ uint8_t Parallel_CheckEvents(void) {
 #endif   
         leftWallP = 1;
         returnVal = TRUE;
+#ifdef DEBUG
+        printf("\r\nleftWallP = %d\r\n", leftWallP);
+#endif        
     } else if (leftWallP && (curLsignal > PARALLEL_HIGH_THRESHOLD)) {
 #ifdef DEBUG
-        printf("NO LONGER PARALLEL PARALLEL TO THE LEFT WALL");
+        printf("NO LONGER PARALLEL TO THE LEFT WALL");
 #endif
         ES_Event thisEvent;
         thisEvent.EventType = WALL_OFF_L;
@@ -124,22 +141,18 @@ uint8_t Parallel_CheckEvents(void) {
 #endif   
         leftWallP = 0;
         returnVal = TRUE;
+#ifdef DEBUG
+        printf("\r\nleftWallP = %d\r\n", leftWallP);
+#endif            
     }
-    
+
     prevRsignal = curRsignal;
     prevLsignal = curLsignal;
-    
+
     return returnVal;
 }
 
 #ifdef ParallelMain
-#include <stdio.h>
-#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
-
-static const char *eventName;
-static ES_Event storedEvent;
-#include <stdio.h>
-static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
 
 void PrintEvent(void);
 
@@ -147,8 +160,9 @@ void main(void) {
     BOARD_Init();
     /* user initialization code goes here */
     ES_Timer_Init();
+    ES_Initialize();
     printf("\r\nTimer initialized");
-    Tape_Init();
+    Parallel_Init();
     // Do not alter anything below this line
     int i;
 

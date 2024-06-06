@@ -18,7 +18,7 @@
 #include "ES_Events.h"
 
 //#define PING_MAIN
-//#define PING_BASIC_TEST
+#define PING_BASIC_TEST
 //#define DEBUG
 //#define EVENTCHECKER_TEST
 
@@ -188,7 +188,7 @@ int main(void) {
         printf("\r\nnew cycle");
         SetTrigger(1);
         DELAY(1);
-        SetTrigger(0);
+        SetTrigger(0); 
         while (!ReadEcho()) printf("\r\nnot yet");
         int counter = 0;
         printf("\r\necho high");

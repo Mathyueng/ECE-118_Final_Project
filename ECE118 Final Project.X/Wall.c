@@ -12,6 +12,7 @@
 #include "Wall.h"
 #include "ES_Configure.h"
 #include "ES_Events.h"
+#include "ES_Timers.h"
 #include "serial.h"
 #include "IO_Ports.h"
 #include "AD.h"
@@ -27,7 +28,15 @@
 /*******************************************************************************
  * PRIVATE MODULE VARIABLES                                                    *
  ******************************************************************************/
+#ifdef WallMain
+#include <stdio.h>
+#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
 
+static const char *eventName;
+static ES_Event storedEvent;
+#include <stdio.h>
+static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
+#endif
 /* Any private module level variable that you might need for keeping track of
    events would be placed here. Private variables should be STATIC so that they
    are limited in scope to this module. */
@@ -54,15 +63,15 @@ uint8_t Wall_Init(void) {
 uint8_t Wall_CheckEvents(void) {
 
     uint8_t curW1 = (prevW1 << 1) | !!(IO_PortsReadPort(WALL_PORT) & WALL_PIN_1);
-    
+
     uint8_t returnVal = FALSE;
 
-    uint8_t wallOff = 
+    uint8_t wallOff =
             (curW1 && !prevW1);
-    
+
     uint8_t wallOn =
             (!curW1 && prevW1);
-    
+
     if (wallOn) {
         ES_Event thisEvent;
         thisEvent.EventType = WALL_ON;
@@ -74,7 +83,7 @@ uint8_t Wall_CheckEvents(void) {
 #endif   
         returnVal = TRUE;
     }
-    
+
     // WALL_OFF detection
     if (wallOff) {
         ES_Event thisEvent;
@@ -87,7 +96,7 @@ uint8_t Wall_CheckEvents(void) {
 #endif 
         returnVal = TRUE;
     }
-    
+
     // update history
     prevW1 = curW1;
 
@@ -95,13 +104,7 @@ uint8_t Wall_CheckEvents(void) {
 }
 
 #ifdef WallMain
-#include <stdio.h>
-#define SaveEvent(x) do {eventName=__func__; storedEvent=x;} while (0)
 
-static const char *eventName;
-static ES_Event storedEvent;
-#include <stdio.h>
-static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
 
 void PrintEvent(void);
 
@@ -110,7 +113,7 @@ void main(void) {
     /* user initialization code goes here */
     ES_Timer_Init();
     printf("\r\nTimer initialized");
-    Tape_Init();
+    Wall_Init();
     // Do not alter anything below this line
     int i;
 

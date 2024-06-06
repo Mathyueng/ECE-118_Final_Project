@@ -78,11 +78,17 @@ uint8_t InitAllEventCheckers(void) {
 }
 
 uint8_t CheckAllEvents(void) {
-    Parallel_CheckEvents();
     Ping_StateMachine();
+}
+
+uint8_t EventCheckingService50ms(void) {
     Tape_CheckEvents();    
+    Wall_CheckEvents();    
+}
+
+uint8_t EventCheckingService250ms(void) {
+    Parallel_CheckEvents();
     Track_CheckEvents();
-    Wall_CheckEvents();
 }
 
 /* 

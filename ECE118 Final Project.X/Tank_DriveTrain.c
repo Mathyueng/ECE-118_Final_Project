@@ -15,14 +15,14 @@
 #include "math.h"
 
 //#define DEBUG
-#define DRIVETRAIN_MAIN
+//#define DRIVETRAIN_MAIN
 
 #ifdef DEBUG
 #include <stdio.h>
 #endif
 
 #define DRIVE_MULTIPLIER_R 1
-#define DRIVE_MULTIPLIER_L 1
+#define DRIVE_MULTIPLIER_L 2/3
 #define SPEED_TO_PWM 10
 
 #define RIGHT_DRIVE_PIN PWM_PORTY10
@@ -67,7 +67,7 @@ char DT_Init(void) {
     PWM_AddPins(RIGHT_DRIVE_PIN | LEFT_DRIVE_PIN);
     PWM_SetFrequency(MIN_PWM_FREQ);
     IO_PortsClearPortBits(H_BRIDGE_PORT, 0xFFFF);
-//    IO_PortsSetPortOutputs(H_BRIDGE_PORT, R_H_BRIDGE_IN1 | R_H_BRIDGE_IN2 | L_H_BRIDGE_IN1 | L_H_BRIDGE_IN2);
+    //    IO_PortsSetPortOutputs(H_BRIDGE_PORT, R_H_BRIDGE_IN1 | R_H_BRIDGE_IN2 | L_H_BRIDGE_IN1 | L_H_BRIDGE_IN2);
     IO_PortsSetPortOutputs(H_BRIDGE_PORT, 0x01E0);
     IO_PortsWritePort(H_BRIDGE_PORT, 0);
     RC_AddPins(SERVO_ARM_PIN);
@@ -90,11 +90,11 @@ char DT_SetRightDrive(int16_t speed) {
     right_speed = speed;
     if (speed < 0) {
         IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | R_H_BRIDGE_IN2) & ~(R_H_BRIDGE_IN1)));
-//        IO_PortsWritePort(H_BRIDGE_PORT, PIN5 | PIN6);       // inserted for debugging purposes 
+        //        IO_PortsWritePort(H_BRIDGE_PORT, PIN5 | PIN6);       // inserted for debugging purposes 
         speed *= -1;
     } else {
         IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | R_H_BRIDGE_IN1) & ~(R_H_BRIDGE_IN2)));
-//        IO_PortsWritePort(H_BRIDGE_PORT, PIN5 | PIN6);       // inserted for debugging purposes
+        //        IO_PortsWritePort(H_BRIDGE_PORT, PIN5 | PIN6);       // inserted for debugging purposes
     }
     if (speed * SPEED_TO_PWM > MAX_PWM) return ERROR;
 #ifdef DEBUG
@@ -117,11 +117,11 @@ char DT_SetLeftDrive(int16_t speed) {
     left_speed = speed;
     if (speed < 0) {
         IO_PortsWritePort(H_BRIDGE_PORT, (IO_PortsReadPort(H_BRIDGE_PORT) | L_H_BRIDGE_IN2) & ~(L_H_BRIDGE_IN1));
-//        IO_PortsWritePort(H_BRIDGE_PORT, PIN7 | PIN8);       // inserted for debugging purposes 
+        //        IO_PortsWritePort(H_BRIDGE_PORT, PIN7 | PIN8);       // inserted for debugging purposes 
         speed *= -1;
     } else {
         IO_PortsWritePort(H_BRIDGE_PORT, (IO_PortsReadPort(H_BRIDGE_PORT) | L_H_BRIDGE_IN1) & ~(L_H_BRIDGE_IN2));
-//        IO_PortsWritePort(H_BRIDGE_PORT, PIN7 | PIN8);       // inserted for debugging purposes
+        //        IO_PortsWritePort(H_BRIDGE_PORT, PIN7 | PIN8);       // inserted for debugging purposes
     }
     if (speed * SPEED_TO_PWM > MAX_PWM) return ERROR;
 #ifdef DEBUG
@@ -172,7 +172,7 @@ char DT_Stop(void) {
  * @author Aarush Banerjee 5.19.2024 */
 char DT_DriveFwd(int16_t speed) {
     return (DT_SetRightDrive(speed) && DT_SetLeftDrive(speed));
-} 
+}
 
 /**
  * @Function DT_DriveRight(int16_t speed)
@@ -182,8 +182,8 @@ char DT_DriveFwd(int16_t speed) {
  * @brief drives forward and rightward with specified speed and turning radius; negative values drive backward and rightward
  * @author Aarush Banerjee 5.19.2024 */
 char DT_DriveRight(int16_t speed, uint16_t radius) {
-    int v1 = (int) (speed * sqrt(((double) radius)/((double) (radius + (WHEEL_DIST >> 1)))));
-    int v2 = (int) (speed * sqrt(((double) (radius + WHEEL_DIST))/((double) radius + (WHEEL_DIST >> 1))));
+    int v1 = (int) (speed * sqrt(((double) radius) / ((double) (radius + (WHEEL_DIST >> 1)))));
+    int v2 = (int) (speed * sqrt(((double) (radius + WHEEL_DIST)) / ((double) radius + (WHEEL_DIST >> 1))));
     return (DT_SetLeftDrive(v2) && DT_SetRightDrive(v1));
 }
 
@@ -195,8 +195,8 @@ char DT_DriveRight(int16_t speed, uint16_t radius) {
  * @brief drives forward and leftward with specified speed and turning radius; negative values drive backward and leftward
  * @author Aarush Banerjee 5.19.2024 */
 char DT_DriveLeft(int16_t speed, uint16_t radius) {
-    int v1 = (int) (speed * sqrt(((double) radius)/((double) (radius + (WHEEL_DIST >> 1)))));
-    int v2 = (int) (speed * sqrt(((double) (radius + WHEEL_DIST))/((double) radius + (WHEEL_DIST >> 1))));
+    int v1 = (int) (speed * sqrt(((double) radius) / ((double) (radius + (WHEEL_DIST >> 1)))));
+    int v2 = (int) (speed * sqrt(((double) (radius + WHEEL_DIST)) / ((double) radius + (WHEEL_DIST >> 1))));
     return (DT_SetRightDrive(v2) && DT_SetLeftDrive(v1));
 }
 
@@ -211,16 +211,17 @@ char DT_SpinCC(int16_t speed) {
 }
 
 char DT_ExtendArm(void) {
-    RC_SetPulseTime(SERVO_ARM_PIN,2000);
+    RC_SetPulseTime(SERVO_ARM_PIN, 2000);
 }
 
 char DT_RetractArm(void) {
-    RC_SetPulseTime(SERVO_ARM_PIN,1000);
+    RC_SetPulseTime(SERVO_ARM_PIN, 1000);
 }
 
 #ifdef DRIVETRAIN_MAIN
 #define DELAY(x) for (int i=0;i<(400000*x);i++) asm("nop");
 #include <stdio.h>
+
 void main(void) {
     printf("\r\nDrivetrain.c test harness successfully compiled");
     BOARD_Init();
@@ -228,9 +229,9 @@ void main(void) {
     RC_Init();
     DT_Init();
     printf("\r\nDrivetrain successfully initalized");
-    
+
     while (1) {
-        int speed = 100;
+        int speed = 50;
         int turningRad = 50;
         int delay = 1;
         DT_DriveFwd(speed);
@@ -239,16 +240,16 @@ void main(void) {
         DT_DriveFwd(-speed);
         DT_RetractArm();
         DELAY(delay);
-        DT_DriveRight(speed,turningRad);
+        DT_DriveRight(speed, turningRad);
         DT_ExtendArm();
         DELAY(delay);
-        DT_DriveRight(-speed,turningRad);
+        DT_DriveRight(-speed, turningRad);
         DT_RetractArm();
         DELAY(delay);
-        DT_DriveLeft(speed,turningRad);
+        DT_DriveLeft(speed, turningRad);
         DT_ExtendArm();
         DELAY(delay);
-        DT_DriveLeft(-speed,turningRad);
+        DT_DriveLeft(-speed, turningRad);
         DT_RetractArm();
         DELAY(delay);
         DT_SpinCC(speed);

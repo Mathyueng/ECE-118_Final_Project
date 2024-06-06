@@ -20,9 +20,9 @@
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
-//#define TapeMain
+#define TapeMain
 //#define DEBUG
-#define INACTIVE
+//#define INACTIVE
 
 #ifdef TapeMain
 #include <stdio.h>
@@ -82,63 +82,70 @@ uint8_t Tape_CheckEvents(void) {
 
     uint8_t returnVal = FALSE;
 
-    uint8_t tapeOff =
-            ((curT1 && !prevT1) << 3) |
-            ((curT2 && !prevT2) << 2) |
-            ((curT3 && !prevT3) << 1) |
-            ((curT4 && !prevT4) << 0);
-
-    uint8_t tapeOn =
-            ((!curT1 && prevT1) << 3) |
-            ((!curT2 && prevT2) << 2) |
-            ((!curT3 && prevT3) << 1) |
-            ((!curT4 && prevT4) << 0);
-
-    uint8_t tapeActive =
-            (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_1)) << 3) |
-            (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_2)) << 2) |
-            (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_3)) << 1) |
-            (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_4)) << 0);
-
-    if (tapeOn) {
 #ifdef DEBUG
-        printf("\r\nTapeOn\r\n");
+    if (curT1 != prevT1) printf("\r\ncurT1: %x", curT1);
+    if (curT2 != prevT2) printf("\r\ncurT2: %x", curT2);
+    if (curT3 != prevT3) printf("\r\ncurT3: %x", curT3);
+    if (curT4 != prevT4) printf("\r\ncurT4: %x", curT4);
 #endif
-        ES_Event thisEvent;
-        thisEvent.EventType = TAPE_ON;
+    
+    if ((curT1 != prevT1) || 
+            (curT2 != prevT2) || 
+            (curT3 != prevT3) || 
+            (curT4 != prevT4)) {
+        
+        uint8_t tapeOff =
+                ((curT1 && !prevT1) << 3) |
+                ((curT2 && !prevT2) << 2) |
+                ((curT3 && !prevT3) << 1) |
+                ((curT4 && !prevT4) << 0);
+
+        uint8_t tapeOn =
+                ((!curT1 && prevT1) << 3) |
+                ((!curT2 && prevT2) << 2) |
+                ((!curT3 && prevT3) << 1) |
+                ((!curT4 && prevT4) << 0);
+
+        uint8_t tapeActive =
+                (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_1)) << 3) |
+                (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_2)) << 2) |
+                (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_3)) << 1) |
+                (!(IO_PortsReadPort(TAPE_PORT) & (TAPE_PIN_4)) << 0);
+
+        if (tapeOn) {
+            ES_Event thisEvent;
+            thisEvent.EventType = TAPE_ON;
 #ifdef INACTIVE
-        thisEvent.EventParam = tapeOn
+            thisEvent.EventParam = tapeOn;
 #else
-        thisEvent.EventParam = tapeActive;
+            thisEvent.EventParam = tapeActive;
 #endif
 
 #ifndef TapeMain           // keep this as is for test harness
-        PostTopHSM(thisEvent);
+            PostTopHSM(thisEvent);
 #else
-        SaveEvent(thisEvent);
+            SaveEvent(thisEvent);
 #endif   
-        returnVal = TRUE;
-    }
+            returnVal = TRUE;
+        }
 
     // TAPE_OFF detection
-    if (tapeOff) {
-#ifdef DEBUG
-        printf("\r\nTapeOff\r\n");
-#endif
-        ES_Event thisEvent;
-        thisEvent.EventType = TAPE_OFF;
+        if (tapeOff) {
+            ES_Event thisEvent;
+            thisEvent.EventType = TAPE_OFF;
 #ifdef INACTIVE
-        thisEvent.EventParam = tapeOff; //  & 0x0F
+            thisEvent.EventParam = tapeOff; //  & 0x0F
 #else
-        thisEvent.EventParam = tapeActive;        
+            thisEvent.EventParam = tapeActive;        
 #endif
        
 #ifndef TapeMain           // keep this as is for test harness
-        PostTopHSM(thisEvent);
+            PostTopHSM(thisEvent);
 #else
-        SaveEvent(thisEvent);
+            SaveEvent(thisEvent);
 #endif 
-        returnVal = TRUE;
+            returnVal = TRUE;
+        }
     }
 
     // update history
@@ -169,10 +176,6 @@ void main(void) {
         if (Tape_CheckEvents()) {
             PrintEvent();
         }
-#ifdef DEBUG
-        printf("\r\nCheck");
-        PrintEvent();
-#endif
         if (IsTransmitEmpty()) {
             for (i = 0; i< sizeof (EventList) >> 2; i++) {
                 if (EventList[i]() == TRUE) {

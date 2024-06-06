@@ -62,7 +62,9 @@ uint8_t InitAllEventCheckers(void);
 
 uint8_t CheckAllEvents(void);
 
+uint8_t EventCheckingService1ms(void);
 
+uint8_t EventCheckingService5ms(void);
 
 #endif	/* TEMPLATEEVENTCHECKER_H */
 
