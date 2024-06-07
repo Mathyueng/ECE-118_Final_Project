@@ -122,11 +122,11 @@ static const char *EventNames[] = {
 #define TIMER1_RESP_FUNC PostTopHSM
 #define TIMER2_RESP_FUNC PostTopHSM
 #define TIMER3_RESP_FUNC PostTopHSM
-#define TIMER4_RESP_FUNC PostTopHSM
-#define TIMER5_RESP_FUNC PostTopHSM
-#define TIMER6_RESP_FUNC PostTopHSM
-#define TIMER7_RESP_FUNC PostTapeService
-#define TIMER8_RESP_FUNC PostWallService    //PostTrackService
+#define TIMER4_RESP_FUNC PostTapeService
+#define TIMER5_RESP_FUNC PostWallService
+#define TIMER6_RESP_FUNC TIMER_UNUSED
+#define TIMER7_RESP_FUNC TIMER_UNUSED
+#define TIMER8_RESP_FUNC TIMER_UNUSED
 #define TIMER9_RESP_FUNC TIMER_UNUSED 
 #define TIMER10_RESP_FUNC TIMER_UNUSED
 #define TIMER11_RESP_FUNC TIMER_UNUSED
@@ -137,22 +137,17 @@ static const char *EventNames[] = {
 
 
 /****************************************************************************/
-// Give the timer numbers symbolc names to make it easier to move them
-// to different timers if the need arises. Keep these definitons close to the
-// definitions for the response functions to make it easire to check that
+// Give the timer numbers symbolic names to make it easier to move them
+// to different timers if the need arises. Keep these definitions close to the
+// definitions for the response functions to make it easier to check that
 // the timer number matches where the timer event will be routed
 
-#define ROAM_LOOP_TIMER     0   /* Defined for Tape Sensors         */
-#define BLUE_LOOP_TIMER     1   /* Defined for Blue Loop Use        */
-#define BLACK_LOOP_TIMER    2   /* Defined for Black Loop Use       */
-#define DUMP_FINISH_TIMER   3   /* Defined for Dump Finish Use      */
-#define BUFFER_TIMER        4   /* Defined for Buffering turn sens  */
-#define DUMP_TIMER          5   /* Defined for Dumping Use          */
-#define AVOID_TIMER         6   /* Defined for Avoidance            */
-
-#define TAPE_SERVICE_TIMER  7   /* Defined for Tape Service         */
-#define WALL_SERVICE_TIMER  8   /* Defined for Wall Service         */
-#define TRACK_SERVICE_TIMER 9   /* Defined for Track Service        */
+#define ROAM_TIMER          0   /* Defined for Roam Use     */
+#define LOOP_TIMER          1   /* Defined for Loop Use     */
+#define DUMP_TIMER          2   /* Defined for Dump Use     */
+#define AVOID_TIMER         3   /* Defined for Avoidance    */
+#define TAPE_SERVICE_TIMER  4   /* Defined for Tape Service */
+#define WALL_SERVICE_TIMER  5   /* Defined for Wall Service */
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 

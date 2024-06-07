@@ -17,8 +17,8 @@
  * Updated on 16/Sep/2013
  */
 
-#ifndef SUB_ROAM_HSM_H  // <- This should be changed to your own guard on both
-#define SUB_ROAM_HSM_H  //    of these lines
+#ifndef ROAM_SUB_HSM_H  // <- This should be changed to your own guard on both
+#define ROAM_SUB_HSM_H  //    of these lines
 
 
 /*******************************************************************************

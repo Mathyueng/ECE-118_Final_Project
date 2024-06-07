@@ -2,6 +2,7 @@
  * File: TopHSM.c
  * Author: J. Edward Carryer
  * Modified: Gabriel Elkaim and Soja-Marie Morgens
+ * Modified: Matthew Eng and Duc Lam
  *
  * Template file to set up a Heirarchical State Machine to work with the Events and
  * Services Framework (ES_Framework) on the Uno32 for the CMPE-118/L class. Note that
@@ -33,8 +34,7 @@
 #include "BOARD.h"
 #include "TopHSM.h"
 
-#include "BlackLoopSubHSM.h" //#include all sub state machines called
-#include "BlueLoopSubHSM.h"
+#include "LoopSubHSM.h" //#include all sub state machines called
 #include "RoamSubHSM.h"
 #include "DumpSubHSM.h"
 /*******************************************************************************
@@ -50,8 +50,7 @@
 typedef enum {
     InitPState,
     Roaming,
-    Black_Looping,
-    Blue_Looping,
+    Looping,
     Dumping,
 
 } TopHSMState_t;
@@ -59,8 +58,7 @@ typedef enum {
 static const char *StateNames[] = {
     "InitPState",
     "Roaming",
-    "Black_Looping",
-    "Blue_Looping",
+    "Looping",
     "Dumping",
 };
 
@@ -149,13 +147,12 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 // transition from the initial pseudo-state into the actual
                 // initial state
                 // Initialize all sub-state machines
-//                InitBlackLoopSubHSM();
-//                InitBlueLoopSubHSM();
-//                InitRoamSubHSM();
-//                InitDumpSubHSM();
+                InitLoopSubHSM();
+                InitRoamSubHSM();
+                InitDumpSubHSM();
                 // now put the machine into the actual initial state
                 nextState = Roaming;
-                makeTransition = FALSE;
+                makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
                 break;
             }
@@ -170,7 +167,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     break;
                 case TRACK_WIRE_EQUAL:
-                    nextState = Black_Looping;
+                    nextState = Looping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
@@ -182,35 +179,11 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Black_Looping: // in the first state, replace this with correct names
+        case Looping: // in the first state, replace this with correct names
             // run sub-state machine for this state
             //NOTE: the SubState Machine runs and responds to events before anything in the this
             //state machine does
-            ThisEvent = RunBlackLoopSubHSM(ThisEvent);
-            switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    break;
-                case TAPE_EVENT:
-                    //logic for front right and front left tape sensor
-                    if (ThisEvent.EventParam == 0b1100) { // FR FL (1100, C)
-                        nextState = Blue_Looping;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
-                    break;
-                case ES_EXIT:
-                    InitBlackLoopSubHSM();
-                    break;
-                default:
-                    break;
-            }
-            break;
-
-        case Blue_Looping: // in the first state, replace this with correct names
-            // run sub-state machine for this state
-            //NOTE: the SubState Machine runs and responds to events before anything in the this
-            //state machine does
-            ThisEvent = RunBlueLoopSubHSM(ThisEvent);
+            ThisEvent = RunLoopSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
@@ -218,11 +191,9 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     nextState = Dumping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
-                    ES_Timer_InitTimer(DUMP_FINISH_TIMER, TIMER_7_SEC);
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
                     break;
                 case ES_EXIT:
-                    InitBlueLoopSubHSM();
+                    InitLoopSubHSM();
                     break;
                 default:
                     break;
@@ -237,12 +208,10 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case ES_TIMEOUT:
-                    if (ThisEvent.EventParam = DUMP_FINISH_TIMER) {
-                        nextState = Black_Looping;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
+                case WALL_PARALLEL_R:
+                    nextState = Looping;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case ES_EXIT:
                     InitDumpSubHSM();

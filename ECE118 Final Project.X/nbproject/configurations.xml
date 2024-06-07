@@ -34,13 +34,12 @@
       <itemPath>serial.h</itemPath>
       <itemPath>timers.h</itemPath>
       <itemPath>TopHSM.h</itemPath>
-      <itemPath>BlackLoopSubHSM.h</itemPath>
-      <itemPath>BlueLoopSubHSM.h</itemPath>
       <itemPath>RoamSubHSM.h</itemPath>
       <itemPath>DumpSubHSM.h</itemPath>
       <itemPath>Parallel.h</itemPath>
       <itemPath>Track.h</itemPath>
       <itemPath>E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.h</itemPath>
+      <itemPath>LoopSubHSM.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -76,13 +75,12 @@
       <itemPath>serial.c</itemPath>
       <itemPath>timers.c</itemPath>
       <itemPath>TopHSM.c</itemPath>
-      <itemPath>BlackLoopSubHSM.c</itemPath>
-      <itemPath>BlueLoopSubHSM.c</itemPath>
       <itemPath>RoamSubHSM.c</itemPath>
       <itemPath>DumpSubHSM.c</itemPath>
       <itemPath>Parallel.c</itemPath>
       <itemPath>Track.c</itemPath>
       <itemPath>E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.c</itemPath>
+      <itemPath>LoopSubHSM.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

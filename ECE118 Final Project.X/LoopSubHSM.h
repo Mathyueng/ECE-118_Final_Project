@@ -1,9 +1,9 @@
 /*
- * File: DumpSubHSM.h
+ * File: LoopSubHSM.h
  * Author: J. Edward Carryer
  * Modified: Gabriel H Elkaim and Soja-Marie Morgens
  * Modified: Matthew Eng and Duc Lam
- *
+ * 
  * Template file to set up a Heirarchical SubState Machine to work with the Events and
  * Services Framework (ES_Framework) on the Uno32 for the CMPE-118/L class. Note that 
  * this file will need to be modified to fit your exact needs, and most of the names
@@ -16,11 +16,10 @@
  *
  * Created on 23/Oct/2011
  * Updated on 16/Sep/2013
- * Modified on 06/Jun/2024
  */
 
-#ifndef DUMP_SUB_HSM_H  // <- This should be changed to your own guard on both
-#define DUMP_SUB_HSM_H  //    of these lines
+#ifndef LOOP_SUB_HSM_H  // <- This should be changed to your own guard on both
+#define LOOP_SUB_HSM_H  //    of these lines
 
 
 /*******************************************************************************
@@ -44,19 +43,19 @@
  ******************************************************************************/
 
 /**
- * @Function InitDumpSubHSM(void)
+ * @Function InitLoopSubHSM(void)
  * @param Priority - internal variable to track which event queue to use
  * @return TRUE or FALSE
  * @brief This will get called by the framework at the beginning of the code
  *        execution. It will post an ES_INIT event to the appropriate event
- *        queue, which will be handled inside RunDumpFSM function. Remember
+ *        queue, which will be handled inside RunLoopFSM function. Remember
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitDumpSubHSM(void);
+uint8_t InitLoopSubHSM(void);
 
 /**
- * @Function RunDumpSubHSM(ES_Event ThisEvent)
+ * @Function RunLoopSubHSM(ES_Event ThisEvent)
  * @param ThisEvent - the event (type and param) to be responded.
  * @return Event - return event (type and param), in general should be ES_NO_EVENT
  * @brief This function is where you implement the whole of the heirarchical state
@@ -70,6 +69,6 @@ uint8_t InitDumpSubHSM(void);
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunDumpSubHSM(ES_Event ThisEvent);
+ES_Event RunLoopSubHSM(ES_Event ThisEvent);
 
-#endif /* SUB_HSM_Dump_H */
+#endif /* SUB_HSM_Template_H */

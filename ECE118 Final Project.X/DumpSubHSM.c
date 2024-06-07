@@ -41,7 +41,11 @@ typedef enum {
     Reverse,
     Lower_Arm,
     Forward,
-    Reverse_Rollers
+    Dump,
+    Reverse_2,
+    Raise,
+    Turn_Left
+
 } DumpSubHSMState_t;
 
 static const char *StateNames[] = {
@@ -137,6 +141,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     DT_DriveFwd(REV_LOW_SPEED);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
@@ -158,12 +163,70 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             // code to lower RC Servo Arm needed
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
                     DT_ExtendArm();
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
                         nextState = Forward;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_EXIT:
+                    break;
+                default: // all unhandled events pass the event back up to the next level
+                    break;
+            }
+            break;
+
+        case Forward:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    DT_DriveFwd(FWD_LOW_SPEED);
+                    break;
+                case TRACK_WIRE_EQUAL:
+                    nextState = Dump;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_EXIT:
+                    DT_Stop();
+                    break;
+                default:
+                    break;
+            }
+
+        case Dump:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    DT_SpinCC(FWD_MID_SPEED);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_3_SEC);                  
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == DUMP_TIMER) {
+                        nextState = Reverse_2;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_EXIT:
+                    DT_SpinCC(REV_MID_SPEED);
+                    break;
+                default:
+                    break;
+            }
+
+        case Reverse_2: // in the first state, replace this with correct names
+            // code to move backwards needed
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    DT_DriveFwd(REV_LOW_SPEED);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == DUMP_TIMER) {
+                        nextState = Raise;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
@@ -177,34 +240,33 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Forward:
-            // code to move forward needed
+        case Raise:
+            // code to lower RC Servo Arm needed
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_DriveFwd(FWD_LOW_SPEED);                    
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
+                    DT_RetractArm();
                     break;
-                case TRACK_WIRE_EQUAL:
-                    nextState = Reverse_Rollers;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == DUMP_TIMER) {
+                        nextState = Turn_Left;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
                 case ES_EXIT:
-                    DT_Stop();
                     break;
-                case ES_NO_EVENT:
-                    break;
-                default:
+                default: // all unhandled events pass the event back up to the next level
                     break;
             }
+            break;
 
-        case Reverse_Rollers:
+        case Turn_Left:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    // code to reverse roller
+                    DT_SetRightDrive(FWD_LOW_SPEED);
                     break;
                 case ES_EXIT:
-                    break;
-                case ES_NO_EVENT:
                     break;
                 default:
                     break;
@@ -230,4 +292,3 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
 /*******************************************************************************
  * PRIVATE FUNCTIONS                                                           *
  ******************************************************************************/
-
