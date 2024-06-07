@@ -53,7 +53,10 @@ static const char *StateNames[] = {
     "Reverse",
     "Lower_Arm",
     "Forward",
-    "Reverse_Rollers"
+    "Dump",
+    "Reverse_2",
+    "Raise",
+    "Turn_Left"
 };
 
 
@@ -141,7 +144,6 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     DT_DriveFwd(REV_LOW_SPEED);
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
@@ -282,7 +284,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         RunDumpSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 
-    LED_SetBank(LED_BANK2, CurrentState);
+//    LED_SetBank(LED_BANK2, CurrentState);
 
     ES_Tail(); // trace call stack end
     return ThisEvent;

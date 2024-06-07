@@ -166,7 +166,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case TRACK_WIRE_EQUAL:
+                case WALL_ON:
                     nextState = Looping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -207,6 +207,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             ThisEvent = RunDumpSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
                     break;
                 case WALL_PARALLEL_R:
                     nextState = Looping;
@@ -230,8 +231,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
         CurrentState = nextState;
         RunTopHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
-    //    LED_SetBank(LED_BANK1, CurrentState);
-
+    LED_SetBank(LED_BANK1, CurrentState);
     ES_Tail(); // trace call stack end
     return ThisEvent;
 }

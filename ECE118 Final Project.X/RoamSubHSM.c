@@ -44,11 +44,8 @@ typedef enum {
 
 static const char *StateNames[] = {
     "InitPSubState",
-    "FindTape",
-    "Rotate_Tape",
     "Forward",
-    "Rotate_Parallel_Wall",
-    "Avoid"
+    "Bounce"
 };
 
 
@@ -185,8 +182,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
         RunRoamSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 
-    //    LED_SetBank(LED_BANK2, CurrentState);
-    LED_SetBank(LED_BANK1, CurrentState);
+    LED_SetBank(LED_BANK2, CurrentState);
     ES_Tail(); // trace call stack end
     return ThisEvent;
 }
