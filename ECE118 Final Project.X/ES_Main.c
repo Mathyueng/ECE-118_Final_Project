@@ -10,6 +10,7 @@
 #include "RC_Servo.h"
 #include "serial.h"
 #include "timers.h"
+#include "EventChecker.h"
 void main(void)
 {
     ES_Return_t ErrorType;
@@ -26,6 +27,7 @@ void main(void)
     RC_Init();
 //    SERIAL_Init();
     TIMERS_Init();
+    InitAllEventCheckers();
     DT_Init();
     
     LED_AddBanks (LED_BANK1);

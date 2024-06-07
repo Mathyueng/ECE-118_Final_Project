@@ -58,30 +58,29 @@ void Track_Init() {
 }
 
 uint8_t Track_CheckEvents(void) {
-    
+
     uint8_t returnVal = FALSE;
-    
+
     uint32_t curRsignal = ReadRightTrack();
     uint32_t curLsignal = ReadLeftTrack();
-    
+
+
+    ES_Event thisEvent;
+    thisEvent.EventType = ES_NO_EVENT;
+    thisEvent.EventParam = 0;
+
 #ifdef DEBUG
-//    printf("\r\n");
-//    printf("\r\nRight: %d", AD_ReadADPin(TRACK_PIN_R1));
-//    printf("\r\nLeft: %d", AD_ReadADPin(TRACK_PIN_L1));
+    //    printf("\r\n");
+    //    printf("\r\nRight: %d", AD_ReadADPin(TRACK_PIN_R1));
+    //    printf("\r\nLeft: %d", AD_ReadADPin(TRACK_PIN_L1));
 #endif
-    
+
     if (((curLsignal > TRACK_HIGH_THRESHOLD)) && (curRsignal > TRACK_HIGH_THRESHOLD) && ((!leftTrack) || (!rightTrack))) {
 #ifdef DEBUG
         printf("Track Parallel\r\n");
 #endif
-        ES_Event thisEvent;
         thisEvent.EventType = TRACK_WIRE_EQUAL;
         thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_L1));
-#ifndef TrackMain           // keep this as is for test harness
-//        PostTopHSM(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif   
         leftTrack = 1;
         rightTrack = 1;
         returnVal = TRUE;
@@ -89,14 +88,8 @@ uint8_t Track_CheckEvents(void) {
 #ifdef DEBUG
         printf("Track Not Parallel\r\n");
 #endif
-        ES_Event thisEvent;
         thisEvent.EventType = TRACK_WIRE_EQUAL;
         thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_L1));
-#ifndef TrackMain           // keep this as is for test harness
-//        PostTopHSM(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif   
         leftTrack = 0;
         rightTrack = 0;
         returnVal = TRUE;
@@ -104,63 +97,42 @@ uint8_t Track_CheckEvents(void) {
 #ifdef DEBUG
         printf("Right Track Active\r\n");
 #endif
-        ES_Event thisEvent;
         thisEvent.EventType = TRACK_WIRE_R;
         thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
-#ifndef TrackMain           // keep this as is for test harness
-//        PostTopHSM(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif
         rightTrack = 1;
         returnVal = TRUE;
+
     } else if (rightTrack && (curRsignal < TRACK_LOW_THRESHOLD)) {
 #ifdef DEBUG
         printf("Right Track Inactive\r\n");
 #endif
-        ES_Event thisEvent;
         thisEvent.EventType = WALL_OFF_R;
         thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_R1));
-#ifndef TrackMain           // keep this as is for test harness
-        PostTopHSM(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif
         rightTrack = 0;
-        returnVal = TRUE;        
+        returnVal = TRUE;
     } else if (!leftTrack && (curLsignal > TRACK_HIGH_THRESHOLD)) {
 #ifdef DEBUG
         printf("Left Track Wire Active\r\n");
 #endif
-        ES_Event thisEvent;
         thisEvent.EventType = TRACK_WIRE_L;
         thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
-#ifndef TrackMain           // keep this as is for test harness
-        PostTopHSM(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif   
         leftTrack = 1;
         returnVal = TRUE;
     } else if (leftTrack && (curLsignal < TRACK_LOW_THRESHOLD)) {
 #ifdef DEBUG
         printf("Left Track Wire Inactive\r\n");
 #endif
-        ES_Event thisEvent;
         thisEvent.EventType = TRACK_OFF_L;
         thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_L1));
-#ifndef TrackMain           // keep this as is for test harness
-//        PostTopHSM(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif   
         leftTrack = 0;
         returnVal = TRUE;
-    } 
-    
+    }
+    if (returnVal) {
+        PostTopHSM(thisEvent);
+    }
     prevRsignal = curRsignal;
     prevLsignal = curLsignal;
-    
+
     return returnVal;
 }
 
@@ -180,7 +152,7 @@ void main(void) {
     /* user initialization code goes here */
     ES_Timer_Init();
     printf("\r\nTimer initialized");
-    Tape_Init();
+    Track_Init();
     // Do not alter anything below this line
     int i;
 
@@ -194,19 +166,6 @@ void main(void) {
         printf("\r\nCheck");
         PrintEvent();
 #endif
-
-        if (IsTransmitEmpty()) {
-#ifdef DEBUG
-            printf("\r\nEmptyCheck");
-#endif
-            for (i = 0; i< sizeof (EventList) >> 2; i++) {
-                if (EventList[i]() == TRUE) {
-                    PrintEvent();
-                    break;
-                }
-
-            }
-        }
     }
 }
 

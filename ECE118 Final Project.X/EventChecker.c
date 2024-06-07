@@ -28,7 +28,6 @@
 #include "EventChecker.h"
 #include "ES_Configure.h"
 #include "ES_Timers.h"
-#include "tape.h"
 #include "ping.h"
 #include "ES_Events.h"
 #include "serial.h"
@@ -36,7 +35,6 @@
 #include "AD.h"
 #include "Parallel.h"
 #include "Track.h"
-#include "Wall.h"
 
 /*******************************************************************************
  * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
@@ -72,23 +70,25 @@ static ES_Event storedEvent;
 uint8_t InitAllEventCheckers(void) {
     Parallel_Init();
     Ping_Init();
-//    Tape_Init();    
-//    Track_Init();
-//    Wall_Init();
+    //    Tape_Init();    
+    Track_Init();
+    //    Wall_Init();
 }
 
 uint8_t CheckAllEvents(void) {
     Ping_StateMachine();
+    Parallel_CheckEvents();
+    Track_CheckEvents();
+
 }
 
 uint8_t EventCheckingService50ms(void) {
-//    Tape_CheckEvents();    
-//    Wall_CheckEvents();    
+    //    Tape_CheckEvents();    
+    //    Wall_CheckEvents();    
 }
 
 uint8_t EventCheckingService250ms(void) {
-    Parallel_CheckEvents();
-//    Track_CheckEvents();
+    //    Track_CheckEvents();
 }
 
 /* 

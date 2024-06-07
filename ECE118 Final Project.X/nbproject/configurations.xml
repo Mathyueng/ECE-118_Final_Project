@@ -29,7 +29,6 @@
       <itemPath>Stepper.h</itemPath>
       <itemPath>Tank_DriveTrain.h</itemPath>
       <itemPath>TapeService.h</itemPath>
-      <itemPath>TemplateService.h</itemPath>
       <itemPath>ping.h</itemPath>
       <itemPath>pwm.h</itemPath>
       <itemPath>serial.h</itemPath>
@@ -39,12 +38,9 @@
       <itemPath>BlueLoopSubHSM.h</itemPath>
       <itemPath>RoamSubHSM.h</itemPath>
       <itemPath>DumpSubHSM.h</itemPath>
-      <itemPath>tape.h</itemPath>
       <itemPath>Parallel.h</itemPath>
       <itemPath>Track.h</itemPath>
-      <itemPath>Wall.h</itemPath>
       <itemPath>E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.h</itemPath>
-      <itemPath>E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/TrackService.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -75,7 +71,6 @@
       <itemPath>Stepper.c</itemPath>
       <itemPath>Tank_DriveTrain.c</itemPath>
       <itemPath>TapeService.c</itemPath>
-      <itemPath>TemplateService.c</itemPath>
       <itemPath>ping.c</itemPath>
       <itemPath>pwm.c</itemPath>
       <itemPath>serial.c</itemPath>
@@ -85,12 +80,9 @@
       <itemPath>BlueLoopSubHSM.c</itemPath>
       <itemPath>RoamSubHSM.c</itemPath>
       <itemPath>DumpSubHSM.c</itemPath>
-      <itemPath>tape.c</itemPath>
       <itemPath>Parallel.c</itemPath>
       <itemPath>Track.c</itemPath>
-      <itemPath>Wall.c</itemPath>
       <itemPath>E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.c</itemPath>
-      <itemPath>E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/TrackService.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -290,30 +282,6 @@
         </C32CPP>
         <C32Global>
         </C32Global>
-      </item>
-      <item path="Track.c" ex="true" overriding="false">
-      </item>
-      <item path="Wall.c" ex="true" overriding="false">
-      </item>
-      <item path="Wall.h" ex="true" overriding="false">
-      </item>
-      <item path="tape.c" ex="true" overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="tape.h" ex="true" overriding="false">
       </item>
     </conf>
   </confs>

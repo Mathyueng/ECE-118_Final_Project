@@ -61,6 +61,7 @@ typedef enum {
     TRACK_OFF_R,
     TRACK_OFF_L,
     TRACK_WIRE_EQUAL,
+    TRACK_WIRE_OFF,
     WALL_ON,
     WALL_OFF,
     /* User-defined events end here */
@@ -95,6 +96,7 @@ static const char *EventNames[] = {
     "TRACK_OFF_R",
     "TRACK_OFF_L",
     "TRACK_WIRE_EQUAL",
+    "TRACK_WIRE_OFF",
     "WALL_ON",
     "WALL_OFF",
     "NUMBEROFEVENTS",
@@ -124,8 +126,8 @@ static const char *EventNames[] = {
 #define TIMER5_RESP_FUNC PostTopHSM
 #define TIMER6_RESP_FUNC PostTopHSM
 #define TIMER7_RESP_FUNC PostTapeService
-#define TIMER8_RESP_FUNC PostWallService
-#define TIMER9_RESP_FUNC TIMER_UNUSED
+#define TIMER8_RESP_FUNC PostWallService    //PostTrackService
+#define TIMER9_RESP_FUNC TIMER_UNUSED 
 #define TIMER10_RESP_FUNC TIMER_UNUSED
 #define TIMER11_RESP_FUNC TIMER_UNUSED
 #define TIMER12_RESP_FUNC TIMER_UNUSED
@@ -150,6 +152,7 @@ static const char *EventNames[] = {
 
 #define TAPE_SERVICE_TIMER  7   /* Defined for Tape Service         */
 #define WALL_SERVICE_TIMER  8   /* Defined for Wall Service         */
+#define TRACK_SERVICE_TIMER 9   /* Defined for Track Service        */
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 
@@ -160,7 +163,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // This macro determines that number of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 5
+#define NUM_SERVICES 4      // HSM, Tape, Wall, Track
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service

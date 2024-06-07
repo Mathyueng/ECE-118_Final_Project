@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c TemplateService.c ping.c pwm.c serial.c timers.c TopHSM.c BlackLoopSubHSM.c BlueLoopSubHSM.c RoamSubHSM.c DumpSubHSM.c Parallel.c "E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.c" "E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/TrackService.c"
+SOURCEFILES_QUOTED_IF_SPACED=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c ping.c pwm.c serial.c timers.c TopHSM.c BlackLoopSubHSM.c BlueLoopSubHSM.c RoamSubHSM.c DumpSubHSM.c Parallel.c Track.c "E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.c"
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/TemplateService.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/BlackLoopSubHSM.o ${OBJECTDIR}/BlueLoopSubHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/_ext/1241137693/WallService.o ${OBJECTDIR}/_ext/1241137693/TrackService.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/AD.o.d ${OBJECTDIR}/BOARD.o.d ${OBJECTDIR}/ES_CheckEvents.o.d ${OBJECTDIR}/ES_Framework.o.d ${OBJECTDIR}/ES_KeyboardInput.o.d ${OBJECTDIR}/ES_Main.o.d ${OBJECTDIR}/ES_PostList.o.d ${OBJECTDIR}/ES_Queue.o.d ${OBJECTDIR}/ES_TattleTale.o.d ${OBJECTDIR}/ES_Timers.o.d ${OBJECTDIR}/EventChecker.o.d ${OBJECTDIR}/IO_Ports.o.d ${OBJECTDIR}/LED.o.d ${OBJECTDIR}/RC_Servo.o.d ${OBJECTDIR}/Stepper.o.d ${OBJECTDIR}/Tank_DriveTrain.o.d ${OBJECTDIR}/TapeService.o.d ${OBJECTDIR}/TemplateService.o.d ${OBJECTDIR}/ping.o.d ${OBJECTDIR}/pwm.o.d ${OBJECTDIR}/serial.o.d ${OBJECTDIR}/timers.o.d ${OBJECTDIR}/TopHSM.o.d ${OBJECTDIR}/BlackLoopSubHSM.o.d ${OBJECTDIR}/BlueLoopSubHSM.o.d ${OBJECTDIR}/RoamSubHSM.o.d ${OBJECTDIR}/DumpSubHSM.o.d ${OBJECTDIR}/Parallel.o.d ${OBJECTDIR}/_ext/1241137693/WallService.o.d ${OBJECTDIR}/_ext/1241137693/TrackService.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/BlackLoopSubHSM.o ${OBJECTDIR}/BlueLoopSubHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/Track.o ${OBJECTDIR}/_ext/1241137693/WallService.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/AD.o.d ${OBJECTDIR}/BOARD.o.d ${OBJECTDIR}/ES_CheckEvents.o.d ${OBJECTDIR}/ES_Framework.o.d ${OBJECTDIR}/ES_KeyboardInput.o.d ${OBJECTDIR}/ES_Main.o.d ${OBJECTDIR}/ES_PostList.o.d ${OBJECTDIR}/ES_Queue.o.d ${OBJECTDIR}/ES_TattleTale.o.d ${OBJECTDIR}/ES_Timers.o.d ${OBJECTDIR}/EventChecker.o.d ${OBJECTDIR}/IO_Ports.o.d ${OBJECTDIR}/LED.o.d ${OBJECTDIR}/RC_Servo.o.d ${OBJECTDIR}/Stepper.o.d ${OBJECTDIR}/Tank_DriveTrain.o.d ${OBJECTDIR}/TapeService.o.d ${OBJECTDIR}/ping.o.d ${OBJECTDIR}/pwm.o.d ${OBJECTDIR}/serial.o.d ${OBJECTDIR}/timers.o.d ${OBJECTDIR}/TopHSM.o.d ${OBJECTDIR}/BlackLoopSubHSM.o.d ${OBJECTDIR}/BlueLoopSubHSM.o.d ${OBJECTDIR}/RoamSubHSM.o.d ${OBJECTDIR}/DumpSubHSM.o.d ${OBJECTDIR}/Parallel.o.d ${OBJECTDIR}/Track.o.d ${OBJECTDIR}/_ext/1241137693/WallService.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/TemplateService.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/BlackLoopSubHSM.o ${OBJECTDIR}/BlueLoopSubHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/_ext/1241137693/WallService.o ${OBJECTDIR}/_ext/1241137693/TrackService.o
+OBJECTFILES=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/TapeService.o ${OBJECTDIR}/ping.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/BlackLoopSubHSM.o ${OBJECTDIR}/BlueLoopSubHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/Track.o ${OBJECTDIR}/_ext/1241137693/WallService.o
 
 # Source Files
-SOURCEFILES=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c TemplateService.c ping.c pwm.c serial.c timers.c TopHSM.c BlackLoopSubHSM.c BlueLoopSubHSM.c RoamSubHSM.c DumpSubHSM.c Parallel.c E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.c E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/TrackService.c
+SOURCEFILES=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c TapeService.c ping.c pwm.c serial.c timers.c TopHSM.c BlackLoopSubHSM.c BlueLoopSubHSM.c RoamSubHSM.c DumpSubHSM.c Parallel.c Track.c E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.c
 
 
 
@@ -219,12 +219,6 @@ ${OBJECTDIR}/TapeService.o: TapeService.c  .generated_files/flags/default/43b6ea
 	@${RM} ${OBJECTDIR}/TapeService.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TapeService.o.d" -o ${OBJECTDIR}/TapeService.o TapeService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/TemplateService.o: TemplateService.c  .generated_files/flags/default/64e2eb9b99d70f64be5fcea8feb66598d1dace95 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/TemplateService.o.d 
-	@${RM} ${OBJECTDIR}/TemplateService.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TemplateService.o.d" -o ${OBJECTDIR}/TemplateService.o TemplateService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
 ${OBJECTDIR}/ping.o: ping.c  .generated_files/flags/default/3f62a0b503b866bc2719edf30ff3a207379cd490 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ping.o.d 
@@ -285,17 +279,17 @@ ${OBJECTDIR}/Parallel.o: Parallel.c  .generated_files/flags/default/8979e413d251
 	@${RM} ${OBJECTDIR}/Parallel.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/Parallel.o.d" -o ${OBJECTDIR}/Parallel.o Parallel.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
+${OBJECTDIR}/Track.o: Track.c  .generated_files/flags/default/23941f551d7bbe63aedd4e547ea63eff9cc37d0f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/Track.o.d 
+	@${RM} ${OBJECTDIR}/Track.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/Track.o.d" -o ${OBJECTDIR}/Track.o Track.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
 ${OBJECTDIR}/_ext/1241137693/WallService.o: E:/College\ Work/Year\ 5/Quarter\ 03/ECE\ 118/Final\ Project/ece118-final-project-part-2-electric-boogaloo/ECE118\ Final\ Project.X/WallService.c  .generated_files/flags/default/3c9856f77ef1be8766a47c1b6678baabcd9b16b3 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1241137693" 
 	@${RM} ${OBJECTDIR}/_ext/1241137693/WallService.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1241137693/WallService.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/_ext/1241137693/WallService.o.d" -o ${OBJECTDIR}/_ext/1241137693/WallService.o "E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.c"    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/_ext/1241137693/TrackService.o: E:/College\ Work/Year\ 5/Quarter\ 03/ECE\ 118/Final\ Project/ece118-final-project-part-2-electric-boogaloo/ECE118\ Final\ Project.X/TrackService.c  .generated_files/flags/default/270e87051143b63c90f9cb84c904b57c819c3aba .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/_ext/1241137693" 
-	@${RM} ${OBJECTDIR}/_ext/1241137693/TrackService.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1241137693/TrackService.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/_ext/1241137693/TrackService.o.d" -o ${OBJECTDIR}/_ext/1241137693/TrackService.o "E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/TrackService.c"    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 else
 ${OBJECTDIR}/AD.o: AD.c  .generated_files/flags/default/a58e75d1d6ec63820c52a3f1c954b9bba4783b8a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
@@ -400,12 +394,6 @@ ${OBJECTDIR}/TapeService.o: TapeService.c  .generated_files/flags/default/9eff3d
 	@${RM} ${OBJECTDIR}/TapeService.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TapeService.o.d" -o ${OBJECTDIR}/TapeService.o TapeService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/TemplateService.o: TemplateService.c  .generated_files/flags/default/d07fb163d2a50b4fbb2a7bdf4a3d87102ae8325d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/TemplateService.o.d 
-	@${RM} ${OBJECTDIR}/TemplateService.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TemplateService.o.d" -o ${OBJECTDIR}/TemplateService.o TemplateService.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
 ${OBJECTDIR}/ping.o: ping.c  .generated_files/flags/default/2799bf8a8bfb27b521e9254046ed5c1b0316cdac .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ping.o.d 
@@ -466,17 +454,17 @@ ${OBJECTDIR}/Parallel.o: Parallel.c  .generated_files/flags/default/922916b6847c
 	@${RM} ${OBJECTDIR}/Parallel.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/Parallel.o.d" -o ${OBJECTDIR}/Parallel.o Parallel.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
+${OBJECTDIR}/Track.o: Track.c  .generated_files/flags/default/e635c957ed05f1f9279315dc58e3f0e5e26e38a0 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/Track.o.d 
+	@${RM} ${OBJECTDIR}/Track.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/Track.o.d" -o ${OBJECTDIR}/Track.o Track.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
 ${OBJECTDIR}/_ext/1241137693/WallService.o: E:/College\ Work/Year\ 5/Quarter\ 03/ECE\ 118/Final\ Project/ece118-final-project-part-2-electric-boogaloo/ECE118\ Final\ Project.X/WallService.c  .generated_files/flags/default/2b844a380decd71363cd738d2555c20177fd9acc .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1241137693" 
 	@${RM} ${OBJECTDIR}/_ext/1241137693/WallService.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1241137693/WallService.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/_ext/1241137693/WallService.o.d" -o ${OBJECTDIR}/_ext/1241137693/WallService.o "E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.c"    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/_ext/1241137693/TrackService.o: E:/College\ Work/Year\ 5/Quarter\ 03/ECE\ 118/Final\ Project/ece118-final-project-part-2-electric-boogaloo/ECE118\ Final\ Project.X/TrackService.c  .generated_files/flags/default/c4adf8bfce585234f9043e57a5f297351fa5b91f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/_ext/1241137693" 
-	@${RM} ${OBJECTDIR}/_ext/1241137693/TrackService.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1241137693/TrackService.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/_ext/1241137693/TrackService.o.d" -o ${OBJECTDIR}/_ext/1241137693/TrackService.o "E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/TrackService.c"    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 endif
 

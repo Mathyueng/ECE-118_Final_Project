@@ -149,13 +149,13 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 // transition from the initial pseudo-state into the actual
                 // initial state
                 // Initialize all sub-state machines
-                InitBlackLoopSubHSM();
-                InitBlueLoopSubHSM();
-                InitRoamSubHSM();
-                InitDumpSubHSM();
+//                InitBlackLoopSubHSM();
+//                InitBlueLoopSubHSM();
+//                InitRoamSubHSM();
+//                InitDumpSubHSM();
                 // now put the machine into the actual initial state
                 nextState = Roaming;
-                makeTransition = TRUE;
+                makeTransition = FALSE;
                 ThisEvent.EventType = ES_NO_EVENT;
                 break;
             }
