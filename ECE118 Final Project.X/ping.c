@@ -40,7 +40,7 @@ static ES_Event storedEvent;
 
 
 #define D_OVER_EW_RATIO 148 // D/EW, adjusted for taking in ms instead of us
-#define PING_SENSOR_PORT PORTW
+#define PING_SENSOR_PORT PORTX
 #define TRIGGER_PIN PIN3
 #define ECHO_PIN PIN4
 #define PING_TIMER 

@@ -136,6 +136,12 @@ char DT_ExtendArm(void);
 
 char DT_RetractArm(void);
 
+char DT_IntakeFwd(void);
+
+char DT_IntakeBack(void);
+
+char DT_IntakeStop(void);
+
 #endif /* TANK_DRIVE_H */
 
 /* *****************************************************************************

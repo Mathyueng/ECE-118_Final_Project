@@ -15,7 +15,7 @@
 #include "math.h"
 
 //#define DEBUG
-//#define DRIVETRAIN_MAIN
+#define DRIVETRAIN_MAIN
 
 #ifdef DEBUG
 #include <stdio.h>
@@ -27,9 +27,12 @@
 
 #define RIGHT_DRIVE_PIN PWM_PORTY10
 #define LEFT_DRIVE_PIN PWM_PORTY12
+#define INTAKE_DRIVE_PIN PWM_PORTX11
 #define SERVO_ARM_PIN RC_PORTY06
 
 #define H_BRIDGE_PORT PORTW
+#define INTAKE_IN1 PIN3
+#define INTAKE_IN2 PIN4
 #define R_H_BRIDGE_IN1 PIN5
 #define R_H_BRIDGE_IN2 PIN6
 #define L_H_BRIDGE_IN1 PIN7
@@ -64,18 +67,18 @@ uint8_t GetLeftPWM() {
  * @brief  Initializes the drivetrain: adds PWM pins and H-Bridge pins, sets drives to 0
  * @author Aarush Banerjee 5.19.2024 */
 char DT_Init(void) {
-    PWM_AddPins(RIGHT_DRIVE_PIN | LEFT_DRIVE_PIN);
+    PWM_AddPins(RIGHT_DRIVE_PIN | LEFT_DRIVE_PIN | INTAKE_DRIVE_PIN);
     PWM_SetFrequency(MIN_PWM_FREQ);
+    IO_PortsSetPortOutputs(H_BRIDGE_PORT, INTAKE_IN1 | INTAKE_IN2 | R_H_BRIDGE_IN1 | R_H_BRIDGE_IN2 | L_H_BRIDGE_IN1 | L_H_BRIDGE_IN2);
     IO_PortsClearPortBits(H_BRIDGE_PORT, 0xFFFF);
-    //    IO_PortsSetPortOutputs(H_BRIDGE_PORT, R_H_BRIDGE_IN1 | R_H_BRIDGE_IN2 | L_H_BRIDGE_IN1 | L_H_BRIDGE_IN2);
-    IO_PortsSetPortOutputs(H_BRIDGE_PORT, 0x01E0);
-    IO_PortsWritePort(H_BRIDGE_PORT, 0);
+//    IO_PortsSetPortOutputs(H_BRIDGE_PORT, 0x01E0);
     RC_AddPins(SERVO_ARM_PIN);
+    RC_SetPulseTime(SERVO_ARM_PIN, 1000);
 #ifdef DEBUG
     printf("\r\nPort Initialization Successful...\r\n");
 #endif
-    DT_SetRightDrive(0);
-    DT_SetLeftDrive(0);
+    DT_Stop();
+    DT_IntakeStop();
     DT_RetractArm();
     return SUCCESS;
 }
@@ -218,6 +221,22 @@ char DT_RetractArm(void) {
     RC_SetPulseTime(SERVO_ARM_PIN, 1000);
 }
 
+char DT_IntakeFwd(void) {
+    PWM_SetDutyCycle(INTAKE_DRIVE_PIN, 550);
+    IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | INTAKE_IN1) & ~(INTAKE_IN2)));
+}
+
+char DT_IntakeBack(void) {
+    PWM_SetDutyCycle(INTAKE_DRIVE_PIN, 550);
+    IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | INTAKE_IN2) & ~(INTAKE_IN1)));
+}
+
+char DT_IntakeStop(void) {
+    PWM_SetDutyCycle(INTAKE_DRIVE_PIN, 0);
+    IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) & ~(INTAKE_IN1) & ~(INTAKE_IN2))));
+}
+
+
 #ifdef DRIVETRAIN_MAIN
 #define DELAY(x) for (int i=0;i<(400000*x);i++) asm("nop");
 #include <stdio.h>
@@ -232,30 +251,42 @@ void main(void) {
 
     while (1) {
         int speed = 50;
-        int turningRad = 50;
+        int turningRad = 15000;
         int delay = 1;
+        
         DT_DriveFwd(speed);
+        DT_IntakeFwd();
         DT_ExtendArm();
         DELAY(delay);
+        
+        DT_IntakeBack();
         DT_DriveFwd(-speed);
         DT_RetractArm();
         DELAY(delay);
+        
+        DT_IntakeStop();
         DT_DriveRight(speed, turningRad);
         DT_ExtendArm();
         DELAY(delay);
+        
         DT_DriveRight(-speed, turningRad);
         DT_RetractArm();
         DELAY(delay);
+        
         DT_DriveLeft(speed, turningRad);
         DT_ExtendArm();
         DELAY(delay);
+        
         DT_DriveLeft(-speed, turningRad);
         DT_RetractArm();
         DELAY(delay);
+        
         DT_SpinCC(speed);
         DELAY(delay);
+        
         DT_SpinCC(-speed);
         DELAY(delay);
+        
 #ifdef DEBUG
         printf("\r\n");
         printf("\r\nH_Bridge Port: %x", ReadHBridge());
