@@ -36,10 +36,12 @@
       <itemPath>TopHSM.h</itemPath>
       <itemPath>RoamSubHSM.h</itemPath>
       <itemPath>DumpSubHSM.h</itemPath>
-      <itemPath>Parallel.h</itemPath>
       <itemPath>Track.h</itemPath>
+      <itemPath>E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.h</itemPath>
       <itemPath>LoopSubHSM.h</itemPath>
-      <itemPath>WallService.h</itemPath>
+      <itemPath>BumpService.h</itemPath>
+      <itemPath>Tape.h</itemPath>
+      <itemPath>Wall.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -77,10 +79,14 @@
       <itemPath>TopHSM.c</itemPath>
       <itemPath>RoamSubHSM.c</itemPath>
       <itemPath>DumpSubHSM.c</itemPath>
-      <itemPath>Parallel.c</itemPath>
       <itemPath>Track.c</itemPath>
+      <itemPath>E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.c</itemPath>
       <itemPath>LoopSubHSM.c</itemPath>
-      <itemPath>WallService.c</itemPath>
+      <itemPath>BumpService.c</itemPath>
+      <itemPath>Wall.c</itemPath>
+      <itemPath>Parallel.c</itemPath>
+      <itemPath>Parallel.h</itemPath>
+      <itemPath>Tape.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -96,7 +102,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.10</languageToolchainVersion>
+        <languageToolchainVersion>4.35</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -122,13 +128,15 @@
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>true</makeCustomizationPreStepEnabled>
         <makeUseCleanTarget>false</makeUseCleanTarget>
-        <makeCustomizationPreStep></makeCustomizationPreStep>
+        <makeCustomizationPreStep>python D:\ECE118Directory\scripts\Enum_To_String.py</makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
         <makeCustomizationPostStep></makeCustomizationPostStep>
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
+      <item path="BumpService.c" ex="true" overriding="false">
+      </item>
       <C32>
         <property key="additional-warnings" value="false"/>
         <property key="addresss-attribute-use" value="false"/>
@@ -265,7 +273,47 @@
         <property key="stack-smashing" value=""/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
-      <item path="ES_Main.c" ex="true" overriding="false">
+      <item path="E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.c"
+            ex="true"
+            overriding="false">
+      </item>
+      <item path="ES_Main.c" ex="false" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="TapeService.c" ex="true" overriding="false">
+      </item>
+      <item path="Track.c" ex="true" overriding="false">
+      </item>
+      <item path="ping.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="ping.h" ex="true" overriding="false">
         <C32>
         </C32>
         <C32-AR>

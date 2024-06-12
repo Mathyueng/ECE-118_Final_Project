@@ -49,14 +49,13 @@ typedef enum {
 } DumpSubHSMState_t;
 
 static const char *StateNames[] = {
-    "InitPSubState",
-    "Reverse",
-    "Lower_Arm",
-    "Forward",
-    "Dump",
-    "Reverse_2",
-    "Raise",
-    "Turn_Left"
+	"InitPSubState",
+	"Reverse",
+	"Lower_Arm",
+	"Forward",
+	"Dump",
+	"Reverse_2",
+	"Raise",
 };
 
 
@@ -187,7 +186,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     DT_DriveFwd(FWD_LOW_SPEED);
                     break;
-                case TRACK_WIRE_EQUAL:
+                case WALL_ON:
                     nextState = Dump;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;

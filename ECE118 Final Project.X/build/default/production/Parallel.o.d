@@ -1,6 +1,7 @@
 build/default/production/Parallel.o: Parallel.c EventChecker.h \
- ES_Configure.h BOARD.h TopHSM.h LED.h Tank_DriveTrain.h BOARD.h \
- ES_Events.h Parallel.h pwm.h ES_Timers.h serial.h IO_Ports.h AD.h
+ ES_Configure.h BOARD.h ES_Events.h TopHSM.h LED.h Tape.h Wall.h \
+ Parallel.h Tank_DriveTrain.h BOARD.h ES_Timers.h serial.h IO_Ports.h \
+ AD.h
 
 EventChecker.h:
 
@@ -8,19 +9,21 @@ ES_Configure.h:
 
 BOARD.h:
 
+ES_Events.h:
+
 TopHSM.h:
 
 LED.h:
 
-Tank_DriveTrain.h:
+Tape.h:
 
-BOARD.h:
-
-ES_Events.h:
+Wall.h:
 
 Parallel.h:
 
-pwm.h:
+Tank_DriveTrain.h:
+
+BOARD.h:
 
 ES_Timers.h:
 

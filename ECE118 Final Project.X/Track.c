@@ -18,8 +18,7 @@
 #include "ES_Configure.h"
 #include "ES_Events.h"
 
-#define TRACK_PIN_L1 AD_PORTV7
-#define TRACK_PIN_R1 AD_PORTV8
+#define TRACK_PIN_1 AD_PORTV7
 
 #define TRACK_LOW_THRESHOLD 350
 #define TRACK_HIGH_THRESHOLD 700
@@ -36,34 +35,24 @@ static const char *eventName;
 static ES_Event storedEvent;
 #endif
 
-static uint32_t prevRsignal = 0;
-static uint32_t prevLsignal = 0;
-static uint8_t leftTrack = 0;
-static uint8_t rightTrack = 0;
+static uint32_t prevSignal = 0;
+static uint8_t TrackFlag = 0;
 
-uint32_t ReadRightTrack() {
-    return abs(AD_ReadADPin(TRACK_PIN_R1));
-}
-
-uint32_t ReadLeftTrack() {
-    return abs(AD_ReadADPin(TRACK_PIN_L1));
+uint32_t ReadTrack() {
+    return abs(AD_ReadADPin(TRACK_PIN_1));
 }
 
 void Track_Init() {
-    AD_AddPins(TRACK_PIN_R1 | TRACK_PIN_L1);
-    prevRsignal = ReadRightTrack();
-    prevLsignal = ReadLeftTrack();
-    leftTrack = 0;
-    rightTrack = 0;
+    AD_AddPins(TRACK_PIN_1);
+    prevSignal = ReadTrack();
+    TrackFlag = 0;
 }
 
 uint8_t Track_CheckEvents(void) {
 
     uint8_t returnVal = FALSE;
 
-    uint32_t curRsignal = ReadRightTrack();
-    uint32_t curLsignal = ReadLeftTrack();
-
+    uint32_t curSignal = ReadTrack();
 
     ES_Event thisEvent;
     thisEvent.EventType = ES_NO_EVENT;
@@ -75,63 +64,26 @@ uint8_t Track_CheckEvents(void) {
     //    printf("\r\nLeft: %d", AD_ReadADPin(TRACK_PIN_L1));
 #endif
 
-    if (((curLsignal > TRACK_HIGH_THRESHOLD)) && (curRsignal > TRACK_HIGH_THRESHOLD) && ((!leftTrack) || (!rightTrack))) {
+    if (!TrackFlag && (curSignal > TRACK_HIGH_THRESHOLD)) {
 #ifdef DEBUG
-        printf("Track Parallel\r\n");
+        printf("Track Active\r\n");
 #endif
-        thisEvent.EventType = TRACK_WIRE_EQUAL;
-        thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_L1));
-        leftTrack = 1;
-        rightTrack = 1;
-        returnVal = TRUE;
-    } else if (((curLsignal < TRACK_LOW_THRESHOLD) || (curRsignal < TRACK_LOW_THRESHOLD)) && (leftTrack && rightTrack)) {
-#ifdef DEBUG
-        printf("Track Not Parallel\r\n");
-#endif
-        thisEvent.EventType = TRACK_WIRE_EQUAL;
-        thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_L1));
-        leftTrack = 0;
-        rightTrack = 0;
-        returnVal = TRUE;
-    } else if (!rightTrack && (curRsignal > TRACK_HIGH_THRESHOLD)) {
-#ifdef DEBUG
-        printf("Right Track Active\r\n");
-#endif
-        thisEvent.EventType = TRACK_WIRE_R;
-        thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
-        rightTrack = 1;
+        thisEvent.EventType = TRACK_WIRE_ON;
+        thisEvent.EventParam = curSignal;
+        TrackFlag = 1;
         returnVal = TRUE;
 
-    } else if (rightTrack && (curRsignal < TRACK_LOW_THRESHOLD)) {
+    } else if (TrackFlag && (curSignal < TRACK_LOW_THRESHOLD)) {
 #ifdef DEBUG
-        printf("Right Track Inactive\r\n");
+        printf("Track Inactive\r\n");
 #endif
-        thisEvent.EventType = WALL_OFF_R;
-        thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_R1));
-        rightTrack = 0;
-        returnVal = TRUE;
-    } else if (!leftTrack && (curLsignal > TRACK_HIGH_THRESHOLD)) {
-#ifdef DEBUG
-        printf("Left Track Wire Active\r\n");
-#endif
-        thisEvent.EventType = TRACK_WIRE_L;
-        thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
-        leftTrack = 1;
-        returnVal = TRUE;
-    } else if (leftTrack && (curLsignal < TRACK_LOW_THRESHOLD)) {
-#ifdef DEBUG
-        printf("Left Track Wire Inactive\r\n");
-#endif
-        thisEvent.EventType = TRACK_OFF_L;
-        thisEvent.EventParam = (AD_ReadADPin(TRACK_PIN_L1));
-        leftTrack = 0;
+        thisEvent.EventType = TRACK_WIRE_OFF;
+        thisEvent.EventParam = curSignal;
+        TrackFlag = 0;
         returnVal = TRUE;
     }
-    if (returnVal) {
-        PostTopHSM(thisEvent);
-    }
-    prevRsignal = curRsignal;
-    prevLsignal = curLsignal;
+    if (returnVal) PostTopHSM(thisEvent);
+    prevSignal = curSignal;
 
     return returnVal;
 }

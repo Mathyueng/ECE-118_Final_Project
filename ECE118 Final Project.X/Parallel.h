@@ -18,12 +18,27 @@
 #ifndef PARALLEL_H    /* Guard against multiple inclusion */
 #define PARALLEL_H
 
-void Parallel_Init(void);
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/* Section: Included Files                                                    */
+/* ************************************************************************** */
+/* ************************************************************************** */
+
+/* This section lists the other files that are included in this file.
+ */
+
+/* TODO:  Include other files here if needed. */
+#include "ES_Configure.h"
+#include "BOARD.h"
+
+uint8_t Parallel_Init(void);
 
 uint8_t Parallel_CheckEvents(void);
 
-#endif /* PARALLEL_H */
+uint8_t ReadParallelSensors(void);
 
+#endif
 /* *****************************************************************************
  End of File
  */

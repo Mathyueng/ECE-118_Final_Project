@@ -56,10 +56,10 @@ typedef enum {
 } TopHSMState_t;
 
 static const char *StateNames[] = {
-    "InitPState",
-    "Roaming",
-    "Looping",
-    "Dumping",
+	"InitPState",
+	"Roaming",
+	"Looping",
+	"Dumping",
 };
 
 
@@ -154,6 +154,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 nextState = Roaming;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
+                DT_Stop();
                 break;
             }
             break;
@@ -165,6 +166,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             ThisEvent = RunRoamSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    DT_IntakeFwd();
                     break;
                 case WALL_ON:
                     nextState = Looping;
@@ -187,7 +189,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-                case TRACK_WIRE_EQUAL:
+                case WALL_ON:
                     nextState = Dumping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -209,10 +211,12 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
                     break;
-                case WALL_PARALLEL_R:
-                    nextState = Looping;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                case WALL_ON:
+                    if (ThisEvent.EventParam == 0b0110) { // FR BR (0110, 6))
+                        nextState = Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
                 case ES_EXIT:
                     InitDumpSubHSM();

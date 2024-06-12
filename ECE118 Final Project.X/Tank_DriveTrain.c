@@ -15,15 +15,16 @@
 #include "math.h"
 
 //#define DEBUG
-#define DRIVETRAIN_MAIN
+//#define DRIVETRAIN_MAIN
 
 #ifdef DEBUG
 #include <stdio.h>
 #endif
 
-#define DRIVE_MULTIPLIER_R 1
-#define DRIVE_MULTIPLIER_L 2/3
+#define DRIVE_MULTIPLIER_R 15/16
+#define DRIVE_MULTIPLIER_L 1
 #define SPEED_TO_PWM 10
+#define INTAKE_PWM 600
 
 #define RIGHT_DRIVE_PIN PWM_PORTY10
 #define LEFT_DRIVE_PIN PWM_PORTY12
@@ -222,12 +223,12 @@ char DT_RetractArm(void) {
 }
 
 char DT_IntakeFwd(void) {
-    PWM_SetDutyCycle(INTAKE_DRIVE_PIN, 550);
+    PWM_SetDutyCycle(INTAKE_DRIVE_PIN, INTAKE_PWM);
     IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | INTAKE_IN1) & ~(INTAKE_IN2)));
 }
 
 char DT_IntakeBack(void) {
-    PWM_SetDutyCycle(INTAKE_DRIVE_PIN, 550);
+    PWM_SetDutyCycle(INTAKE_DRIVE_PIN, INTAKE_PWM);
     IO_PortsWritePort(H_BRIDGE_PORT, ((IO_PortsReadPort(H_BRIDGE_PORT) | INTAKE_IN2) & ~(INTAKE_IN1)));
 }
 
@@ -250,21 +251,19 @@ void main(void) {
     printf("\r\nDrivetrain successfully initalized");
 
     while (1) {
-        int speed = 50;
-        int turningRad = 15000;
-        int delay = 1;
+        int speed = 60;
+        int turningRad = 8000;
+        int delay = 5;
         
         DT_DriveFwd(speed);
         DT_IntakeFwd();
         DT_ExtendArm();
         DELAY(delay);
         
-        DT_IntakeBack();
         DT_DriveFwd(-speed);
         DT_RetractArm();
         DELAY(delay);
         
-        DT_IntakeStop();
         DT_DriveRight(speed, turningRad);
         DT_ExtendArm();
         DELAY(delay);
@@ -273,6 +272,7 @@ void main(void) {
         DT_RetractArm();
         DELAY(delay);
         
+        DT_IntakeBack();
         DT_DriveLeft(speed, turningRad);
         DT_ExtendArm();
         DELAY(delay);

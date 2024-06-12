@@ -29,6 +29,11 @@
 #include "stdio.h"
 #include "LED.h"
 
+#include "EventChecker.h"       // Event Checker Files
+#include "Tape.h"
+#include "Wall.h"
+#include "Parallel.h"
+
 #include "ES_Configure.h"       // defines ES_Event, INIT_EVENT, ENTRY_EVENT, and EXIT_EVENT
 #include "Tank_DriveTrain.h"    // defines Drive Train Functions
 #include "ES_Events.h"
@@ -36,7 +41,7 @@
 /*******************************************************************************
  * PUBLIC #DEFINES                                                             *
  ******************************************************************************/
-#define TIMER_0_TICKS   50      // 0.005 s
+#define TIMER_0_TICKS   5       // 0.0005 s
 #define TIMER_QUART_SEC 250     // 0.25 s
 #define TIMER_HALF_SEC  500     // 0.5 s
 #define TIMER_1_SEC     1000    // 1 s

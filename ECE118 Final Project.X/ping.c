@@ -18,7 +18,7 @@
 #include "ES_Events.h"
 
 //#define PING_MAIN
-#define PING_BASIC_TEST
+//#define PING_BASIC_TEST
 //#define DEBUG
 //#define EVENTCHECKER_TEST
 
@@ -41,8 +41,8 @@ static ES_Event storedEvent;
 
 #define D_OVER_EW_RATIO 148 // D/EW, adjusted for taking in ms instead of us
 #define PING_SENSOR_PORT PORTX
-#define TRIGGER_PIN PIN3
-#define ECHO_PIN PIN4
+#define TRIGGER_PIN PIN9
+#define ECHO_PIN PIN10
 #define PING_TIMER 
 
 #define TIMER_TICKS_PER_uS 40
@@ -101,6 +101,9 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
     static uint16_t prevDist = 0;
     uint32_t FRT_in_uS = (ES_Timer_GetTime() * 1000) + (TMR1 / TIMER_TICKS_PER_uS);
     uint8_t returnVal = FALSE;
+    ES_Event thisEvent;
+    thisEvent.EventType = ES_NO_EVENT;
+    thisEvent.EventParam = 0;
     switch (state) {
         case IDLE:
 #ifdef DEBUG
@@ -137,7 +140,6 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
             printf("\r\nECHO");
 #endif
             if (!ReadEcho()) {
-                ES_Event thisEvent;
                 thisEvent.EventParam = (FRT_in_uS - start_time_in_uS) / D_OVER_EW_RATIO;
 #ifdef DEBUG
                 printf("\r\nFinal distance in inches: %d", thisEvent.EventParam);
@@ -147,27 +149,20 @@ uint8_t Ping_StateMachine(void) { // function for Problem 6, part c
                         printf("\r\nPing\r\n");
                         thisEvent.EventType = PING;
                         status = PINGED;
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-                        PostTopHSM(thisEvent);
-#else
-                        SaveEvent(thisEvent);
-#endif   
                         returnVal = TRUE;
                     }
                     if (thisEvent.EventParam >= PING_HIGH_THRESHOLD && status == PINGED) {
                         printf("\r\nUnping\r\n");
                         thisEvent.EventType = PING_OFF;
                         status = UNPINGED;
-#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-                        PostTopHSM(thisEvent);
-#else
-                        SaveEvent(thisEvent);
-#endif   
                         returnVal = TRUE;
                     }
                 }
                 prevDist = thisEvent.EventParam;
                 state = IDLE;
+                
+                if (returnVal) PostTopHSM(thisEvent);
+                
                 }
             break;
     }

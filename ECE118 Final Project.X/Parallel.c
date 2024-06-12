@@ -1,35 +1,28 @@
 /*
  * File:   Parallel.c
- * Author: aanbaner
+ * Author: Matthew Eng
  *
- * Created on May 31, 2024, 8:37 AM
+ * Created on May 29, 2024, 7:48 PM
  */
+
 #include "EventChecker.h"
 #include "TopHSM.h"
 
 #include "xc.h"
 #include <stdio.h>
 #include "Parallel.h"
-#include "pwm.h"
-#include "ES_Configure.h"
 #include "ES_Events.h"
 #include "ES_Timers.h"
 #include "serial.h"
 #include "IO_Ports.h"
 #include "AD.h"
 
-#define PARALLEL_PIN_R1 AD_PORTV3
-#define PARALLEL_PIN_R2 AD_PORTV4
-#define PARALLEL_PIN_L1 AD_PORTV5
-#define PARALLEL_PIN_L2 AD_PORTV6
-
-#define PARALLEL_LOW_THRESHOLD 75
-#define PARALLEL_HIGH_THRESHOLD 225
-
-#define MOV_AVG_LENGTH 5
-
+/*******************************************************************************
+ * MODULE #DEFINES                                                             *
+ ******************************************************************************/
 //#define ParallelMain
 //#define DEBUG
+//#define INACTIVE
 
 #ifdef ParallelMain
 #include <stdio.h>
@@ -40,118 +33,87 @@ static ES_Event storedEvent;
 #include <stdio.h>
 static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
 #endif
-static uint32_t prevRsignal = 0;
-static uint32_t prevLsignal = 0;
-static uint8_t leftWallP = 0;
-static uint8_t rightWallP = 0;
 
-uint32_t ReadRight() {
-    return abs(AD_ReadADPin(PARALLEL_PIN_R1) - AD_ReadADPin(PARALLEL_PIN_R2));
+#define PARALLEL_PORT PORTY
+#define PARALLEL_PIN_1 PIN9     // L
+#define PARALLEL_PIN_2 PIN11    // R
+
+/*******************************************************************************
+ * PRIVATE MODULE VARIABLES                                                    *
+ ******************************************************************************/
+
+/* Any private module level variable that you might need for keeping track of
+   events would be placed here. Private variables should be STATIC so that they
+   are limited in scope to this module. */
+
+// initialize history of Parallel sensor to say we're off Parallel
+static uint8_t prevP1 = 0;
+static uint8_t prevP2 = 0;
+static uint8_t Parallel_Flag = 0;
+
+/*******************************************************************************
+ * PUBLIC FUNCTIONS                                                            *
+ ******************************************************************************/
+
+uint8_t ReadParallelSensors() {
+    uint8_t ParallelActive =
+            ((IO_PortsReadPort(PARALLEL_PORT) & (PARALLEL_PIN_1)) << 1) |
+            ((IO_PortsReadPort(PARALLEL_PORT) & (PARALLEL_PIN_2)) << 0);
+    return ParallelActive;
 }
 
-uint32_t ReadLeft() {
-    return abs(AD_ReadADPin(PARALLEL_PIN_L1) - AD_ReadADPin(PARALLEL_PIN_L2));
+uint8_t Parallel_Init(void) {
+    IO_PortsSetPortInputs(PARALLEL_PORT, PARALLEL_PIN_1 | PARALLEL_PIN_2 | (IO_PortsReadPort(PARALLEL_PORT)));
+    prevP1 = 0;
+    prevP2 = 0;
 }
 
-void Parallel_Init(void) {
-    AD_AddPins(PARALLEL_PIN_R1 | PARALLEL_PIN_L1 | PARALLEL_PIN_R2 | PARALLEL_PIN_L2);
-    prevRsignal = ReadRight();
-    prevLsignal = ReadLeft();
-    leftWallP = 0;
-    rightWallP = 0;
-}
-
+/**
+ * @Function ParallelCheckEvents(void)
+ * @param none
+ * @return TRUE or FALSE
+ * @brief This function raises PARALLEL_ON & PARALLEL_OFF events; the event params specify which Parallel sensors were triggered or untriggered
+ * @author Matthew Eng, 6/11
+ * */
 uint8_t Parallel_CheckEvents(void) {
-
+    ES_Event thisEvent;
     uint8_t returnVal = FALSE;
-
-    uint32_t curRsignal = ReadRight();
-    uint32_t curLsignal = ReadLeft();
-#ifdef DEBUG
-    printf("curLsignal: %d\r\n", curLsignal);
-#endif
+    uint8_t curP1 = (prevP1 << 1) | !(IO_PortsReadPort(PARALLEL_PORT) & PARALLEL_PIN_1);
+    uint8_t curP2 = (prevP2 << 1) | !(IO_PortsReadPort(PARALLEL_PORT) & PARALLEL_PIN_2);
 
 #ifdef DEBUG
-    //    printf("\r\n");
-    //    if (abs(curRsignal - avgSignalR) <= PARALLEL_THRESHOLD) printf("\r\ncurrent Right: %d", curRsignal);
-    //    printf("\r\ncurrent right: %d", curRsignal);
-    //    printf("\r\nright 1: %d", AD_ReadADPin(PARALLEL_PIN_R1));
-    //    printf("\r\nright 2: %d", AD_ReadADPin(PARALLEL_PIN_R2));
-    //    printf("\r\nleft 1: %d", AD_ReadADPin(PARALLEL_PIN_L1));
-    //    printf("\r\nleft 2: %d", AD_ReadADPin(PARALLEL_PIN_L2));    
+    if (curP1 != prevP1) printf("\r\ncurP1: %x", curP1);
+    if (curP2 != prevP2) printf("\r\ncurP2: %x", curP2);
 #endif
-
-    if (!rightWallP && (curRsignal < PARALLEL_LOW_THRESHOLD)) {
-#ifdef DEBUG
-        //        printf("PARALLEL TO THE RIGHT WALL");
-#endif
-        ES_Event thisEvent;
-        thisEvent.EventType = WALL_PARALLEL_R;
-        thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
-#ifndef ParallelMain           // keep this as is for test harness
-        PostTopHSM(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif 
-        rightWallP = 1;
-        returnVal = TRUE;
-    } else if (rightWallP && (curRsignal > PARALLEL_HIGH_THRESHOLD)) {
-#ifdef DEBUG
-        printf("NO LONGER PARALLEL TO THE RIGHT WALL");
-#endif
-        ES_Event thisEvent;
-        thisEvent.EventType = WALL_OFF_R;
-        thisEvent.EventParam = (AD_ReadADPin(PARALLEL_PIN_R1) > AD_ReadADPin(PARALLEL_PIN_R2));
-#ifndef ParallelMain           // keep this as is for test harness
-        PostTopHSM(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif 
-        rightWallP = 0;
-        returnVal = TRUE;
-
-    } else if (!leftWallP && (curLsignal < PARALLEL_LOW_THRESHOLD)) {
-#ifdef DEBUG
-        printf("\r\nPARALLEL TO THE LEFT WALL\r\n");
-#endif
-        ES_Event thisEvent;
-        thisEvent.EventType = WALL_PARALLEL_L;
-        thisEvent.EventParam = (curRsignal + curLsignal) >> 1; // avg
-#ifndef ParallelMain           // keep this as is for test harness
-        PostTopHSM(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif   
-        leftWallP = 1;
-        returnVal = TRUE;
-#ifdef DEBUG
-        printf("\r\nleftWallP = %d\r\n", leftWallP);
-#endif        
-    } else if (leftWallP && (curLsignal > PARALLEL_HIGH_THRESHOLD)) {
-#ifdef DEBUG
-        printf("NO LONGER PARALLEL TO THE LEFT WALL");
-#endif
-        ES_Event thisEvent;
-        thisEvent.EventType = WALL_OFF_L;
-        thisEvent.EventParam = (AD_ReadADPin(PARALLEL_PIN_L1) > AD_ReadADPin(PARALLEL_PIN_L2));
-#ifndef ParallelMain           // keep this as is for test harness
-        PostTopHSM(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif   
-        leftWallP = 0;
-        returnVal = TRUE;
-#ifdef DEBUG
-        printf("\r\nleftWallP = %d\r\n", leftWallP);
-#endif            
+    uint8_t ParallelActive = ReadParallelSensors();
+    if ((curP1 != prevP1) || (curP2 != prevP2)) {
+        if (curP1 && !(prevP1)) {
+            thisEvent.EventType = PARALLEL_ON_L;
+            thisEvent.EventParam = 1;
+            returnVal = TRUE;
+        } else if (curP2 && !(prevP2)) {
+            thisEvent.EventType = PARALLEL_ON_R;
+            thisEvent.EventParam = 2;
+            returnVal = TRUE;
+        } else if ((!curP1 && prevP1) || (!curP2 && prevP2)) {
+            thisEvent.EventType = PARALLEL_OFF;
+            thisEvent.EventParam = 0;
+            returnVal = TRUE;
+        }
     }
+    if (returnVal) {
+#ifndef ParallelMain           // keep this as is for test harness
+        PostTopHSM(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif 
+    }
+    // update history
+    prevP1 = curP1;
+    prevP2 = curP2;
 
-    prevRsignal = curRsignal;
-    prevLsignal = curLsignal;
-
-    return returnVal;
+    return (returnVal);
 }
-
 #ifdef ParallelMain
 
 void PrintEvent(void);
@@ -160,7 +122,6 @@ void main(void) {
     BOARD_Init();
     /* user initialization code goes here */
     ES_Timer_Init();
-    ES_Initialize();
     printf("\r\nTimer initialized");
     Parallel_Init();
     // Do not alter anything below this line
@@ -172,28 +133,23 @@ void main(void) {
         if (Parallel_CheckEvents()) {
             PrintEvent();
         }
-#ifdef DEBUG
-        printf("\r\nCheck");
-        PrintEvent();
-#endif
-
-        if (IsTransmitEmpty()) {
-#ifdef DEBUG
-            printf("\r\nEmptyCheck");
-#endif
-            for (i = 0; i< sizeof (EventList) >> 2; i++) {
-                if (EventList[i]() == TRUE) {
-                    PrintEvent();
-                    break;
-                }
-
-            }
-        }
     }
+    //    while (1) {
+    //        if (IsTransmitEmpty()) {
+    //            for (i = 0; i< sizeof (EventList) >> 2; i++) {
+    //                if (EventList[i]() == TRUE) {
+    //                    PrintEvent();
+    //                    break;
+    //                }
+    //
+    //            }
+    //        }
+    //    }
 }
 
 void PrintEvent(void) {
     printf("\r\nFunc: %s\tEvent: %s\tParam: 0x%X", eventName,
             EventNames[storedEvent.EventType], storedEvent.EventParam);
+    //    printf("\r\nCurrent Active Parallel Sensors: %x", GetCurrentParallel());
 }
 #endif

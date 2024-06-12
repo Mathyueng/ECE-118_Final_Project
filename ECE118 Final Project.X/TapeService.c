@@ -153,37 +153,66 @@ ES_Event RunTapeService(ES_Event ThisEvent) {
 
         case ES_TIMEOUT:
             ES_Timer_InitTimer(TAPE_SERVICE_TIMER, TIMER_0_TICKS);
+            uint8_t returnVal = FALSE;
+
+            uint8_t curT1 = (prevT1 << 1) | !(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_1);
+            uint8_t curT2 = (prevT2 << 1) | !(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_2);
+            uint8_t curT3 = (prevT3 << 1) | !(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_3);
+            uint8_t curT4 = (prevT4 << 1) | !(IO_PortsReadPort(TAPE_PORT) & TAPE_PIN_4);
 
             uint8_t CurTape = ReadTapeSensors();
+            if ((curT1 != prevT1) ||
+                (curT2 != prevT2) ||
+                (curT3 != prevT3) ||
+                (curT4 != prevT4)) {
+                uint8_t tapeOff =
+                        ((curT1 && !prevT1) << 3) |
+                        ((curT2 && !prevT2) << 2) |
+                        ((curT3 && !prevT3) << 1) |
+                        ((curT4 && !prevT4) << 0);
 
-            if (CurTape != PrevTape) { // check for change from last time
+                uint8_t tapeOn =
+                        ((!curT1 && prevT1) << 3) |
+                        ((!curT2 && prevT2) << 2) |
+                        ((!curT3 && prevT3) << 1) |
+                        ((!curT4 && prevT4) << 0);
 #ifdef DEBUG
-                printf("\r\nPrevTape: 0x%X\r\n",    PrevTape);
-                printf("\r\nCurTape: 0x%X\r\n",     CurTape);
+                    printf("\r\nPrevTape: 0x%X\r\n", PrevTape);
+                    printf("\r\nCurTape: 0x%X\r\n", CurTape);
 #endif
-                ReturnEvent.EventType = TAPE_EVENT;
-                ReturnEvent.EventParam = CurTape;
-                PrevTape = CurTape; // update history
+                if (tapeOn) { // check for change from last time
+                    ReturnEvent.EventType = TAPE_ON;
+                    ReturnEvent.EventParam = CurTape;
+                    
+                    returnVal = TRUE;
 #ifdef DEBUG
-                printf("\r\nReturn Event: %s\tParam: 0x%X",
-                        EventNames[ReturnEvent.EventType], ReturnEvent.EventParam);
+                    printf("\r\nReturn Event: %s\tParam: 0x%X",
+                            EventNames[ReturnEvent.EventType], ReturnEvent.EventParam);
 #endif
-#ifndef SIMPLESERVICE_TEST           // keep this as is for test harness
-                PostTopHSM(ReturnEvent);
-#else
-                PostTemplateService(ReturnEvent);
-#endif   
+                } else if (tapeOff) { // check for change from last time
+                    ReturnEvent.EventType = TAPE_OFF;
+                    ReturnEvent.EventParam = CurTape;
+                    
+                    returnVal = TRUE;
+#ifdef DEBUG
+                    printf("\r\nReturn Event: %s\tParam: 0x%X",
+                            EventNames[ReturnEvent.EventType], ReturnEvent.EventParam);
+#endif
+                }
+                
+                PrevTape = CurTape;
+                
+                if (returnVal) PostTopHSM(ReturnEvent);
+                
+                prevT1 = curT1;
+                prevT2 = curT2;
+                prevT3 = curT3;
+                prevT4 = curT4;
+                
+                break;
             }
-            break;
-#ifdef SIMPLESERVICE_TEST     // keep this as is for test harness      
-        default:
-            printf("\r\nEvent: %s\tParam: 0x%X",
-                    EventNames[ThisEvent.EventType], ThisEvent.EventParam);
-            break;
-#endif
+            return ReturnEvent;
     }
-
-    return ReturnEvent;
 }
 
 /*******************************************************************************

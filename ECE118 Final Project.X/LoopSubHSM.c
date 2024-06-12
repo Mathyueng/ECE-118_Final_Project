@@ -47,13 +47,13 @@ typedef enum {
 } LoopSubHSMState_t;
 
 static const char *StateNames[] = {
-    "InitPSubState",
-    "Forward_East",
-    "Forward_West",
-    "Turn_180_Right",
-    "Turn_180_Left",
-    "Turn_90_Left",
-    "Avoid",
+	"InitPSubState",
+	"Forward_East",
+	"Forward_West",
+	"Turn_180_Right",
+	"Turn_180_Left",
+	"Turn_90_Left",
+	"Avoid",
 };
 
 
@@ -138,12 +138,22 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Forward_West: 
+        case Forward_West:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     Direction = 0;
+                    DT_DriveLeft(30, 4000);
                     break;
-                case TAPE_EVENT:
+                case WALL_ON:
+                    if (ThisEvent.EventParam == 0b0110) {
+                        DT_DriveFwd(50);
+                    }
+                    break;
+                case WALL_OFF:
+                    DT_SetLeftDrive(70);
+                    DT_SetRightDrive(60);
+                    break;
+                case TAPE_ON:
                     if (ThisEvent.EventParam == 0b1100) { // FL FR (1100, )
                         //Logic for Turn Left 90 2 timer param
                         nextState = Turn_180_Left;
@@ -151,7 +161,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case PING:
+                case OBSTACLE_EVENT:
                     nextState = Avoid;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -176,7 +186,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case PING:
+                case OBSTACLE_EVENT:
                     nextState = Avoid;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -192,11 +202,21 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     Direction = 1;
+                    DT_DriveRight(-30, 4000);
                     Loop_ctr++;
                     break;
-                case TAPE_EVENT:
+                case WALL_ON:
+                    if (ThisEvent.EventParam == 0b1001) { // FL BL (1001, 9)
+                        DT_DriveFwd(50);
+                    }
+                    break;
+                case WALL_OFF:
+                    DT_SetRightDrive(70);
+                    DT_SetLeftDrive(60);
+                    break;
+                case TAPE_ON:
                     if (ThisEvent.EventParam == 0b1100) { // FL FR (1100, )
-                        if(Loop_ctr < 3)
+                        if (Loop_ctr < 3)
                             nextState = Turn_180_Right;
                         else
                             nextState = Turn_90_Left;
@@ -204,7 +224,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case PING:
+                case OBSTACLE_EVENT:
                     nextState = Avoid;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -229,7 +249,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case PING:
+                case OBSTACLE_EVENT:
                     nextState = Avoid;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -240,7 +260,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                     break;
             }
             break;
-            
+
         case Turn_90_Left:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
@@ -262,7 +282,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_TIMEOUT: // return to going forward
                     if (ThisEvent.EventParam == LOOP_TIMER) {
-                        nextState = Forward_East;       // alter for when we do sensor testing
+                        nextState = Forward_East; // alter for when we do sensor testing
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }

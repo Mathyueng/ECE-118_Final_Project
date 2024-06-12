@@ -39,13 +39,15 @@
 typedef enum {
     InitPSubState,
     Forward,
-    Bounce
+    Bounce,
+    Dance,
 } RoamSubHSMState_t;
 
 static const char *StateNames[] = {
-    "InitPSubState",
-    "Forward",
-    "Bounce"
+	"InitPSubState",
+	"Forward",
+	"Bounce",
+	"Dance",
 };
 
 
@@ -112,6 +114,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
     RoamSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
+    uint8_t tapeSensors;
 
     switch (CurrentState) {
         case InitPSubState: // If current state is initial Psedudo State
@@ -122,23 +125,28 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
                 // initial state
 
                 // now put the machine into the actual initial state
-                nextState = Forward;
+                nextState = Bounce;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
             }
             break;
 
         case Forward: // in the first state, replace this with correct names
+            tapeSensors = ReadTapeSensors();
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_DriveFwd(FWD_MID_SPEED);
+                    DT_DriveFwd(FWD_LOW_SPEED);
+                    //                    ES_Timer_InitTimer(DANCE_TIMER, TIMER_4_SEC);
                     break;
-                case TAPE_EVENT:
-                    nextState = Bounce;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                case TAPE_ON:
+                    
+                    if ((tapeSensors & FLTape) || (tapeSensors & FRTape)) {
+                        nextState = Bounce;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
-                case PING:
+                case OBSTACLE_EVENT:
                     nextState = Bounce;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -154,14 +162,13 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     ES_Timer_InitTimer(ROAM_TIMER, TIMER_HALF_SEC);
-                    DT_SpinCC(FWD_LOW_SPEED);
+                    DT_SpinCC(60);
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == ROAM_TIMER) {
                         nextState = Forward;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
-
                     }
                     break;
                 case ES_EXIT:

@@ -28,6 +28,7 @@
 
 #include "ES_Configure.h"   // defines ES_Event, INIT_EVENT, ENTRY_EVENT, and EXIT_EVENT
 #include "BOARD.h"
+#include "ES_Events.h"
 
 /*******************************************************************************
  * PUBLIC #DEFINES                                                             *

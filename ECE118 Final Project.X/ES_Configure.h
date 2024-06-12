@@ -25,7 +25,7 @@
 //define for TattleTale
 #define USE_TATTLETALE
 
-//uncomment to supress the entry and exit events
+//uncomment to suppress the entry and exit events
 //#define SUPPRESS_EXIT_ENTRY_IN_TATTLE
 
 /****************************************************************************/
@@ -48,58 +48,38 @@ typedef enum {
     BATTERY_DISCONNECTED,
     TAPE_ON,
     TAPE_OFF,
-    TAPE_EVENT,
-    PING,
-    PING_OFF,
-    WALL_FRONT,
-    WALL_PARALLEL_R,
-    WALL_PARALLEL_L,
-    WALL_OFF_R,
-    WALL_OFF_L,
-    TRACK_WIRE_R,
-    TRACK_WIRE_L,
-    TRACK_OFF_R,
-    TRACK_OFF_L,
-    TRACK_WIRE_EQUAL,
-    TRACK_WIRE_OFF,
     WALL_ON,
     WALL_OFF,
+    PARALLEL_ON_R,
+    PARALLEL_ON_L,
+    PARALLEL_OFF,
+    OBSTACLE_EVENT,
     /* User-defined events end here */
     NUMBEROFEVENTS,
 } ES_EventTyp_t;
 
 static const char *EventNames[] = {
-    "ES_NO_EVENT",
-    "ES_ERROR",
-    "ES_INIT",
-    "ES_ENTRY",
-    "ES_EXIT",
-    "ES_KEYINPUT",
-    "ES_LISTEVENTS",
-    "ES_TIMEOUT",
-    "ES_TIMERACTIVE",
-    "ES_TIMERSTOPPED",
-    "BATTERY_CONNECTED",
-    "BATTERY_DISCONNECTED",
-    "TAPE_ON",
-    "TAPE_OFF",
-    "TAPE_EVENT",
-    "PING",
-    "PING_OFF",
-    "WALL_FRONT",
-    "WALL_PARALLEL_R",
-    "WALL_PARALLEL_L",
-    "WALL_OFF_R",
-    "WALL_OFF_L",
-    "TRACK_WIRE_R",
-    "TRACK_WIRE_L",
-    "TRACK_OFF_R",
-    "TRACK_OFF_L",
-    "TRACK_WIRE_EQUAL",
-    "TRACK_WIRE_OFF",
-    "WALL_ON",
-    "WALL_OFF",
-    "NUMBEROFEVENTS",
+	"ES_NO_EVENT",
+	"ES_ERROR",
+	"ES_INIT",
+	"ES_ENTRY",
+	"ES_EXIT",
+	"ES_KEYINPUT",
+	"ES_LISTEVENTS",
+	"ES_TIMEOUT",
+	"ES_TIMERACTIVE",
+	"ES_TIMERSTOPPED",
+	"BATTERY_CONNECTED",
+	"BATTERY_DISCONNECTED",
+	"TAPE_ON",
+	"TAPE_OFF",
+	"WALL_ON",
+	"WALL_OFF",
+	"PARALLEL_ON_R",
+	"PARALLEL_ON_L",
+	"PARALLEL_OFF",
+	"OBSTACLE_EVENT",
+	"NUMBEROFEVENTS",
 };
 
 
@@ -122,9 +102,9 @@ static const char *EventNames[] = {
 #define TIMER1_RESP_FUNC PostTopHSM
 #define TIMER2_RESP_FUNC PostTopHSM
 #define TIMER3_RESP_FUNC PostTopHSM
-#define TIMER4_RESP_FUNC PostTapeService
-#define TIMER5_RESP_FUNC PostWallService
-#define TIMER6_RESP_FUNC TIMER_UNUSED
+#define TIMER4_RESP_FUNC TIMER_UNUSED   // PostTapeService
+#define TIMER5_RESP_FUNC TIMER_UNUSED   // PostBumpService
+#define TIMER6_RESP_FUNC TIMER_UNUSED   // PostWallService
 #define TIMER7_RESP_FUNC TIMER_UNUSED
 #define TIMER8_RESP_FUNC TIMER_UNUSED
 #define TIMER9_RESP_FUNC TIMER_UNUSED 
@@ -146,8 +126,9 @@ static const char *EventNames[] = {
 #define LOOP_TIMER          1   /* Defined for Loop Use     */
 #define DUMP_TIMER          2   /* Defined for Dump Use     */
 #define AVOID_TIMER         3   /* Defined for Avoidance    */
-#define TAPE_SERVICE_TIMER  4   /* Defined for Tape Service */
-#define WALL_SERVICE_TIMER  5   /* Defined for Wall Service */
+//#define TAPE_SERVICE_TIMER  4   /* Defined for Tape Service */
+//#define BUMP_SERVICE_TIMER  5   /* Defined for Wall Service */
+//#define WALL_SERVICE_TIMER  6   /* Defined for Para Service */
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 
@@ -158,7 +139,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // This macro determines that number of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 4      // HSM, Tape, Wall, Track
+#define NUM_SERVICES 2      // HSM, Tape, Wall, Track
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service
@@ -205,11 +186,11 @@ static const char *EventNames[] = {
 // These are the definitions for Service 3
 #if NUM_SERVICES > 3
 // the header file with the public function prototypes
-#define SERV_3_HEADER "WallService.h"
+#define SERV_3_HEADER "BumpService.h"
 // the name of the Init function
-#define SERV_3_INIT InitWallService
+#define SERV_3_INIT InitBumpService
 // the name of the run function
-#define SERV_3_RUN RunWallService
+#define SERV_3_RUN RunBumpService
 // How big should this services Queue be?
 #define SERV_3_QUEUE_SIZE 3
 #endif
@@ -218,11 +199,11 @@ static const char *EventNames[] = {
 // These are the definitions for Service 4
 #if NUM_SERVICES > 4
 // the header file with the public function prototypes
-#define SERV_4_HEADER "TrackService.h"
+#define SERV_4_HEADER "WallService.h"
 // the name of the Init function
-#define SERV_4_INIT InitTrackService
+#define SERV_4_INIT InitWallService
 // the name of the run function
-#define SERV_4_RUN RunTrackService
+#define SERV_4_RUN RunWallService
 // How big should this services Queue be?
 #define SERV_4_QUEUE_SIZE 3
 #endif
