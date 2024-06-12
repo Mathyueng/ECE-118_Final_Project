@@ -33,6 +33,9 @@
 #include "serial.h"
 #include "IO_Ports.h"
 #include "AD.h"
+
+// Event Checker Files
+#include "Obstacle.h"
 #include "Parallel.h"
 #include "Track.h"
 #include "Tape.h"
@@ -70,6 +73,7 @@ static ES_Event storedEvent;
  ******************************************************************************/
 
 uint8_t InitAllEventCheckers(void) {
+    Obstacle_Init();
     Parallel_Init();
     Tape_Init();
     Wall_Init();
@@ -77,6 +81,7 @@ uint8_t InitAllEventCheckers(void) {
 }
 
 uint8_t CheckAllEvents(void) {
+    Obstacle_CheckEvents();
     Parallel_CheckEvents();
     Tape_CheckEvents();
     Wall_CheckEvents();

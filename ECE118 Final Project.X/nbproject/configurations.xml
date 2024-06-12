@@ -87,6 +87,8 @@
       <itemPath>Parallel.c</itemPath>
       <itemPath>Parallel.h</itemPath>
       <itemPath>Tape.c</itemPath>
+      <itemPath>Obstacle.h</itemPath>
+      <itemPath>Obstacle.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

@@ -146,7 +146,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case OBSTACLE_EVENT:
+                case OBSTACLE_ON:
                     nextState = Bounce;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -189,7 +189,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
         RunRoamSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 
-    LED_SetBank(LED_BANK2, CurrentState);
+//    LED_SetBank(LED_BANK1, CurrentState);
     ES_Tail(); // trace call stack end
     return ThisEvent;
 }

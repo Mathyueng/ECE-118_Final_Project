@@ -161,7 +161,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case OBSTACLE_EVENT:
+                case OBSTACLE_ON:
                     nextState = Avoid;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -186,7 +186,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case OBSTACLE_EVENT:
+                case OBSTACLE_ON:
                     nextState = Avoid;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -224,7 +224,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case OBSTACLE_EVENT:
+                case OBSTACLE_ON:
                     nextState = Avoid;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -249,7 +249,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case OBSTACLE_EVENT:
+                case OBSTACLE_ON:
                     nextState = Avoid;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -306,7 +306,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
         RunLoopSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 
-    LED_SetBank(LED_BANK3, CurrentState);
+//    LED_SetBank(LED_BANK2, CurrentState);
 
     ES_Tail(); // trace call stack end
     return ThisEvent;

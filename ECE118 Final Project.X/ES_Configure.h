@@ -53,7 +53,8 @@ typedef enum {
     PARALLEL_ON_R,
     PARALLEL_ON_L,
     PARALLEL_OFF,
-    OBSTACLE_EVENT,
+    OBSTACLE_ON,
+    OBSTACLE_OFF,
     /* User-defined events end here */
     NUMBEROFEVENTS,
 } ES_EventTyp_t;
@@ -78,7 +79,8 @@ static const char *EventNames[] = {
 	"PARALLEL_ON_R",
 	"PARALLEL_ON_L",
 	"PARALLEL_OFF",
-	"OBSTACLE_EVENT",
+	"OBSTACLE_ON",
+	"OBSTACLE_OFF",
 	"NUMBEROFEVENTS",
 };
 
