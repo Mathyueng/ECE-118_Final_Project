@@ -173,7 +173,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
-                        DT_Stop();
+//                        DT_Stop();
                     }
                 default:
                     break;

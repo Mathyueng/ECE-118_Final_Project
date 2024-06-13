@@ -36,14 +36,27 @@
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
+#define TURN_SPEED 80
+#define TURN_TIME 500
+#define BANK_RIGHT_SPEED 60
+#define BANK_RIGHT_RADIUS 9000
+
+#define DEBUG
+
 typedef enum {
     InitPSubState,
-    SubFirstState,
+    SpinLeft,
+    BankRight,
+    LeftTurn,
+    Avoid,
 } LoopSubHSMState_t;
 
 static const char *StateNames[] = {
 	"InitPSubState",
-	"SubFirstState",
+	"SpinLeft",
+    "BankRight",
+    "LeftTurn",
+    "Avoid",
 };
 
 
@@ -107,8 +120,15 @@ uint8_t InitLoopSubHSM(void) {
 ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
     LoopSubHSMState_t nextState; // <- change type to correct enum
-
+    
     ES_Tattle(); // trace call stack
+    uint8_t tapeSensors = ~(ReadTapeSensors()); // records which sensors are on the tape with a raised bit
+    
+#ifdef DEBUG
+    printf("\r\nstate: %s", StateNames[CurrentState]);
+    printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
+    printf("\r\ntapes: %x", tapeSensors);
+#endif
 
     switch (CurrentState) {
     case InitPSubState: // If current state is initial Psedudo State
@@ -119,17 +139,74 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
             // initial state
 
             // now put the machine into the actual initial state
-            nextState = SubFirstState;
+            nextState = SpinLeft;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 
-    case SubFirstState: // in the first state, replace this with correct names
+    case SpinLeft: // in the first state, replace this with correct names
         switch (ThisEvent.EventType) {
-        case ES_NO_EVENT:
-        default: // all unhandled events pass the event back up to the next level
-            break;
+            case ES_ENTRY:
+                DT_SpinCC(TURN_SPEED);
+                break;
+            case TAPE_OFF:
+                if (!(tapeSensors & FRTape)) {
+                    nextState = BankRight;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                }
+                break;
+            case ES_NO_EVENT:
+                break;
+            default: // all unhandled events pass the event back up to the next level
+                break;
+        }
+        break;
+        
+    case BankRight:
+        switch (ThisEvent.EventType) {
+            case ES_ENTRY:
+                DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                printf("\r\ndriving right");
+                break;
+            case TAPE_ON:
+                if (tapeSensors & FLTape) {
+                    nextState = LeftTurn;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                } else if (tapeSensors & FRTape) {
+                    nextState = SpinLeft;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                }
+                break;
+            default:
+                break;
+        }
+        break;
+        
+    case LeftTurn:
+        switch (ThisEvent.EventType) { 
+            case ES_ENTRY:
+                DT_SpinCC(TURN_SPEED);
+                ES_Timer_InitTimer(LOOP_TIMER,TURN_TIME);
+                break;
+            case ES_TIMEOUT:
+                DT_Stop();
+                break;
+            default:
+                break;
+        }
+        break;
+        
+    case Avoid:
+        switch (ThisEvent.EventType) {
+            case ES_ENTRY:
+                DT_Stop();
+                break;
+            default: 
+                break;
         }
         break;
         
