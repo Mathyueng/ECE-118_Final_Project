@@ -3,7 +3,7 @@
  * Author: J. Edward Carryer
  * Modified: Gabriel H Elkaim and Soja-Marie Morgens
  * Modified: Matthew Eng and Duc Lam
- * 
+ *
  * Template file to set up a Heirarchical SubState Machine to work with the Events and
  * Services Framework (ES_Framework) on the Uno32 for the CMPE-118/L class. Note that 
  * this file will need to be modified to fit your exact needs, and most of the names

@@ -15,7 +15,7 @@
 #ifndef CONFIGURE_H
 #define CONFIGURE_H
 
-
+#define LED_USE
 
 //defines for keyboard input
 //#define USE_KEYBOARD_INPUT
@@ -23,7 +23,7 @@
 //#define POSTFUNCTION_FOR_KEYBOARD_INPUT PostTopHSM
 
 //define for TattleTale
-#define USE_TATTLETALE
+//#define USE_TATTLETALE
 
 //uncomment to suppress the entry and exit events
 //#define SUPPRESS_EXIT_ENTRY_IN_TATTLE
@@ -55,6 +55,8 @@ typedef enum {
     PARALLEL_OFF,
     OBSTACLE_ON,
     OBSTACLE_OFF,
+    TRACK_ON,
+    TRACK_OFF,
     /* User-defined events end here */
     NUMBEROFEVENTS,
 } ES_EventTyp_t;
@@ -81,6 +83,8 @@ static const char *EventNames[] = {
 	"PARALLEL_OFF",
 	"OBSTACLE_ON",
 	"OBSTACLE_OFF",
+	"TRACK_ON",
+	"TRACK_OFF",
 	"NUMBEROFEVENTS",
 };
 

@@ -140,6 +140,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
 
         case Reverse: // in the first state, replace this with correct names
             // code to move backwards needed
+#ifdef DEBUG_HSM
+            printf("DUMP - Reverse 1\r\n");
+#endif
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     DT_DriveFwd(REV_LOW_SPEED);
@@ -161,7 +164,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             break;
 
         case Lower_Arm: // in the first state, replace this with correct names
-            // code to lower RC Servo Arm needed
+#ifdef DEBUG_HSM
+            printf("DUMP - Lower Arm\r\n");
+#endif            
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
@@ -182,6 +187,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             break;
 
         case Forward:
+#ifdef DEBUG_HSM
+            printf("DUMP - Forward\r\n");
+#endif
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     DT_DriveFwd(FWD_LOW_SPEED);
@@ -199,10 +207,13 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             }
 
         case Dump:
+#ifdef DEBUG_HSM
+            printf("DUMP - Dump\r\n");
+#endif
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     DT_SpinCC(FWD_MID_SPEED);
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_3_SEC);                  
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_3_SEC);
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
@@ -220,6 +231,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
 
         case Reverse_2: // in the first state, replace this with correct names
             // code to move backwards needed
+#ifdef DEBUG_HSM
+            printf("DUMP - Reverse 2\r\n");
+#endif
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     DT_DriveFwd(REV_LOW_SPEED);
@@ -242,7 +256,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             break;
 
         case Raise:
-            // code to lower RC Servo Arm needed
+#ifdef DEBUG_HSM
+            printf("DUMP - Raise Arm\r\n");
+#endif
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
@@ -263,6 +279,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             break;
 
         case Turn_Left:
+#ifdef DEBUG_HSM
+            printf("DUMP - Left Turn\r\n");
+#endif
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     DT_SetRightDrive(FWD_LOW_SPEED);
@@ -282,9 +301,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         CurrentState = nextState;
         RunDumpSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
-
-//    LED_SetBank(LED_BANK2, CurrentState);
-
+#ifdef LED_USE
+    //    LED_SetBank(LED_BANK2, CurrentState);
+#endif
     ES_Tail(); // trace call stack end
     return ThisEvent;
 }

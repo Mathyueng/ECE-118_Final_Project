@@ -39,15 +39,15 @@
 typedef enum {
     InitPSubState,
     Forward,
-    Bounce,
-    Dance,
+    Spin_Right,
+    Avoid,
 } RoamSubHSMState_t;
 
 static const char *StateNames[] = {
 	"InitPSubState",
 	"Forward",
-	"Bounce",
-	"Dance",
+	"Spin_Right",
+	"Avoid",
 };
 
 
@@ -66,7 +66,6 @@ static const char *StateNames[] = {
 
 static RoamSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
-static int Roam_Flag = 0;
 
 
 /*******************************************************************************
@@ -85,7 +84,7 @@ static int Roam_Flag = 0;
  * @author J. Edward Carryer, 2011.10.23 19:25 */
 uint8_t InitRoamSubHSM(void) {
     ES_Event returnEvent;
-    LED_SetBank(LED_BANK1, 0x0);
+
     CurrentState = InitPSubState;
     returnEvent = RunRoamSubHSM(INIT_EVENT);
     if (returnEvent.EventType == ES_NO_EVENT) {
@@ -99,7 +98,7 @@ uint8_t InitRoamSubHSM(void) {
  * @param ThisEvent - the event (type and param) to be responded.
  * @return Event - return event (type and param), in general should be ES_NO_EVENT
  * @brief This function is where you implement the whole of the heirarchical state
- *        machine, as this is called any time  ba new event is passed to the event
+ *        machine, as this is called any time a new event is passed to the event
  *        queue. This function will be called recursively to implement the correct
  *        order for a state transition to be: exit current state -> enter next state
  *        using the ES_EXIT and ES_ENTRY events.
@@ -125,55 +124,80 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
                 // initial state
 
                 // now put the machine into the actual initial state
-                nextState = Bounce;
+                nextState = Forward;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
             }
             break;
 
         case Forward: // in the first state, replace this with correct names
-            tapeSensors = ReadTapeSensors();
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_DriveFwd(FWD_LOW_SPEED);
-                    //                    ES_Timer_InitTimer(DANCE_TIMER, TIMER_4_SEC);
+                    DT_DriveFwd(FWD_MID_SPEED);
+                    break;
+                case ES_NO_EVENT:
                     break;
                 case TAPE_ON:
-                    
-                    if ((tapeSensors & FLTape) || (tapeSensors & FRTape)) {
-                        nextState = Bounce;
+                    tapeSensors = ~(ReadTapeSensors());
+                    if (tapeSensors & FLTape) {
+                        //                        DT_SpinCC(REV_MID_SPEED);
+                        nextState = Spin_Right;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else if (tapeSensors & BRTape) {
+                        //                        DT_SpinCC(REV_MID_SPEED);
+                        nextState = Spin_Right;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else if (tapeSensors & BLTape) {
+                        //                        DT_SpinCC(REV_MID_SPEED);
+                        nextState = Spin_Right;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else {
+                        //                        DT_SpinCC(REV_MID_SPEED);
+                        nextState = Spin_Right;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
                 case OBSTACLE_ON:
-                    nextState = Bounce;
+                    nextState = Avoid;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    //                    DT_SpinCC(FWD_MID_SPEED);
                     break;
-                case ES_EXIT:
+                case WALL_ON:
+                    // Stuff that happens in transition
+                    //                    DT_DriveLeft(-60, 2000);
+                    nextState = Avoid;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    //                    DT_SpinCC(FWD_MID_SPEED);
                     break;
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
             break;
 
-        case Bounce:
+        case Spin_Right:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(ROAM_TIMER, TIMER_HALF_SEC);
-                    DT_SpinCC(60);
+                    DT_SpinCC(REV_MID_SPEED);
+                    break;
+            }
+            break;
+        case Avoid:
+            printf("dodge\r\n");
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    DT_DriveLeft(-60, 2000);
+                    ES_Timer_InitTimer(ROAM_TIMER, TIMER_2_SEC);
                     break;
                 case ES_TIMEOUT:
-                    if (ThisEvent.EventParam == ROAM_TIMER) {
-                        nextState = Forward;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
-                    break;
-                case ES_EXIT:
-                    break;
-                default: // all unhandled events pass the event back up to the next level
+                    nextState = Forward;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
             }
             break;
@@ -188,12 +212,15 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
         CurrentState = nextState;
         RunRoamSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
-
-//    LED_SetBank(LED_BANK1, CurrentState);
+#ifdef LED_USE
+    LED_SetBank(LED_BANK2, CurrentState);
+#endif
     ES_Tail(); // trace call stack end
     return ThisEvent;
 }
 
+
 /*******************************************************************************
  * PRIVATE FUNCTIONS                                                           *
  ******************************************************************************/
+

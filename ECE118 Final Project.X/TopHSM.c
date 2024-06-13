@@ -136,6 +136,7 @@ uint8_t PostTopHSM(ES_Event ThisEvent) {
 ES_Event RunTopHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
     TopHSMState_t nextState; // <- change type to correct enum
+    uint8_t tapeSensors;
 
     ES_Tattle(); // trace call stack
 
@@ -163,22 +164,21 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             // run sub-state machine for this state
             //NOTE: the SubState Machine runs and responds to events before anything in the this
             //state machine does
-            ThisEvent = RunRoamSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    DT_IntakeFwd();
+                case ES_NO_EVENT:
                     break;
-                case WALL_ON:
-                    nextState = Looping;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    break;
-                case ES_EXIT:
-                    InitRoamSubHSM();
-                    break;
+                case TAPE_ON:
+                    tapeSensors = ~(ReadTapeSensors());
+                    if (tapeSensors & FRTape) {
+                        nextState = Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        DT_Stop();
+                    }
                 default:
                     break;
             }
+            ThisEvent = RunRoamSubHSM(ThisEvent);
             break;
 
         case Looping: // in the first state, replace this with correct names
@@ -187,16 +187,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             //state machine does
             ThisEvent = RunLoopSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    break;
-                case WALL_ON:
-                    nextState = Dumping;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    break;
-                case ES_EXIT:
-                    InitLoopSubHSM();
-                    break;
+
                 default:
                     break;
             }
@@ -208,19 +199,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             //state machine does
             ThisEvent = RunDumpSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
-                    break;
-                case WALL_ON:
-                    if (ThisEvent.EventParam == 0b0110) { // FR BR (0110, 6))
-                        nextState = Looping;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
-                    break;
-                case ES_EXIT:
-                    InitDumpSubHSM();
-                    break;
+
                 default:
                     break;
             }
@@ -235,7 +214,9 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
         CurrentState = nextState;
         RunTopHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
+#ifdef LED_USE
     LED_SetBank(LED_BANK1, CurrentState);
+#endif
     ES_Tail(); // trace call stack end
     return ThisEvent;
 }

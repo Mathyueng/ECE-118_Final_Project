@@ -68,7 +68,7 @@ uint8_t Track_CheckEvents(void) {
 #ifdef DEBUG
         printf("Track Active\r\n");
 #endif
-        thisEvent.EventType = TRACK_WIRE_ON;
+        thisEvent.EventType = TRACK_ON;
         thisEvent.EventParam = curSignal;
         TrackFlag = 1;
         returnVal = TRUE;
@@ -77,7 +77,7 @@ uint8_t Track_CheckEvents(void) {
 #ifdef DEBUG
         printf("Track Inactive\r\n");
 #endif
-        thisEvent.EventType = TRACK_WIRE_OFF;
+        thisEvent.EventType = TRACK_OFF;
         thisEvent.EventParam = curSignal;
         TrackFlag = 0;
         returnVal = TRUE;

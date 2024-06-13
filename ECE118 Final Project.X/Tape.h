@@ -32,10 +32,10 @@
 #include "ES_Configure.h"
 #include "BOARD.h"
 
-#define FLTape 0b0111
-#define FRTape 0b1011
-#define BRTape 0b1101
-#define BLTape 0b1110
+#define FLTape 0b1000
+#define FRTape 0b0100
+#define BRTape 0b0010
+#define BLTape 0b0001
 
 uint8_t Tape_Init(void);
 

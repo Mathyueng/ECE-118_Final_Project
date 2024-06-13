@@ -42,6 +42,8 @@
       <itemPath>BumpService.h</itemPath>
       <itemPath>Tape.h</itemPath>
       <itemPath>Wall.h</itemPath>
+      <itemPath>Parallel.h</itemPath>
+      <itemPath>Obstacle.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -85,9 +87,7 @@
       <itemPath>BumpService.c</itemPath>
       <itemPath>Wall.c</itemPath>
       <itemPath>Parallel.c</itemPath>
-      <itemPath>Parallel.h</itemPath>
       <itemPath>Tape.c</itemPath>
-      <itemPath>Obstacle.h</itemPath>
       <itemPath>Obstacle.c</itemPath>
     </logicalFolder>
   </logicalFolder>
@@ -138,6 +138,20 @@
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
       <item path="BumpService.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <C32>
         <property key="additional-warnings" value="false"/>
@@ -278,6 +292,20 @@
       <item path="E:/College Work/Year 5/Quarter 03/ECE 118/Final Project/ece118-final-project-part-2-electric-boogaloo/ECE118 Final Project.X/WallService.c"
             ex="true"
             overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="ES_Main.c" ex="false" overriding="false">
         <C32>
@@ -296,8 +324,36 @@
         </C32Global>
       </item>
       <item path="TapeService.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
-      <item path="Track.c" ex="true" overriding="false">
+      <item path="Track.c" ex="false" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="ping.c" ex="true" overriding="false">
         <C32>

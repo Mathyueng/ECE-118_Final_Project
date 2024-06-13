@@ -21,7 +21,7 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 //#define TapeMain
-//#define DEBUG
+//#define DEBUG_TAPE
 //#define INACTIVE
 
 #ifdef TapeMain
@@ -68,7 +68,7 @@ uint8_t ReadTapeSensors() {
 }
 
 uint8_t Tape_Init(void) {
-    IO_PortsSetPortInputs(TAPE_PORT, TAPE_PIN_1 | TAPE_PIN_2 | TAPE_PIN_3 | TAPE_PIN_4 | (IO_PortsReadPort(TAPE_PORT)));
+    IO_PortsSetPortInputs(TAPE_PORT, TAPE_PIN_1 | TAPE_PIN_2 | TAPE_PIN_3 | TAPE_PIN_4);
     prevT1 = 0;
     prevT2 = 0;
     prevT3 = 0;
@@ -91,7 +91,7 @@ uint8_t Tape_CheckEvents(void) {
 
     uint8_t returnVal = FALSE;
 
-#ifdef DEBUG
+#ifdef DEBUG_TAPE
     if (curT1 != prevT1) printf("\r\ncurT1: %x", curT1);
     if (curT2 != prevT2) printf("\r\ncurT2: %x", curT2);
     if (curT3 != prevT3) printf("\r\ncurT3: %x", curT3);
@@ -117,17 +117,15 @@ uint8_t Tape_CheckEvents(void) {
 
         uint8_t tapeActive = ReadTapeSensors();
         if (tapeOn) {
-#ifdef DEBUG
+#ifdef DEBUG_TAPE
         printf("\r\nTapeOn\r\n");
 #endif            
             ES_Event thisEvent;
             thisEvent.EventType = TAPE_ON;
-#ifdef INACTIVE
-            thisEvent.EventParam = tapeOn;
-#else
             thisEvent.EventParam = tapeActive;
+#ifdef DEBUG_HSM
+            printf("TAPE_ON\r\n");
 #endif
-
 #ifndef TapeMain           // keep this as is for test harness
             PostTopHSM(thisEvent);
 #else
@@ -138,17 +136,15 @@ uint8_t Tape_CheckEvents(void) {
 
         // TAPE_OFF detection
         if (tapeOff) {
-#ifdef DEBUG
+#ifdef DEBUG_TAPE
         printf("\r\nTapeOff\r\n");
 #endif            
             ES_Event thisEvent;
             thisEvent.EventType = TAPE_OFF;
-#ifdef INACTIVE
-            thisEvent.EventParam = tapeOff; //  & 0x0F
-#else
             thisEvent.EventParam = tapeActive;
+#ifdef DEBUG_HSM
+            printf("TAPE_OFF\r\n");
 #endif
-
 #ifndef TapeMain           // keep this as is for test harness
             PostTopHSM(thisEvent);
 #else

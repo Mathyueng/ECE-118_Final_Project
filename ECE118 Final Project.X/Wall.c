@@ -21,7 +21,7 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 //#define WallMain
-//#define DEBUG
+//#define DEBUG_WALL
 //#define INACTIVE
 
 #ifdef WallMain
@@ -68,7 +68,7 @@ uint8_t ReadWallSensors() {
 }
 
 uint8_t Wall_Init(void) {
-    IO_PortsSetPortInputs(WALL_PORT, WALL_PIN_1 | WALL_PIN_2 | WALL_PIN_3 | WALL_PIN_4 | (IO_PortsReadPort(WALL_PORT)));
+    IO_PortsSetPortInputs(WALL_PORT, WALL_PIN_1 | WALL_PIN_2 | WALL_PIN_3 | WALL_PIN_4);
     prevW1 = 0;
     prevW2 = 0;
     prevW3 = 0;
@@ -84,25 +84,26 @@ uint8_t Wall_Init(void) {
  * */
 uint8_t Wall_CheckEvents(void) {
     ES_Event thisEvent;
-    uint8_t curW1 = (prevW1 << 1) | (IO_PortsReadPort(WALL_PORT) & WALL_PIN_1);
-    uint8_t curW2 = (prevW2 << 1) | (IO_PortsReadPort(WALL_PORT) & WALL_PIN_2);
-    uint8_t curW3 = (prevW3 << 1) | (IO_PortsReadPort(WALL_PORT) & WALL_PIN_3);
-    uint8_t curW4 = (prevW4 << 1) | (IO_PortsReadPort(WALL_PORT) & WALL_PIN_4);
+    uint8_t curW1 = (prevW1 << 1) | !!(IO_PortsReadPort(WALL_PORT) & WALL_PIN_1);
+    uint8_t curW2 = (prevW2 << 1) | !!(IO_PortsReadPort(WALL_PORT) & WALL_PIN_2);
+    uint8_t curW3 = (prevW3 << 1) | !!(IO_PortsReadPort(WALL_PORT) & WALL_PIN_3);
+    uint8_t curW4 = (prevW4 << 1) | !!(IO_PortsReadPort(WALL_PORT) & WALL_PIN_4);
 
     uint8_t returnVal = FALSE;
 
-#ifdef DEBUG
+#ifdef DEBUG_WALL
+//    printf("\r\ncurW2: %x, prevW2: %x", (IO_PortsReadPort(WALL_PORT) & WALL_PIN_2), prevW2);
     if (curW1 != prevW1) printf("\r\ncurW1: %x", curW1);
     if (curW2 != prevW2) printf("\r\ncurW2: %x", curW2);
     if (curW3 != prevW3) printf("\r\ncurW3: %x", curW3);
     if (curW4 != prevW4) printf("\r\ncurW4: %x", curW4);
 #endif
-
+    
     if ((curW1 != prevW1) ||
             (curW2 != prevW2) ||
             (curW3 != prevW3) ||
             (curW4 != prevW4)) {
-
+        
         uint8_t wallOff =
                 ((curW1 && !prevW1) << 3) |
                 ((curW2 && !prevW2) << 2) |
@@ -124,10 +125,9 @@ uint8_t Wall_CheckEvents(void) {
         if (wallOn) {
             ES_Event thisEvent;
             thisEvent.EventType = WALL_ON;
-#ifdef INACTIVE
-            thisEvent.EventParam = wallOn;
-#else
             thisEvent.EventParam = wallActive;
+#ifdef DEBUG_HSM
+            printf("WALL_ON\r\n");
 #endif
 
 #ifndef WallMain           // keep this as is for test harness
@@ -142,12 +142,10 @@ uint8_t Wall_CheckEvents(void) {
         if (wallOff) {
             ES_Event thisEvent;
             thisEvent.EventType = WALL_OFF;
-#ifdef INACTIVE
-            thisEvent.EventParam = wallOff; //  & 0x0F
-#else
             thisEvent.EventParam = wallActive;
+#ifdef DEBUG_HSM
+            printf("WALL_OFF\r\n");
 #endif
-
 #ifndef WallMain           // keep this as is for test harness
             PostTopHSM(thisEvent);
 #else

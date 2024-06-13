@@ -77,7 +77,7 @@ uint8_t InitAllEventCheckers(void) {
     Parallel_Init();
     Tape_Init();
     Wall_Init();
-    //    Track_Init();
+    Track_Init();
 }
 
 uint8_t CheckAllEvents(void) {
@@ -85,7 +85,7 @@ uint8_t CheckAllEvents(void) {
     Parallel_CheckEvents();
     Tape_CheckEvents();
     Wall_CheckEvents();
-    //    Track_CheckEvents();
+    Track_CheckEvents();
 
 }
 
