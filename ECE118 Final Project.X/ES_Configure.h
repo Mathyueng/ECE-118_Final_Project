@@ -171,7 +171,7 @@ static const char *EventNames[] = {
 // the name of the run function
 #define SERV_1_RUN RunTopHSM
 // How big should this services Queue be?
-#define SERV_1_QUEUE_SIZE 3
+#define SERV_1_QUEUE_SIZE 9
 #endif
 
 // These are the definitions for Service 2

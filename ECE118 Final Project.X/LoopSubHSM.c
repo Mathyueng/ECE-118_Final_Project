@@ -37,8 +37,8 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 #define TURN_SPEED 80
-#define TURN_TIME 500
-#define BANK_RIGHT_SPEED 60
+#define TURN_TIME 450
+#define BANK_RIGHT_SPEED 40
 #define BANK_RIGHT_RADIUS 9000
 
 #define DEBUG
@@ -181,6 +181,9 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                     ThisEvent.EventType = ES_NO_EVENT;
                 }
                 break;
+            case ES_EXIT:
+                DT_Stop();
+                break;
             default:
                 break;
         }
@@ -193,8 +196,11 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                 ES_Timer_InitTimer(LOOP_TIMER,TURN_TIME);
                 break;
             case ES_TIMEOUT:
-                DT_Stop();
-                break;
+                if (ThisEvent.EventParam == LOOP_TIMER) {
+                    nextState = BankRight;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                }
             default:
                 break;
         }
