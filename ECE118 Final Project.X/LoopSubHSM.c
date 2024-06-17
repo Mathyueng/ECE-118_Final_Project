@@ -52,11 +52,11 @@ typedef enum {
 } LoopSubHSMState_t;
 
 static const char *StateNames[] = {
-    "InitPSubState",
-    "SpinLeft",
-    "BankRight",
-    "LeftTurn",
-    "Avoid",
+	"InitPSubState",
+	"SpinLeft",
+	"BankRight",
+	"LeftTurn",
+	"Avoid",
 };
 
 
@@ -195,13 +195,6 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                     DT_DriveRight(-TURN_SPEED, 1000);
                     //                    ES_Timer_InitTimer(LOOP_TIMER, TURN_TIME);
                     break;
-//                case TAPE_OFF:
-//                    if (ThisEvent.EventParam & FRTape) {
-//                        nextState = BankRight;
-//                        makeTransition = TRUE;
-//                        ThisEvent.EventType = ES_NO_EVENT;
-//                    }
-//                    break;
                 case TAPE_ON:
                     if (ThisEvent.EventParam & BLTape) {
                         nextState = BankRight;

@@ -173,8 +173,9 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
-//                        DT_Stop();
+                        //                        DT_Stop();
                     }
+                    break;
                 default:
                     break;
             }
@@ -187,7 +188,17 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             //state machine does
             ThisEvent = RunLoopSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
-
+                case ES_NO_EVENT:
+                    break;
+                case ES_ENTRY:
+                    break;
+                case WALL_ON:
+                    nextState = Dumping;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_EXIT:
+                    break;
                 default:
                     break;
             }
@@ -199,7 +210,19 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             //state machine does
             ThisEvent = RunDumpSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
-
+                case ES_NO_EVENT:
+                    break;
+                case ES_ENTRY:
+                    break;
+                case TAPE_ON:
+                    if (ThisEvent.EventParam & FLTape) {
+                        nextState = Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_EXIT:
+                    break;
                 default:
                     break;
             }
