@@ -114,15 +114,14 @@ uint8_t Tape_CheckEvents(void) {
                 ((!curT2 && prevT2) << 2) |
                 ((!curT3 && prevT3) << 1) |
                 ((!curT4 && prevT4) << 0);
-
-        uint8_t tapeActive = ReadTapeSensors();
+        
         if (tapeOn) {
 #ifdef DEBUG_TAPE
         printf("\r\nTapeOn\r\n");
 #endif            
             ES_Event thisEvent;
             thisEvent.EventType = TAPE_ON;
-            thisEvent.EventParam = tapeActive;
+            thisEvent.EventParam = tapeOn;
 #ifdef DEBUG_HSM
             printf("TAPE_ON\r\n");
 #endif
@@ -141,7 +140,7 @@ uint8_t Tape_CheckEvents(void) {
 #endif            
             ES_Event thisEvent;
             thisEvent.EventType = TAPE_OFF;
-            thisEvent.EventParam = tapeActive;
+            thisEvent.EventParam = tapeOff;
 #ifdef DEBUG_HSM
             printf("TAPE_OFF\r\n");
 #endif

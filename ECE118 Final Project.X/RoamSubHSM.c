@@ -188,7 +188,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
             }
             break;
         case Avoid:
-            printf("dodge\r\n");
+//            printf("dodge\r\n");
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     DT_DriveLeft(-60, 2000);

@@ -36,12 +36,12 @@
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
-#define TURN_SPEED 80
+#define TURN_SPEED 60
 #define TURN_TIME 450
 #define BANK_RIGHT_SPEED 40
 #define BANK_RIGHT_RADIUS 9000
 
-#define DEBUG
+//#define DEBUG
 
 typedef enum {
     InitPSubState,
@@ -52,8 +52,8 @@ typedef enum {
 } LoopSubHSMState_t;
 
 static const char *StateNames[] = {
-	"InitPSubState",
-	"SpinLeft",
+    "InitPSubState",
+    "SpinLeft",
     "BankRight",
     "LeftTurn",
     "Avoid",
@@ -120,104 +120,112 @@ uint8_t InitLoopSubHSM(void) {
 ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
     LoopSubHSMState_t nextState; // <- change type to correct enum
-    
+
     ES_Tattle(); // trace call stack
     uint8_t tapeSensors = ~(ReadTapeSensors()); // records which sensors are on the tape with a raised bit
-    
+
 #ifdef DEBUG
-    printf("\r\nstate: %s", StateNames[CurrentState]);
+    printf("\r\n\r\nstate: %s", StateNames[CurrentState]);
     printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
-    printf("\r\ntapes: %x", tapeSensors);
+    printf("\r\nparams: %x", ThisEvent.EventParam & 0x0F);
 #endif
 
     switch (CurrentState) {
-    case InitPSubState: // If current state is initial Psedudo State
-        if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
-        {
-            // this is where you would put any actions associated with the
-            // transition from the initial pseudo-state into the actual
-            // initial state
+        case InitPSubState: // If current state is initial Psedudo State
+            if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
+            {
+                // this is where you would put any actions associated with the
+                // transition from the initial pseudo-state into the actual
+                // initial state
 
-            // now put the machine into the actual initial state
-            nextState = SpinLeft;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
-        }
-        break;
+                // now put the machine into the actual initial state
+                nextState = SpinLeft;
+                makeTransition = TRUE;
+                ThisEvent.EventType = ES_NO_EVENT;
+            }
+            break;
 
-    case SpinLeft: // in the first state, replace this with correct names
-        switch (ThisEvent.EventType) {
-            case ES_ENTRY:
-                DT_SpinCC(TURN_SPEED);
-                break;
-            case TAPE_OFF:
-                if (!(tapeSensors & FRTape)) {
-                    nextState = BankRight;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                }
-                break;
-            case ES_NO_EVENT:
-                break;
-            default: // all unhandled events pass the event back up to the next level
-                break;
-        }
-        break;
-        
-    case BankRight:
-        switch (ThisEvent.EventType) {
-            case ES_ENTRY:
-                DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
-                printf("\r\ndriving right");
-                break;
-            case TAPE_ON:
-                if (tapeSensors & FLTape) {
-                    nextState = LeftTurn;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                } else if (tapeSensors & FRTape) {
-                    nextState = SpinLeft;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                }
-                break;
-            case ES_EXIT:
-                DT_Stop();
-                break;
-            default:
-                break;
-        }
-        break;
-        
-    case LeftTurn:
-        switch (ThisEvent.EventType) { 
-            case ES_ENTRY:
-                DT_SpinCC(TURN_SPEED);
-                ES_Timer_InitTimer(LOOP_TIMER,TURN_TIME);
-                break;
-            case ES_TIMEOUT:
-                if (ThisEvent.EventParam == LOOP_TIMER) {
-                    nextState = BankRight;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                }
-            default:
-                break;
-        }
-        break;
-        
-    case Avoid:
-        switch (ThisEvent.EventType) {
-            case ES_ENTRY:
-                DT_Stop();
-                break;
-            default: 
-                break;
-        }
-        break;
-        
-    default: // all unhandled states fall into here
-        break;
+        case SpinLeft: // in the first state, replace this with correct names
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    DT_SpinCC(TURN_SPEED);
+                    break;
+                case TAPE_OFF:
+                    if (!(tapeSensors & FRTape)) {
+                        nextState = BankRight;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_NO_EVENT:
+                    break;
+                default: // all unhandled events pass the event back up to the next level
+                    break;
+            }
+            break;
+
+        case BankRight:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                    break;
+                case TAPE_ON:
+                    if (tapeSensors & FLTape) {
+                        nextState = LeftTurn;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else if (tapeSensors & FRTape) {
+                        nextState = SpinLeft;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_EXIT:
+                    DT_Stop();
+                    break;
+                default:
+                    break;
+            }
+            break;
+
+        case LeftTurn:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    //                DT_SpinCC(TURN_SPEED);
+                    DT_DriveRight(-TURN_SPEED, 1000);
+                    //                    ES_Timer_InitTimer(LOOP_TIMER, TURN_TIME);
+                    break;
+//                case TAPE_OFF:
+//                    if (ThisEvent.EventParam & FRTape) {
+//                        nextState = BankRight;
+//                        makeTransition = TRUE;
+//                        ThisEvent.EventType = ES_NO_EVENT;
+//                    }
+//                    break;
+                case TAPE_ON:
+                    if (ThisEvent.EventParam & BLTape) {
+                        nextState = BankRight;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            break;
+
+        case Avoid:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    DT_Stop();
+                    break;
+                default:
+                    break;
+            }
+            break;
+
+        default: // all unhandled states fall into here
+            break;
     } // end switch on Current State
 
     if (makeTransition == TRUE) { // making a state transition, send EXIT and ENTRY
@@ -227,7 +235,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
         RunLoopSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 #ifdef LED_USE
-//    LED_SetBank(LED_BANK2, CurrentState);
+    //    LED_SetBank(LED_BANK2, CurrentState);
 #endif
     ES_Tail(); // trace call stack end
     return ThisEvent;
