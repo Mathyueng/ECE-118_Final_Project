@@ -84,7 +84,23 @@ LDLIBSOPTIONS=
 # fixDeps replaces a bunch of sed/cat/printf statements that slow down the build
 FIXDEPS=fixDeps
 
-.build-conf:  ${BUILD_SUBPROJECTS}
+# The following macros may be used in the pre and post step lines
+_/_=\\
+ShExtension=.bat
+Device=PIC32MX320F128H
+ProjectDir="C:\Users\aanbaner\Desktop\ece118-final-project-part-2-electric-boogaloo\ECE118 Final Project.X"
+ProjectName=ECE118_Final_Project
+ConfName=default
+ImagePath="${DISTDIR}\ECE118_Final_Project.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}"
+ImageDir="${DISTDIR}"
+ImageName="ECE118_Final_Project.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}"
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+IsDebug="true"
+else
+IsDebug="false"
+endif
+
+.build-conf:  .pre ${BUILD_SUBPROJECTS}
 ifneq ($(INFORMATION_MESSAGE), )
 	@echo $(INFORMATION_MESSAGE)
 endif
@@ -466,6 +482,11 @@ ${DISTDIR}/ECE118_Final_Project.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}
 	${MP_CC_DIR}\\xc32-bin2hex ${DISTDIR}/ECE118_Final_Project.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} 
 endif
 
+.pre:
+	@echo "--------------------------------------"
+	@echo "User defined pre-build step: [python C:\ECE118\scripts\Enum_To_String.py]"
+	@python C:\ECE118\scripts\Enum_To_String.py
+	@echo "--------------------------------------"
 
 # Subprojects
 .build-subprojects:

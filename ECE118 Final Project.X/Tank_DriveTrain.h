@@ -26,7 +26,9 @@
 #define REV_HI_SPEED    -100
 #define REV_MID_SPEED   -60
 #define REV_LOW_SPEED   -40
+#define REV_CRAWL_SPEED -10
 #define FULL_STOP       0
+#define FWD_CRAWL_SPEED 10
 #define FWD_LOW_SPEED   40
 #define FWD_MID_SPEED   60
 #define FWD_HI_SPEED    100

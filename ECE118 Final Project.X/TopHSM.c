@@ -34,13 +34,15 @@
 #include "BOARD.h"
 #include "TopHSM.h"
 
-#include "LoopSubHSM.h" //#include all sub state machines called
+//#include all sub state machines called
+#include "LoopSubHSM.h" 
 #include "RoamSubHSM.h"
 #include "DumpSubHSM.h"
 /*******************************************************************************
  * PRIVATE #DEFINES                                                            *
  ******************************************************************************/
 //Include any defines you need to do
+#define DEBUG
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
@@ -52,7 +54,6 @@ typedef enum {
     Roaming,
     Looping,
     Dumping,
-
 } TopHSMState_t;
 
 static const char *StateNames[] = {
@@ -139,7 +140,12 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
     uint8_t tapeSensors;
 
     ES_Tattle(); // trace call stack
+#ifdef DEBUG
+    printf("\r\n\r\nTOP state: %s", StateNames[CurrentState]);
+    printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
+    printf("\r\nparams: %x", ThisEvent.EventParam & 0x0F);
 
+#endif
     switch (CurrentState) {
         case InitPState: // If current state is initial Pseudo State
             if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
@@ -160,10 +166,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Roaming: // in the first state, replace this with correct names
-            // run sub-state machine for this state
-            //NOTE: the SubState Machine runs and responds to events before anything in the this
-            //state machine does
+        case Roaming:
             switch (ThisEvent.EventType) {
                 case ES_NO_EVENT:
                     break;
@@ -173,33 +176,48 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
-//                        DT_Stop();
                     }
+                    break;
                 default:
                     break;
             }
             ThisEvent = RunRoamSubHSM(ThisEvent);
             break;
 
-        case Looping: // in the first state, replace this with correct names
-            // run sub-state machine for this state
-            //NOTE: the SubState Machine runs and responds to events before anything in the this
-            //state machine does
+        case Looping:
             ThisEvent = RunLoopSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
-
+                case ES_ENTRY:
+                    break;
+                case TRACK_ON:
+                    nextState = Dumping;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_EXIT:
+                    break;
                 default:
                     break;
             }
             break;
 
-        case Dumping: // in the first state, replace this with correct names
-            // run sub-state machine for this state
-            //NOTE: the SubState Machine runs and responds to events before anything in the this
-            //state machine does
+        case Dumping:
             ThisEvent = RunDumpSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
-
+                case ES_NO_EVENT:
+                    break;
+                case ES_ENTRY:
+                    break;
+                case TAPE_ON:
+                    tapeSensors = ~(ReadTapeSensors());
+                    if (tapeSensors & (FRTape | FLTape)) {
+                        nextState = Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                case ES_EXIT:
+                    InitDumpSubHSM();
+                    break;
                 default:
                     break;
             }

@@ -36,6 +36,17 @@
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
+#define WALL_TURN_SPEED         60
+#define WALL_TURN_TIME          450
+#define TURN_SPEED 60
+#define TURN_TIME 450
+#define BANK_RIGHT_SPEED 40
+#define BANK_RIGHT_RADIUS 9000
+#define BANK_LEFT_SPEED 40
+#define BANK_LEFT_RADIUS 9000
+
+#define DEBUG
+
 typedef enum {
     InitPSubState,
     Reverse,
@@ -44,8 +55,11 @@ typedef enum {
     Dump,
     Reverse_2,
     Raise,
-    Turn_Left
-
+    LeftTurn,
+    BankRight,
+    BankLeft,
+    LeftSideBuffer,
+    SpinLeft
 } DumpSubHSMState_t;
 
 static const char *StateNames[] = {
@@ -56,6 +70,10 @@ static const char *StateNames[] = {
 	"Dump",
 	"Reverse_2",
 	"Raise",
+	"LeftTurn",
+	"BankRight",
+	"BankLeft",
+	"LeftSideBuffer",
 };
 
 
@@ -121,7 +139,11 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
     DumpSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
-
+#ifdef DEBUG
+    printf("\r\n\r\nDUMP state: %s", StateNames[CurrentState]);
+    printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
+    printf("\r\nparams: %x", ThisEvent.EventParam & 0x0F);
+#endif
     switch (CurrentState) {
         case InitPSubState: // If current state is initial Psedudo State
             if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
@@ -138,13 +160,13 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Reverse: // in the first state, replace this with correct names
-            // code to move backwards needed
-#ifdef DEBUG_HSM
-            printf("DUMP - Reverse 1\r\n");
-#endif
+        case Reverse:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+#ifdef DEBUG_HSM
+                    printf("DUMP - Reverse 1\r\n");
+#endif                    
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
                     DT_DriveFwd(REV_LOW_SPEED);
                     break;
                 case ES_TIMEOUT:
@@ -155,6 +177,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     }
                     break;
                 case ES_EXIT:
+                    DT_Stop();
                     break;
                 case ES_NO_EVENT:
                     break;
@@ -164,12 +187,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             break;
 
         case Lower_Arm: // in the first state, replace this with correct names
-#ifdef DEBUG_HSM
-            printf("DUMP - Lower Arm\r\n");
-#endif            
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
                     DT_ExtendArm();
                     break;
                 case ES_TIMEOUT:
@@ -180,6 +200,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     }
                     break;
                 case ES_EXIT:
+                    DT_Stop();
                     break;
                 default: // all unhandled events pass the event back up to the next level
                     break;
@@ -187,12 +208,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             break;
 
         case Forward:
-#ifdef DEBUG_HSM
-            printf("DUMP - Forward\r\n");
-#endif
             switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    DT_DriveFwd(FWD_LOW_SPEED);
+                case ES_ENTRY:                  
+                    DT_DriveFwd(FWD_CRAWL_SPEED);
                     break;
                 case WALL_ON:
                     nextState = Dump;
@@ -207,41 +225,85 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             }
 
         case Dump:
-#ifdef DEBUG_HSM
-            printf("DUMP - Dump\r\n");
-#endif
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_SpinCC(FWD_MID_SPEED);
+                    // Roller Reverse
                     ES_Timer_InitTimer(DUMP_TIMER, TIMER_3_SEC);
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
-                        nextState = Reverse_2;
+                        //                        nextState = Reverse_2;
+                        nextState = LeftTurn;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
                 case ES_EXIT:
-                    DT_SpinCC(REV_MID_SPEED);
                     break;
                 default:
                     break;
             }
-
-        case Reverse_2: // in the first state, replace this with correct names
-            // code to move backwards needed
-#ifdef DEBUG_HSM
-            printf("DUMP - Reverse 2\r\n");
-#endif
+//
+//        case Reverse_2: // in the first state, replace this with correct names
+//            // code to move backwards needed
+//#ifdef DEBUG_HSM
+//            printf("DUMP - Reverse 2\r\n");
+//#endif
+//            switch (ThisEvent.EventType) {
+//                case ES_ENTRY:
+//                    DT_DriveFwd(REV_LOW_SPEED);
+//                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_QUART_SEC);
+//                    break;
+//                case ES_TIMEOUT:
+//                    if (ThisEvent.EventParam == DUMP_TIMER) {
+//                        nextState = Raise;
+//                        makeTransition = TRUE;
+//                        ThisEvent.EventType = ES_NO_EVENT;
+//                    }
+//                    break;
+//                case ES_EXIT:
+//                    DT_Stop();
+//                    break;
+//                case ES_NO_EVENT:
+//                    break;
+//                default: // all unhandled events pass the event back up to the next level
+//                    break;
+//            }
+//            break;
+//
+//        case Raise:
+//#ifdef DEBUG_HSM
+//            printf("DUMP - Raise Arm\r\n");
+//#endif
+//            switch (ThisEvent.EventType) {
+//                case ES_ENTRY:
+//                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
+//                    DT_RetractArm();
+//                    break;
+//                case ES_TIMEOUT:
+//                    if (ThisEvent.EventParam == DUMP_TIMER) {
+//                        nextState = LeftTurn;
+//                        makeTransition = TRUE;
+//                        ThisEvent.EventType = ES_NO_EVENT;
+//                    }
+//                    break;
+//                case ES_EXIT:
+//                    break;
+//                case ES_NO_EVENT:
+//                    break;
+//                default: // all unhandled events pass the event back up to the next level
+//                    break;
+//            }
+//            break;
+        case LeftTurn:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_DriveFwd(REV_LOW_SPEED);
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
+                    DT_RetractArm();
+                    DT_DriveRight(-50, 0);
                     break;
-                case ES_TIMEOUT:
-                    if (ThisEvent.EventParam == DUMP_TIMER) {
-                        nextState = Raise;
+                case TAPE_ON:
+                    if (ThisEvent.EventParam & BLTape) {
+                        nextState = BankRight;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
@@ -250,47 +312,96 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_NO_EVENT:
                     break;
-                default: // all unhandled events pass the event back up to the next level
+                default:
                     break;
             }
             break;
 
-        case Raise:
-#ifdef DEBUG_HSM
-            printf("DUMP - Raise Arm\r\n");
-#endif
+        case BankRight:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
-                    DT_RetractArm();
+                    DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                    break;
+                case PARALLEL_ON_R:
+                    nextState = BankLeft;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case WALL_ON:
+                    nextState = SpinLeft;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_EXIT:
+                    DT_Stop();
+                    break;
+                default:
+                    break;
+            }
+            break;
+
+        case BankLeft:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    DT_DriveRight(-40, 0);
+                    break;
+                case PARALLEL_OFF:
+                    nextState = LeftSideBuffer;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_EXIT:
+                    DT_Stop();
+                    break;
+                default:
+                    break;
+            }
+            break;
+
+        case LeftSideBuffer:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_BUFFER);
+                    break;
+                case ES_NO_EVENT:
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
-                        nextState = Turn_Left;
+                        nextState = BankRight;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
                 case ES_EXIT:
                     break;
+                default:
+                    break;
+            }
+            break;
+
+        case SpinLeft: // in the first state, replace this with correct names
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+//                    DT_SpinCC(TURN_SPEED);
+                    DT_DriveRight(-40, 2000);
+                    break;
+                case WALL_OFF:
+                    nextState = LeftSideBuffer;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case PARALLEL_ON_R:
+                    nextState = BankLeft;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_NO_EVENT:
+                    break;
                 default: // all unhandled events pass the event back up to the next level
                     break;
             }
             break;
 
-        case Turn_Left:
-#ifdef DEBUG_HSM
-            printf("DUMP - Left Turn\r\n");
-#endif
-            switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    DT_SetRightDrive(FWD_LOW_SPEED);
-                    break;
-                case ES_EXIT:
-                    break;
-                default:
-                    break;
-            }
         default: // all unhandled states fall into here
             break;
     } // end switch on Current State

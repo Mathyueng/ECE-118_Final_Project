@@ -33,6 +33,8 @@
 #include "TopHSM.h"
 #include "RoamSubHSM.h"
 
+//#define DEBUG
+
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
@@ -115,6 +117,12 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
     ES_Tattle(); // trace call stack
     uint8_t tapeSensors;
 
+#ifdef DEBUG
+    printf("\r\n\r\nROAM state: %s", StateNames[CurrentState]);
+    printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
+    printf("\r\nparams: %x", ThisEvent.EventParam);
+#endif
+    
     switch (CurrentState) {
         case InitPSubState: // If current state is initial Psedudo State
             if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
@@ -183,16 +191,16 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
         case Spin_Right:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_SpinCC(REV_MID_SPEED);
+                    DT_DriveLeft(REV_MID_SPEED,0);
                     break;
             }
             break;
+            
         case Avoid:
-//            printf("dodge\r\n");
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_DriveLeft(-60, 2000);
-                    ES_Timer_InitTimer(ROAM_TIMER, TIMER_2_SEC);
+                    DT_SpinCC(30);
+                    ES_Timer_InitTimer(ROAM_TIMER, TIMER_1_SEC);
                     break;
                 case ES_TIMEOUT:
                     nextState = Forward;

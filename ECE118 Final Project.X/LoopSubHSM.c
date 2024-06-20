@@ -41,7 +41,7 @@
 #define BANK_RIGHT_SPEED 40
 #define BANK_RIGHT_RADIUS 9000
 
-//#define DEBUG
+#define DEBUG
 
 typedef enum {
     InitPSubState,
@@ -52,11 +52,11 @@ typedef enum {
 } LoopSubHSMState_t;
 
 static const char *StateNames[] = {
-    "InitPSubState",
-    "SpinLeft",
-    "BankRight",
-    "LeftTurn",
-    "Avoid",
+	"InitPSubState",
+	"SpinLeft",
+	"BankRight",
+	"LeftTurn",
+	"Avoid",
 };
 
 
@@ -125,9 +125,10 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
     uint8_t tapeSensors = ~(ReadTapeSensors()); // records which sensors are on the tape with a raised bit
 
 #ifdef DEBUG
-    printf("\r\n\r\nstate: %s", StateNames[CurrentState]);
+    printf("\r\n\r\nLOOP state: %s", StateNames[CurrentState]);
     printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
     printf("\r\nparams: %x", ThisEvent.EventParam & 0x0F);
+    
 #endif
 
     switch (CurrentState) {
@@ -153,6 +154,13 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                 case TAPE_OFF:
                     if (!(tapeSensors & FRTape)) {
                         nextState = BankRight;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case TAPE_ON:
+                    if (tapeSensors & FLTape) {
+                        nextState = LeftTurn;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
@@ -194,14 +202,16 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                     //                DT_SpinCC(TURN_SPEED);
                     DT_DriveRight(-TURN_SPEED, 1000);
                     //                    ES_Timer_InitTimer(LOOP_TIMER, TURN_TIME);
+                    //Watchdog timer
+                    ES_Timer_InitTimer(LOOP_TIMER, TIMER_1_SEC);
                     break;
-//                case TAPE_OFF:
-//                    if (ThisEvent.EventParam & FRTape) {
-//                        nextState = BankRight;
-//                        makeTransition = TRUE;
-//                        ThisEvent.EventType = ES_NO_EVENT;
-//                    }
-//                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == LOOP_TIMER) {
+                        nextState = BankRight;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case TAPE_ON:
                     if (ThisEvent.EventParam & BLTape) {
                         nextState = BankRight;

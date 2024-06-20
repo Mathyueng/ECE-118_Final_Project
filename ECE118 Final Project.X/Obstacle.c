@@ -84,10 +84,10 @@ uint8_t Obstacle_Init(void) {
  * */
 uint8_t Obstacle_CheckEvents(void) {
     ES_Event thisEvent;
-    uint8_t curObs1 = (prevObs1 << 1) | !!(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_1);
-    uint8_t curObs2 = (prevObs2 << 1) | !!(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_2);
-    uint8_t curObs3 = (prevObs3 << 1) | !!(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_3);
-    uint8_t curObs4 = (prevObs4 << 1) | !!(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_4);
+    uint8_t curObs1 = (prevObs1 << 1) | !(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_1);
+    uint8_t curObs2 = (prevObs2 << 1) | !(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_2);
+    uint8_t curObs3 = (prevObs3 << 1) | !(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_3);
+    uint8_t curObs4 = (prevObs4 << 1) | !(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_4);
 
     uint8_t returnVal = FALSE;
 

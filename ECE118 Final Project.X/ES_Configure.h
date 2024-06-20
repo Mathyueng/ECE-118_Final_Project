@@ -108,7 +108,7 @@ static const char *EventNames[] = {
 #define TIMER1_RESP_FUNC PostTopHSM
 #define TIMER2_RESP_FUNC PostTopHSM
 #define TIMER3_RESP_FUNC PostTopHSM
-#define TIMER4_RESP_FUNC TIMER_UNUSED   // PostTapeService
+#define TIMER4_RESP_FUNC PostTopHSM
 #define TIMER5_RESP_FUNC TIMER_UNUSED   // PostBumpService
 #define TIMER6_RESP_FUNC TIMER_UNUSED   // PostWallService
 #define TIMER7_RESP_FUNC TIMER_UNUSED
@@ -132,9 +132,7 @@ static const char *EventNames[] = {
 #define LOOP_TIMER          1   /* Defined for Loop Use     */
 #define DUMP_TIMER          2   /* Defined for Dump Use     */
 #define AVOID_TIMER         3   /* Defined for Avoidance    */
-//#define TAPE_SERVICE_TIMER  4   /* Defined for Tape Service */
-//#define BUMP_SERVICE_TIMER  5   /* Defined for Wall Service */
-//#define WALL_SERVICE_TIMER  6   /* Defined for Para Service */
+#define TOP_TIMER           4   /* Defined for Top Service */
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 
