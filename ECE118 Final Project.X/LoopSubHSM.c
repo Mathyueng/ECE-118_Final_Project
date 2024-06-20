@@ -41,7 +41,6 @@
 #define BANK_RIGHT_SPEED 40
 #define BANK_RIGHT_RADIUS 9000
 
-#define DEBUG
 
 typedef enum {
     InitPSubState,
@@ -124,7 +123,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
     ES_Tattle(); // trace call stack
     uint8_t tapeSensors = ~(ReadTapeSensors()); // records which sensors are on the tape with a raised bit
 
-#ifdef DEBUG
+#ifdef DEBUG_LOOP
     printf("\r\n\r\nLOOP state: %s", StateNames[CurrentState]);
     printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
     printf("\r\nparams: %x", ThisEvent.EventParam & 0x0F);

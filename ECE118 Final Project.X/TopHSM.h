@@ -42,7 +42,7 @@
  * PUBLIC #DEFINES                                                             *
  ******************************************************************************/
 #define TIMER_0_TICKS   5       // 0.0005 s
-#define TIMER_BUFFER    20      // 0.002 s
+#define TIMER_BUFFER    50      // 0.005 s
 #define TIMER_QUART_SEC 250     // 0.25 s
 #define TIMER_HALF_SEC  500     // 0.5 s
 #define TIMER_1_SEC     1000    // 1 s
@@ -56,6 +56,11 @@
 #define TIMER_9_SEC     9000    // 9 s
 #define TIMER_10_SEC    10000   // 10 s
 
+
+//#define DEBUG_TOP
+//#define DEBUG_ROAM
+//#define DEBUG_LOOP
+//#define DEBUG_DUMP
 
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *

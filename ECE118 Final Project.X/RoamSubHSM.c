@@ -33,7 +33,6 @@
 #include "TopHSM.h"
 #include "RoamSubHSM.h"
 
-//#define DEBUG
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
@@ -117,7 +116,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
     ES_Tattle(); // trace call stack
     uint8_t tapeSensors;
 
-#ifdef DEBUG
+#ifdef DEBUG_ROAM
     printf("\r\n\r\nROAM state: %s", StateNames[CurrentState]);
     printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
     printf("\r\nparams: %x", ThisEvent.EventParam);
