@@ -4,13 +4,13 @@
  * Modified: Gabriel Elkaim and Soja-Marie Morgens
  * Modified: Matthew Eng and Duc Lam
  *
- * Template file to set up a Heirarchical State Machine to work with the Events and
+ * Template file to set up a Hierarchal State Machine to work with the Events and
  * Services Framework (ES_Framework) on the Uno32 for the CMPE-118/L class. Note that
  * this file will need to be modified to fit your exact needs, and most of the names
  * will have to be changed to match your code.
  *
- * There is another template file for the SubHSM's that is slightly differet, and
- * should be used for all of the subordinate state machines (flat or heirarchical)
+ * There is another template file for the SubHSM's that is slightly different, and
+ * should be used for all of the subordinate state machines (flat or hierarchal)
  *
  * This is provided as an example and a good place to start.
  *
@@ -42,7 +42,8 @@
  * PRIVATE #DEFINES                                                            *
  ******************************************************************************/
 //Include any defines you need to do
-#define DEBUG
+
+// Debug Defines in TopHSM.h
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
@@ -123,7 +124,7 @@ uint8_t PostTopHSM(ES_Event ThisEvent) {
  * @Function RunTemplateHSM(ES_Event ThisEvent)
  * @param ThisEvent - the event (type and param) to be responded.
  * @return Event - return event (type and param), in general should be ES_NO_EVENT
- * @brief This function is where you implement the whole of the heirarchical state
+ * @brief This function is where you implement the whole of the hierarchal state
  *        machine, as this is called any time a new event is passed to the event
  *        queue. This function will be called recursively to implement the correct
  *        order for a state transition to be: exit current state -> enter next state
@@ -140,7 +141,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
     uint8_t tapeSensors;
 
     ES_Tattle(); // trace call stack
-#ifdef DEBUG
+#ifdef DEBUG_TOP
     printf("\r\n\r\nTOP state: %s", StateNames[CurrentState]);
     printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
     printf("\r\nparams: %x", ThisEvent.EventParam & 0x0F);
@@ -161,6 +162,9 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 nextState = Roaming;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
+#ifdef INTAKE_ACTIVE
+      DT_IntakeFwd();          
+#endif
                 DT_Stop();
                 break;
             }
@@ -176,10 +180,6 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
-<<<<<<< HEAD
-=======
-                        //                        DT_Stop();
->>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                     }
                     break;
                 default:
@@ -191,17 +191,10 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
         case Looping:
             ThisEvent = RunLoopSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
-<<<<<<< HEAD
-                case ES_ENTRY:
-                    break;
-                case TRACK_ON:
-=======
-                case ES_NO_EVENT:
-                    break;
                 case ES_ENTRY:
                     break;
                 case WALL_ON:
->>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
+//                case TRACK_ON:
                     nextState = Dumping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -221,23 +214,14 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     break;
                 case TAPE_ON:
-<<<<<<< HEAD
                     tapeSensors = ~(ReadTapeSensors());
                     if (tapeSensors & (FRTape | FLTape)) {
-=======
-                    if (ThisEvent.EventParam & FLTape) {
->>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
-<<<<<<< HEAD
                 case ES_EXIT:
                     InitDumpSubHSM();
-=======
-                    break;
-                case ES_EXIT:
->>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                     break;
                 default:
                     break;

@@ -41,6 +41,7 @@
 #define BANK_RIGHT_SPEED 40
 #define BANK_RIGHT_RADIUS 9000
 
+// Debug Defines in TopHSM.h
 
 typedef enum {
     InitPSubState,
