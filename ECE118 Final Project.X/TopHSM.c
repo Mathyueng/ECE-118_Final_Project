@@ -176,6 +176,10 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
+<<<<<<< HEAD
+=======
+                        //                        DT_Stop();
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                     }
                     break;
                 default:
@@ -187,9 +191,17 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
         case Looping:
             ThisEvent = RunLoopSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
+<<<<<<< HEAD
                 case ES_ENTRY:
                     break;
                 case TRACK_ON:
+=======
+                case ES_NO_EVENT:
+                    break;
+                case ES_ENTRY:
+                    break;
+                case WALL_ON:
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                     nextState = Dumping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -209,14 +221,23 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     break;
                 case TAPE_ON:
+<<<<<<< HEAD
                     tapeSensors = ~(ReadTapeSensors());
                     if (tapeSensors & (FRTape | FLTape)) {
+=======
+                    if (ThisEvent.EventParam & FLTape) {
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
+<<<<<<< HEAD
                 case ES_EXIT:
                     InitDumpSubHSM();
+=======
+                    break;
+                case ES_EXIT:
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                     break;
                 default:
                     break;

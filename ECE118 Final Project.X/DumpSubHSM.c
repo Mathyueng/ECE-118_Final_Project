@@ -38,6 +38,7 @@
  ******************************************************************************/
 #define WALL_TURN_SPEED         60
 #define WALL_TURN_TIME          450
+<<<<<<< HEAD
 #define TURN_SPEED 60
 #define TURN_TIME 450
 #define BANK_RIGHT_SPEED 40
@@ -46,6 +47,12 @@
 #define BANK_LEFT_RADIUS 9000
 
 #define DEBUG
+=======
+#define WALL_BANK_RIGHT_SPEED   40
+#define WALL_BANK_RIGHT_RADIUS  10000
+
+//#define DEBUG_HSM
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
 
 typedef enum {
     InitPSubState,
@@ -56,6 +63,7 @@ typedef enum {
     Reverse_2,
     Raise,
     LeftTurn,
+<<<<<<< HEAD
     BankRight,
     BankLeft,
     LeftSideBuffer,
@@ -74,6 +82,22 @@ static const char *StateNames[] = {
 	"BankRight",
 	"BankLeft",
 	"LeftSideBuffer",
+=======
+    Bank_Wall,
+    Tape_Turn
+} DumpSubHSMState_t;
+
+static const char *StateNames[] = {
+    "InitPSubState",
+    "Reverse",
+    "Lower_Arm",
+    "Forward",
+    "Dump",
+    "Reverse_2",
+    "Raise",
+    "LeftTurn",
+    "Bank_Wall",
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
 };
 
 
@@ -160,7 +184,13 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             }
             break;
 
+<<<<<<< HEAD
         case Reverse:
+=======
+        case Reverse: // in the first state, replace this with correct names
+            // code to move backwards needed
+
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
 #ifdef DEBUG_HSM
@@ -187,9 +217,19 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             break;
 
         case Lower_Arm: // in the first state, replace this with correct names
+<<<<<<< HEAD
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+=======
+
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+#ifdef DEBUG_HSM
+                    printf("DUMP - Lower Arm\r\n");
+#endif   
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                     DT_ExtendArm();
                     break;
                 case ES_TIMEOUT:
@@ -208,9 +248,19 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             break;
 
         case Forward:
+<<<<<<< HEAD
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:                  
                     DT_DriveFwd(FWD_CRAWL_SPEED);
+=======
+
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+#ifdef DEBUG_HSM
+                    printf("DUMP - Forward\r\n");
+#endif                    
+                    DT_DriveFwd(FWD_LOW_SPEED);
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                     break;
                 case WALL_ON:
                     nextState = Dump;
@@ -225,9 +275,19 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             }
 
         case Dump:
+<<<<<<< HEAD
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     // Roller Reverse
+=======
+
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+#ifdef DEBUG_HSM
+                    printf("DUMP - Dump\r\n");
+#endif
+                    //                    DT_SpinCC(FWD_MID_SPEED);
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                     ES_Timer_InitTimer(DUMP_TIMER, TIMER_3_SEC);
                     break;
                 case ES_TIMEOUT:
@@ -309,6 +369,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     }
                     break;
                 case ES_EXIT:
+                    DT_Stop();
                     break;
                 case ES_NO_EVENT:
                     break;
@@ -367,13 +428,18 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
+<<<<<<< HEAD
                         nextState = BankRight;
+=======
+                        nextState = LeftTurn;
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
                 case ES_EXIT:
                     break;
+<<<<<<< HEAD
                 default:
                     break;
             }
@@ -395,6 +461,8 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
+=======
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
                 case ES_NO_EVENT:
                     break;
                 default: // all unhandled events pass the event back up to the next level
@@ -402,6 +470,51 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             }
             break;
 
+<<<<<<< HEAD
+=======
+        case LeftTurn:
+#ifdef DEBUG_HSM
+            printf("DUMP - Left Turn\r\n");
+#endif
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    DT_RetractArm();
+                    DT_DriveRight(-WALL_TURN_SPEED, 1000);
+                    break;
+                case TAPE_OFF:
+                    if (!(ThisEvent.EventParam & BLTape)) {
+                        nextState = Bank_Wall;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_EXIT:
+                    break;
+                case ES_NO_EVENT:
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case Bank_Wall:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+#ifdef DEBUG_HSM
+                    printf("DUMP - BankWall\r\n");
+#endif
+                    DT_DriveRight(WALL_BANK_RIGHT_SPEED, WALL_BANK_RIGHT_RADIUS);
+                    break;
+                case ES_EXIT:
+                    break;
+                    //                case PARALLEL_ON_R:
+                    //                    break;
+                    //                case TAPE_ON:
+                    //                    break;
+                case ES_NO_EVENT:
+                    break;
+            }
+            break;
+>>>>>>> 1f52c49af913b20ce401f6a013e3f98609a19cc5
         default: // all unhandled states fall into here
             break;
     } // end switch on Current State
