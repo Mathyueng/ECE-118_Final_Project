@@ -50,6 +50,9 @@ typedef enum {
     LowerArm,
     Forward,
     Dump,
+    Reverse_2,
+    RaiseArm,
+    Forward_2,
     LeftTurn,
     BankRight,
     BankLeft,
@@ -63,6 +66,9 @@ static const char *StateNames[] = {
     "LowerArm",
     "Forward",
     "Dump",
+    "Reverse_2",
+    "RaiseArm",
+    "Forward_2",
     "LeftTurn",
     "BankRight",
     "BankLeft",
@@ -182,6 +188,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     }
                     break;
                 case ES_EXIT:
+                    DT_ExtendArm();
                     DT_Stop();
                     break;
                 case ES_NO_EVENT:
@@ -266,10 +273,59 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     break;
             }
             break;
+
+        case Reverse_2:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    break;
+                case ES_NO_EVENT:
+                    break;
+                case ES_TIMEOUT:
+                    break;
+                case ES_EXIT:
+                    DT_Stop();
+                    break;
+            }
+            break;
+
+        case RaiseArm: // in the first state, replace this with correct names
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    DT_RetractArm();
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == DUMP_TIMER) {
+                        nextState = Forward_2;
+                        makeTransition = TRUE; // NOTE FOR CHANGE BACK TO TRUE
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_EXIT:
+                    DT_Stop();
+                    break;
+                default: // all unhandled events pass the event back up to the next level
+                    break;
+            }
+            break;
+
+        case Forward_2:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    break;
+                case ES_NO_EVENT:
+                    break;
+                case ES_TIMEOUT:
+                    break;
+                case ES_EXIT:
+                    DT_Stop();
+                    break;
+            }
+            break;
+
         case LeftTurn:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_RetractArm();
                     DT_DriveRight(-20, 0);
                     break;
                 case TAPE_ON:
@@ -289,6 +345,8 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             }
             break;
 
+
+            // Adding every state below this into new sub-state (WallTrack)
         case BankRight:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:

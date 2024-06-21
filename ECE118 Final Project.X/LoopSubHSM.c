@@ -38,7 +38,7 @@
  ******************************************************************************/
 #define TURN_SPEED 60
 #define TURN_TIME 450
-#define BANK_RIGHT_SPEED 40
+#define BANK_RIGHT_SPEED 35
 #define BANK_RIGHT_RADIUS 9000
 
 // Debug Defines in TopHSM.h

@@ -57,7 +57,7 @@
 #define TIMER_10_SEC    10000   // 10 s
 
 
-//#define DEBUG_TOP
+#define DEBUG_TOP
 //#define DEBUG_ROAM
 //#define DEBUG_LOOP
 #define DEBUG_DUMP

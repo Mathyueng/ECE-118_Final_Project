@@ -14,7 +14,7 @@
 #include "RC_Servo.h"
 #include "math.h"
 
-//#define DEBUG
+#define DEBUG
 //#define DRIVETRAIN_MAIN
 
 #ifdef DEBUG

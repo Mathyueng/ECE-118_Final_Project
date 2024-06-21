@@ -58,10 +58,10 @@ typedef enum {
 } TopHSMState_t;
 
 static const char *StateNames[] = {
-	"InitPState",
-	"Roaming",
-	"Looping",
-	"Dumping",
+    "InitPState",
+    "Roaming",
+    "Looping",
+    "Dumping",
 };
 
 
@@ -163,7 +163,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
 #ifdef INTAKE_ACTIVE
-                DT_IntakeFwd();          
+                DT_IntakeFwd();
 #endif
                 DT_Stop();
                 break;
@@ -171,6 +171,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             break;
 
         case Roaming:
+            ThisEvent = RunRoamSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
                 case ES_NO_EVENT:
                     break;
@@ -182,10 +183,12 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
+                case ES_EXIT:
+                    InitRoamSubHSM();
+                    break;
                 default:
                     break;
             }
-            ThisEvent = RunRoamSubHSM(ThisEvent);
             break;
 
         case Looping:
@@ -203,6 +206,8 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case ES_EXIT:
+                    DT_Stop();
+                    InitLoopSubHSM();
                     break;
                 default:
                     break;
@@ -218,7 +223,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     break;
                 case TAPE_ON:
                     tapeSensors = ~(ReadTapeSensors());
-                    if (tapeSensors & (FRTape | FLTape)) {
+                    if (ThisEvent.EventParam & FLTape) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
@@ -241,7 +246,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
         RunTopHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 #ifdef LED_USE
-//    LED_SetBank(LED_BANK1, CurrentState);
+    //    LED_SetBank(LED_BANK1, CurrentState);
 #endif
     ES_Tail(); // trace call stack end
     return ThisEvent;
