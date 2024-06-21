@@ -163,7 +163,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
 #ifdef INTAKE_ACTIVE
-      DT_IntakeFwd();          
+                DT_IntakeFwd();          
 #endif
                 DT_Stop();
                 break;
@@ -193,8 +193,11 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
+#ifndef TRACK_ACTIVE
                 case WALL_ON:
-//                case TRACK_ON:
+#else
+                case TRACK_ON:
+#endif
                     nextState = Dumping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -238,7 +241,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
         RunTopHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 #ifdef LED_USE
-    LED_SetBank(LED_BANK1, CurrentState);
+//    LED_SetBank(LED_BANK1, CurrentState);
 #endif
     ES_Tail(); // trace call stack end
     return ThisEvent;

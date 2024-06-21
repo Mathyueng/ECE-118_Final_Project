@@ -24,7 +24,7 @@
 #define DRIVE_MULTIPLIER_R 15/16
 #define DRIVE_MULTIPLIER_L 1
 #define SPEED_TO_PWM 10
-#define INTAKE_PWM 600
+#define INTAKE_PWM 400
 
 #define RIGHT_DRIVE_PIN PWM_PORTY10
 #define LEFT_DRIVE_PIN PWM_PORTY12
@@ -215,11 +215,11 @@ char DT_SpinCC(int16_t speed) {
 }
 
 char DT_ExtendArm(void) {
-    RC_SetPulseTime(SERVO_ARM_PIN, 2000);
+    RC_SetPulseTime(SERVO_ARM_PIN, 1150);
 }
 
 char DT_RetractArm(void) {
-    RC_SetPulseTime(SERVO_ARM_PIN, 1000);
+    RC_SetPulseTime(SERVO_ARM_PIN, 2000);
 }
 
 char DT_IntakeFwd(void) {

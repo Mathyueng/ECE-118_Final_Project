@@ -60,9 +60,11 @@
 //#define DEBUG_TOP
 //#define DEBUG_ROAM
 //#define DEBUG_LOOP
-//#define DEBUG_DUMP
+#define DEBUG_DUMP
 
-//#define INTAKE_ACTIVE
+#define INTAKE_ACTIVE
+
+#define TRACK_ACTIVE
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *
  ******************************************************************************/

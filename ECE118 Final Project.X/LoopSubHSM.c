@@ -199,9 +199,8 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
         case LeftTurn:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    //                DT_SpinCC(TURN_SPEED);
                     DT_DriveRight(-TURN_SPEED, 1000);
-                    //                    ES_Timer_InitTimer(LOOP_TIMER, TURN_TIME);
+                    
                     //Watchdog timer
                     ES_Timer_InitTimer(LOOP_TIMER, TIMER_1_SEC);
                     break;
