@@ -21,7 +21,7 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 //#define TapeMain
-//#define DEBUG_TAPE
+//#define DEBUG_TAPE_CHECK
 //#define INACTIVE
 
 #ifdef TapeMain
@@ -91,7 +91,7 @@ uint8_t Tape_CheckEvents(void) {
 
     uint8_t returnVal = FALSE;
 
-#ifdef DEBUG_TAPE
+#ifdef DEBUG_TAPE_CHECK
     if (curT1 != prevT1) printf("\r\ncurT1: %x", curT1);
     if (curT2 != prevT2) printf("\r\ncurT2: %x", curT2);
     if (curT3 != prevT3) printf("\r\ncurT3: %x", curT3);
@@ -116,7 +116,7 @@ uint8_t Tape_CheckEvents(void) {
                 ((!curT4 && prevT4) << 0);
         
         if (tapeOn) {
-#ifdef DEBUG_TAPE
+#ifdef DEBUG_TAPE_CHECK
         printf("\r\nTapeOn\r\n");
 #endif            
             ES_Event thisEvent;
@@ -135,7 +135,7 @@ uint8_t Tape_CheckEvents(void) {
 
         // TAPE_OFF detection
         if (tapeOff) {
-#ifdef DEBUG_TAPE
+#ifdef DEBUG_TAPE_CHECK
         printf("\r\nTapeOff\r\n");
 #endif            
             ES_Event thisEvent;

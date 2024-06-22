@@ -1,9 +1,10 @@
 /*
- * File: LoopSubHSM.c
+ * File: WallSubHSM.c
  * Author: J. Edward Carryer
- * Modified: Gabriel H Elkaim, Matthew Eng, and Duc Lam ;)
+ * Modified: Gabriel H Elkaim
+ * Modified: Matthew Eng
  *
- * Template file to set up a Hierarchical State Machine to work with the Events and
+ * Template file to set up a Hierarchal State Machine to work with the Events and
  * Services Framework (ES_Framework) on the Uno32 for the CMPE-118/L class. Note that
  * this file will need to be modified to fit your exact needs, and most of the names
  * will have to be changed to match your code.
@@ -31,31 +32,34 @@
 #include "ES_Framework.h"
 #include "BOARD.h"
 #include "TopHSM.h"
-#include "LoopSubHSM.h"
+#include "WallSubHSM.h"
+
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
-#define TURN_SPEED 60
-#define BANK_RIGHT_SPEED 35
-#define BANK_RIGHT_RADIUS 9000
+#define TURN_SPEED          40
+#define BANK_RIGHT_SPEED    30
+#define BANK_RIGHT_RADIUS   11000
 
 // Debug Defines in TopHSM.h
 
 typedef enum {
     InitPSubState,
-    SpinLeft,
+    StartTurn,
     BankRight,
-    LeftTurn,
-    Avoid,
-} LoopSubHSMState_t;
+    BankLeft,
+    LeftSideBuffer,
+    SpinLeft
+} WallSubHSMState_t;
 
 static const char *StateNames[] = {
-	"InitPSubState",
-	"SpinLeft",
-	"BankRight",
-	"LeftTurn",
-	"Avoid",
+    "InitPSubState",
+    "StartTurn",
+    "BankRight",
+    "BankLeft",
+    "LeftSideBuffer",
+    "SpinLeft"
 };
 
 
@@ -72,7 +76,7 @@ static const char *StateNames[] = {
 /* You will need MyPriority and the state variable; you may need others as well.
  * The type of state variable should match that of enum in header file. */
 
-static LoopSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
+static WallSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
 
 
@@ -90,11 +94,11 @@ static uint8_t MyPriority;
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitLoopSubHSM(void) {
+uint8_t InitWallSubHSM(void) {
     ES_Event returnEvent;
 
     CurrentState = InitPSubState;
-    returnEvent = RunLoopSubHSM(INIT_EVENT);
+    returnEvent = RunWallSubHSM(INIT_EVENT);
     if (returnEvent.EventType == ES_NO_EVENT) {
         return TRUE;
     }
@@ -102,7 +106,7 @@ uint8_t InitLoopSubHSM(void) {
 }
 
 /**
- * @Function RunTemplateSubHSM(ES_Event ThisEvent)
+ * @Function RunWallSubHSM(ES_Event ThisEvent)
  * @param ThisEvent - the event (type and param) to be responded.
  * @return Event - return event (type and param), in general should be ES_NO_EVENT
  * @brief This function is where you implement the whole of the heirarchical state
@@ -116,18 +120,16 @@ uint8_t InitLoopSubHSM(void) {
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
-    uint8_t makeTransition = FALSE; // use to flag transition
-    LoopSubHSMState_t nextState; // <- change type to correct enum
+ES_Event RunWallSubHSM(ES_Event ThisEvent) {
+    uint8_t makeTransition = FALSE; // use to Wall_Flag transition
+    WallSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
-    uint8_t tapeSensors = ~(ReadTapeSensors()); // records which sensors are on the tape with a raised bit
 
-#ifdef DEBUG_LOOP
-    printf("\r\n\r\nLOOP state: %s", StateNames[CurrentState]);
+#ifdef DEBUG_WALL
+    printf("\r\n\r\nROAM state: %s", StateNames[CurrentState]);
     printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
-    printf("\r\nparams: %x", ThisEvent.EventParam & 0x0F);
-    
+    printf("\r\nparams: %x", ThisEvent.EventParam);
 #endif
 
     switch (CurrentState) {
@@ -139,53 +141,27 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                 // initial state
 
                 // now put the machine into the actual initial state
-                nextState = SpinLeft;
+                nextState = StartTurn;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
+                break;
             }
             break;
 
-        case SpinLeft: // in the first state, replace this with correct names
+        case StartTurn:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_InitTimer(START_TURN_TIMER, TIMER_0_TICKS);
                     DT_SpinCC(TURN_SPEED);
                     break;
-                case TAPE_OFF:
-                    if (!(tapeSensors & FRTape)) {
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == START_TURN_TIMER) {
                         nextState = BankRight;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case TAPE_ON:
-                    if (tapeSensors & FLTape) {
-                        nextState = LeftTurn;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
-                    break;
                 case ES_NO_EVENT:
-                    break;
-                default: // all unhandled events pass the event back up to the next level
-                    break;
-            }
-            break;
-
-        case BankRight:
-            switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
-                    break;
-                case TAPE_ON:
-                    if (tapeSensors & FLTape) {
-                        nextState = LeftTurn;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    } else if (tapeSensors & FRTape) {
-                        nextState = SpinLeft;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
                     break;
                 case ES_EXIT:
                     DT_Stop();
@@ -195,39 +171,87 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case LeftTurn:
+        case BankRight:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_DriveRight(-TURN_SPEED, 1000);
-                    
-                    //Watchdog timer
-                    ES_Timer_InitTimer(LOOP_TIMER, TIMER_1_SEC);
+                    ES_Timer_InitTimer(WALL_FOLLOW_TIMER, TIMER_3_SEC);
+                    DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
                     break;
-                case ES_TIMEOUT:
-                    if (ThisEvent.EventParam == LOOP_TIMER) {
-                        nextState = BankRight;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
+                case PARALLEL_ON_R:
+                    ES_Timer_StopTimer(WALL_FOLLOW_TIMER);
+                    nextState = BankLeft;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
-                case TAPE_ON:
-                    if (ThisEvent.EventParam & BLTape) {
-                        nextState = BankRight;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
+                case WALL_ON:
+                    ES_Timer_StopTimer(WALL_FOLLOW_TIMER);
+                    nextState = SpinLeft;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+//                case ES_TIMEOUT:
+//                    if (ThisEvent.EventParam == WALL_FOLLOW_TIMER) {
+//                        nextState = SpinLeft;
+//                        makeTransition = TRUE;
+//                        ThisEvent.EventType = ES_NO_EVENT;
+//                    }
+//                    break;
+                case ES_EXIT:
+                    DT_Stop();
                     break;
                 default:
                     break;
             }
             break;
 
-        case Avoid:
+        case LeftSideBuffer:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_Stop();
+                    ES_Timer_InitTimer(WALL_FOLLOW_TIMER, TIMER_BUFFER);
+                    break;
+                case ES_NO_EVENT:
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == WALL_FOLLOW_TIMER) {
+                        nextState = BankRight;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_EXIT:
                     break;
                 default:
+                    break;
+            }
+            break;
+
+        case SpinLeft: // in the first state, replace this with correct names
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    DT_SpinCC(TURN_SPEED);
+                    
+                    // watchdog timer
+                    ES_Timer_InitTimer(WALL_FOLLOW_TIMER, TIMER_1_SEC);
+                    break;
+                case WALL_OFF:
+                    ES_Timer_StopTimer(WALL_FOLLOW_TIMER);
+                    nextState = LeftSideBuffer;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+//                case ES_TIMEOUT:
+//                    nextState = BankRight;
+//                    makeTransition = TRUE;
+//                    ThisEvent.EventType = ES_NO_EVENT;
+//                    break;
+                case PARALLEL_ON_R:
+                    nextState = BankLeft;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_NO_EVENT:
+                    break;
+                default: // all unhandled events pass the event back up to the next level
                     break;
             }
             break;
@@ -238,12 +262,12 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
 
     if (makeTransition == TRUE) { // making a state transition, send EXIT and ENTRY
         // recursively call the current state with an exit event
-        RunLoopSubHSM(EXIT_EVENT); // <- rename to your own Run function
+        RunWallSubHSM(EXIT_EVENT); // <- rename to your own Run function
         CurrentState = nextState;
-        RunLoopSubHSM(ENTRY_EVENT); // <- rename to your own Run function
+        RunWallSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
-#ifdef LED_USE_LOOP
-        LED_SetBank(LED_BANK2, CurrentState);
+#ifdef LED_USE_WALL
+    LED_SetBank(LED_BANK2, CurrentState);
 #endif
     ES_Tail(); // trace call stack end
     return ThisEvent;

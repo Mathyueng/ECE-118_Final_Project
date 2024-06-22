@@ -1,15 +1,15 @@
 /*
- * File: TopHSM.h
+ * File: WallSubHSM.h
  * Author: J. Edward Carryer
- * Modified: Gabriel H Elkaim, Duc Lam, Matthew Eng
+ * Modified: Gabriel H Elkaim and Soja-Marie Morgens
  *
- * Template file to set up a Heirarchical State Machine to work with the Events and
+ * Template file to set up a Heirarchical SubState Machine to work with the Events and
  * Services Framework (ES_Framework) on the Uno32 for the CMPE-118/L class. Note that 
  * this file will need to be modified to fit your exact needs, and most of the names
  * will have to be changed to match your code.
  *
- * There is another template file for the SubHSM's that is slightly differet, and
- * should be used for all of the subordinate state machines (flat or heirarchical)
+ * Make sure each SubState machine has a unique name and is #include in the
+ * higher level state machine using it
  *
  * This is provided as an example and a good place to start.
  *
@@ -17,61 +17,21 @@
  * Updated on 16/Sep/2013
  */
 
-#ifndef HSM_Top_H  // <- This should be changed to your own guard on both
-#define HSM_Top_H  //    of these lines
+#ifndef WALL_SUB_HSM_H  // <- This should be changed to your own guard on both
+#define WALL_SUB_HSM_H  //    of these lines
 
 
 /*******************************************************************************
  * PUBLIC #INCLUDES                                                            *
  ******************************************************************************/
 
-#include "xc.h"
-#include "stdio.h"
-#include "LED.h"
-
-#include "EventChecker.h"       // Event Checker Files
-#include "Tape.h"
-#include "Wall.h"
-#include "Parallel.h"
-
-#include "ES_Configure.h"       // defines ES_Event, INIT_EVENT, ENTRY_EVENT, and EXIT_EVENT
-#include "Tank_DriveTrain.h"    // defines Drive Train Functions
-#include "ES_Events.h"
+#include "ES_Configure.h"   // defines ES_Event, INIT_EVENT, ENTRY_EVENT, and EXIT_EVENT
 
 /*******************************************************************************
  * PUBLIC #DEFINES                                                             *
  ******************************************************************************/
-#define TIMER_0_TICKS   50      // 0.050 s
-#define TIMER_BUFFER    200     // 0.200 s
-#define TIMER_QUART_SEC 250     // 0.250 s
-#define TIMER_HALF_SEC  500     // 0.500 s
-#define TIMER_1_SEC     1000    // 1.000 s
-#define TIMER_2_SEC     2000    // 2.000 s
-#define TIMER_3_SEC     3000    // 3.000 s
-#define TIMER_4_SEC     4000    // 4.000 s
-#define TIMER_5_SEC     5000    // 5.000 s
-#define TIMER_6_SEC     6000    // 6.000 s
-#define TIMER_7_SEC     7000    // 7.000 s
-#define TIMER_8_SEC     8000    // 8.000 s
-#define TIMER_9_SEC     9000    // 9.000 s
-#define TIMER_10_SEC    10000   // 10.00 s
 
 
-//#define DEBUG_TOP
-//#define DEBUG_ROAM
-//#define DEBUG_LOOP
-//#define DEBUG_DUMP
-#define DEBUG_WALL
-
-#define LED_USE_TOP
-//#define LED_USE_ROAM
-//#define LED_USE_LOOP
-//#define LED_USE_DUMP
-//#define LED_USE_WALL
-
-#define INTAKE_ACTIVE
-
-#define TRACK_ACTIVE
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *
  ******************************************************************************/
@@ -82,7 +42,7 @@
  ******************************************************************************/
 
 /**
- * @Function InitTemplateHSM(uint8_t Priority)
+ * @Function InitWallSubHSM(void)
  * @param Priority - internal variable to track which event queue to use
  * @return TRUE or FALSE
  * @brief This will get called by the framework at the beginning of the code
@@ -91,25 +51,10 @@
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitTopHSM(uint8_t Priority);
-
-
-/**
- * @Function PostTemplateHSM(ES_Event ThisEvent)
- * @param ThisEvent - the event (type and param) to be posted to queue
- * @return TRUE or FALSE
- * @brief This function is a wrapper to the queue posting function, and its name
- *        will be used inside ES_Configure to point to which queue events should
- *        be posted to. Remember to rename to something appropriate.
- *        Returns TRUE if successful, FALSE otherwise
- * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t PostTopHSM(ES_Event ThisEvent);
-
-
-
+uint8_t InitWallSubHSM(void);
 
 /**
- * @Function RunTemplateHSM(ES_Event ThisEvent)
+ * @Function RunWallSubHSM(ES_Event ThisEvent)
  * @param ThisEvent - the event (type and param) to be responded.
  * @return Event - return event (type and param), in general should be ES_NO_EVENT
  * @brief This function is where you implement the whole of the heirarchical state
@@ -123,7 +68,7 @@ uint8_t PostTopHSM(ES_Event ThisEvent);
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunTopHSM(ES_Event ThisEvent);
+ES_Event RunWallSubHSM(ES_Event ThisEvent);
 
-#endif /* HSM_Top_H */
+#endif /* SUB_HSM_Template_H */
 

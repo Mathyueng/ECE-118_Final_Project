@@ -21,7 +21,7 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 //#define WallMain
-//#define DEBUG_WALL
+//#define DEBUG_WALL_CHECK
 //#define INACTIVE
 
 #ifdef WallMain
@@ -91,7 +91,7 @@ uint8_t Wall_CheckEvents(void) {
 
     uint8_t returnVal = FALSE;
 
-#ifdef DEBUG_WALL
+#ifdef DEBUG_WALL_CHECK
 //    printf("\r\ncurW2: %x, prevW2: %x", (IO_PortsReadPort(WALL_PORT) & WALL_PIN_2), prevW2);
     if (curW1 != prevW1) printf("\r\ncurW1: %x", curW1);
     if (curW2 != prevW2) printf("\r\ncurW2: %x", curW2);

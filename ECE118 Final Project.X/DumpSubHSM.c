@@ -36,9 +36,9 @@
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
-#define TURN_SPEED          60
-#define BANK_RIGHT_SPEED    30
-#define BANK_RIGHT_RADIUS   11000
+#define TURN_SPEED 60
+#define BANK_RIGHT_SPEED 35
+#define BANK_RIGHT_RADIUS 9000
 
 //#define LOOP_TEST
 
@@ -54,10 +54,6 @@ typedef enum {
     RaiseArm,
     Forward_2,
     LeftTurn,
-    BankRight,
-    BankLeft,
-    LeftSideBuffer,
-    SpinLeft
 } DumpSubHSMState_t;
 
 static const char *StateNames[] = {
@@ -70,10 +66,6 @@ static const char *StateNames[] = {
     "RaiseArm",
     "Forward_2",
     "LeftTurn",
-    "BankRight",
-    "BankLeft",
-    "LeftSideBuffer",
-    "SpinLeft"
 };
 
 
@@ -110,7 +102,6 @@ static uint8_t MyPriority;
  * @author J. Edward Carryer, 2011.10.23 19:25 */
 uint8_t InitDumpSubHSM(void) {
     ES_Event returnEvent;
-    LED_SetBank(LED_BANK2, 0x0);
     CurrentState = InitPSubState;
     returnEvent = RunDumpSubHSM(INIT_EVENT);
     if (returnEvent.EventType == ES_NO_EVENT) {
@@ -138,6 +129,8 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
     DumpSubHSMState_t nextState; // <- change type to correct enum
 
+    uint8_t tapeSensors = ~(ReadTapeSensors()); // records which sensors are on the tape with a raised bit
+
     ES_Tattle(); // trace call stack
 #ifdef DEBUG_DUMP
     printf("\r\n\r\nDUMP state: %s", StateNames[CurrentState]);
@@ -153,11 +146,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                 // initial state
 
                 // now put the machine into the actual initial state
-#ifndef LOOP_TEST
                 nextState = Reverse;
-#else
-                nextState = LeftTurn; // Testing Looping
-#endif
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
                 break;
@@ -167,28 +156,26 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case Reverse:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-#ifdef DEBUG_HSM
-                    printf("DUMP - Reverse 1\r\n");
-#endif                    
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
-                    DT_DriveFwd(REV_LOW_SPEED);
+                    // WatchDog Timer
+                    ES_Timer_InitTimer(REVERSE_TIMER, TIMER_1_SEC);
+                    DT_DriveFwd(REV_MID_SPEED);
                     break;
-                    //#ifndef TRACK_ACTIVE
-                    //                case WALL_OFF:
-                    //#else
-                    //                case TRACK_OFF:
-                    //#endif
-                    //                    ThisEvent.EventType = ES_NO_EVENT;
-                    //                    break;
+                case TAPE_ON:
+                    if (ThisEvent.EventParam & BRTape) {
+                        ES_Timer_StopTimer(REVERSE_TIMER);
+                        nextState = LowerArm;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case ES_TIMEOUT:
-                    if (ThisEvent.EventParam == DUMP_TIMER) {
+                    if (ThisEvent.EventParam == REVERSE_TIMER) {
                         nextState = LowerArm;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
                 case ES_EXIT:
-                    DT_ExtendArm();
                     DT_Stop();
                     break;
                 case ES_NO_EVENT:
@@ -221,24 +208,29 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case Forward:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_DriveFwd(FWD_LOW_SPEED);
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    //                    DT_DriveFwd(FWD_LOW_SPEED);
+                    if (tapeSensors & FRTape) {
+                        DT_SpinCC(TURN_SPEED);
+                    } else if (!(tapeSensors & FRTape)) {
+                        DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                    }
                     break;
-                    //#ifndef TRACK_ACTIVE
-                    //                case WALL_ON:
-                    //#else
-                    //                case TRACK_ON:
-                    //#endif
-                    //                    nextState = Dump;
-                    //                    makeTransition = TRUE;
-                    //                    ThisEvent.EventType = ES_NO_EVENT;
-                    //                    break;
-                case ES_TIMEOUT:
-                    if (ThisEvent.EventParam == DUMP_TIMER) {
-                        nextState = Dump;
-                        makeTransition = TRUE;
+                case TAPE_ON:
+                    if (tapeSensors & FRTape) {
+                        DT_SpinCC(TURN_SPEED);
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
+                    break;
+                case TAPE_OFF:
+                    if (!(tapeSensors & FRTape)) {
+                        DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case TRACK_ON:
+                    nextState = Dump;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case ES_EXIT:
                     DT_Stop();
@@ -259,7 +251,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
-                        nextState = LeftTurn;
+                        nextState = Reverse_2;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
@@ -277,13 +269,33 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case Reverse_2:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    DT_DriveLeft(-BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
                     break;
                 case ES_NO_EVENT:
                     break;
+                case TAPE_ON:
+                    if (ThisEvent.EventParam & FRTape) {
+                        DT_DriveRight(-BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else if (ThisEvent.EventParam & BRTape) {
+                        ES_Timer_StopTimer(DUMP_TIMER);
+                        nextState = RaiseArm;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == DUMP_TIMER) {
+                        nextState = RaiseArm;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
                 case ES_EXIT:
                     DT_Stop();
+                    break;
+                default:
                     break;
             }
             break;
@@ -297,7 +309,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
                         nextState = Forward_2;
-                        makeTransition = TRUE; // NOTE FOR CHANGE BACK TO TRUE
+                        makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
@@ -312,10 +324,32 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case Forward_2:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    //                    DT_DriveFwd(FWD_LOW_SPEED);
+                    if (tapeSensors & FRTape) {
+                        DT_SpinCC(TURN_SPEED);
+                    } else if (!(tapeSensors & FRTape)) {
+                        DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                    }
+                    break;
+                case TAPE_ON:
+                    if (tapeSensors & FRTape) {
+                        DT_SpinCC(TURN_SPEED);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case TAPE_OFF:
+                    if (!(tapeSensors & FRTape)) {
+                        DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case TRACK_ON:
+                    //                    ES_Timer_StopTimer(DUMP_TIMER);
+                    nextState = LeftTurn;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case ES_NO_EVENT:
-                    break;
-                case ES_TIMEOUT:
                     break;
                 case ES_EXIT:
                     DT_Stop();
@@ -328,106 +362,12 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     DT_DriveRight(-20, 0);
                     break;
-                case TAPE_ON:
-                    if (ThisEvent.EventParam & BLTape) {
-                        nextState = BankRight;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
-                    break;
                 case ES_EXIT:
                     DT_Stop();
                     break;
                 case ES_NO_EVENT:
                     break;
                 default:
-                    break;
-            }
-            break;
-
-
-            // Adding every state below this into new sub-state (WallTrack)
-        case BankRight:
-            switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
-                    break;
-                case PARALLEL_ON_R:
-                    nextState = BankLeft;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    break;
-                case WALL_ON:
-                    nextState = SpinLeft;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    break;
-                case ES_EXIT:
-                    DT_Stop();
-                    break;
-                default:
-                    break;
-            }
-            break;
-
-        case BankLeft:
-            switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    DT_DriveRight(-BANK_RIGHT_SPEED, 0);
-                    break;
-                case PARALLEL_OFF:
-                    nextState = LeftSideBuffer;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    break;
-                case ES_EXIT:
-                    DT_Stop();
-                    break;
-                default:
-                    break;
-            }
-            break;
-
-        case LeftSideBuffer:
-            switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_BUFFER);
-                    break;
-                case ES_NO_EVENT:
-                    break;
-                case ES_TIMEOUT:
-                    if (ThisEvent.EventParam == DUMP_TIMER) {
-                        nextState = BankRight;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
-                    break;
-                case ES_EXIT:
-                    break;
-                default:
-                    break;
-            }
-            break;
-
-        case SpinLeft: // in the first state, replace this with correct names
-            switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    DT_SpinCC(TURN_SPEED);
-                    //                    DT_DriveRight(-BANK_RIGHT_SPEED, 2000);
-                    break;
-                case WALL_OFF:
-                    nextState = LeftSideBuffer;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    break;
-                case PARALLEL_ON_R:
-                    nextState = BankLeft;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    break;
-                case ES_NO_EVENT:
-                    break;
-                default: // all unhandled events pass the event back up to the next level
                     break;
             }
             break;
@@ -442,8 +382,8 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         CurrentState = nextState;
         RunDumpSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
-#ifdef LED_USE
-    LED_SetBank(LED_BANK1, CurrentState);
+#ifdef LED_USE_DUMP
+    LED_SetBank(LED_BANK2, CurrentState);
 #endif
     ES_Tail(); // trace call stack end
     return ThisEvent;

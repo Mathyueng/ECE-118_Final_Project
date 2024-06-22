@@ -44,6 +44,7 @@
       <itemPath>Parallel.h</itemPath>
       <itemPath>Obstacle.h</itemPath>
       <itemPath>WallService.h</itemPath>
+      <itemPath>WallSubHSM.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -89,6 +90,7 @@
       <itemPath>Tape.c</itemPath>
       <itemPath>Obstacle.c</itemPath>
       <itemPath>WallService.c</itemPath>
+      <itemPath>WallSubHSM.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

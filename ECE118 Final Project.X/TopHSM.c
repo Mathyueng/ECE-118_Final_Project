@@ -38,6 +38,7 @@
 #include "LoopSubHSM.h" 
 #include "RoamSubHSM.h"
 #include "DumpSubHSM.h"
+#include "WallSubHSM.h"
 /*******************************************************************************
  * PRIVATE #DEFINES                                                            *
  ******************************************************************************/
@@ -55,6 +56,7 @@ typedef enum {
     Roaming,
     Looping,
     Dumping,
+    WallTracking,
 } TopHSMState_t;
 
 static const char *StateNames[] = {
@@ -62,6 +64,7 @@ static const char *StateNames[] = {
     "Roaming",
     "Looping",
     "Dumping",
+    "WallTracking",
 };
 
 
@@ -158,6 +161,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 InitLoopSubHSM();
                 InitRoamSubHSM();
                 InitDumpSubHSM();
+                InitWallSubHSM();
                 // now put the machine into the actual initial state
                 nextState = Roaming;
                 makeTransition = TRUE;
@@ -183,6 +187,11 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
+                case TRACK_ON:
+                    nextState = Dumping;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
                 case ES_EXIT:
                     InitRoamSubHSM();
                     break;
@@ -196,11 +205,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     break;
-#ifndef TRACK_ACTIVE
-                case WALL_ON:
-#else
                 case TRACK_ON:
-#endif
                     nextState = Dumping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -222,14 +227,35 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     break;
                 case TAPE_ON:
-                    tapeSensors = ~(ReadTapeSensors());
+                    if (ThisEvent.EventParam & BLTape) {
+                        nextState = WallTracking;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case ES_EXIT:
+                    InitDumpSubHSM();
+                    break;
+                default:
+                    break;
+            }
+            break;
+
+        case WallTracking:
+            ThisEvent = RunWallSubHSM(ThisEvent);
+            switch (ThisEvent.EventType) {
+                case ES_NO_EVENT:
+                    break;
+                case ES_ENTRY:
+                    break;
+                case TAPE_ON:
                     if (ThisEvent.EventParam & FLTape) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                 case ES_EXIT:
-                    InitDumpSubHSM();
+                    InitWallSubHSM();
                     break;
                 default:
                     break;
@@ -245,8 +271,8 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
         CurrentState = nextState;
         RunTopHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
-#ifdef LED_USE
-    //    LED_SetBank(LED_BANK1, CurrentState);
+#ifdef LED_USE_TOP
+    LED_SetBank(LED_BANK1, CurrentState);
 #endif
     ES_Tail(); // trace call stack end
     return ThisEvent;

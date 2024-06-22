@@ -14,7 +14,7 @@
 #include "RC_Servo.h"
 #include "math.h"
 
-#define DEBUG
+//#define DEBUG
 //#define DRIVETRAIN_MAIN
 
 #ifdef DEBUG
@@ -215,7 +215,7 @@ char DT_SpinCC(int16_t speed) {
 }
 
 char DT_ExtendArm(void) {
-    RC_SetPulseTime(SERVO_ARM_PIN, 1150);
+    RC_SetPulseTime(SERVO_ARM_PIN, 1170);
 }
 
 char DT_RetractArm(void) {
@@ -264,28 +264,28 @@ void main(void) {
         DT_RetractArm();
         DELAY(delay);
         
-        DT_DriveRight(speed, turningRad);
-        DT_ExtendArm();
-        DELAY(delay);
-        
-        DT_DriveRight(-speed, turningRad);
-        DT_RetractArm();
-        DELAY(delay);
-        
-        DT_IntakeBack();
-        DT_DriveLeft(speed, turningRad);
-        DT_ExtendArm();
-        DELAY(delay);
-        
-        DT_DriveLeft(-speed, turningRad);
-        DT_RetractArm();
-        DELAY(delay);
-        
-        DT_SpinCC(speed);
-        DELAY(delay);
-        
-        DT_SpinCC(-speed);
-        DELAY(delay);
+//        DT_DriveRight(speed, turningRad);
+//        DT_ExtendArm();
+//        DELAY(delay);
+//        
+//        DT_DriveRight(-speed, turningRad);
+//        DT_RetractArm();
+//        DELAY(delay);
+//        
+//        DT_IntakeBack();
+//        DT_DriveLeft(speed, turningRad);
+//        DT_ExtendArm();
+//        DELAY(delay);
+//        
+//        DT_DriveLeft(-speed, turningRad);
+//        DT_RetractArm();
+//        DELAY(delay);
+//        
+//        DT_SpinCC(speed);
+//        DELAY(delay);
+//        
+//        DT_SpinCC(-speed);
+//        DELAY(delay);
         
 #ifdef DEBUG
         printf("\r\n");

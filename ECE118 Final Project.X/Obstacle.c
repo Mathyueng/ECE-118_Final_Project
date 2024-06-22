@@ -21,7 +21,7 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 //#define ObstacleMain
-//#define DEBUG_OBSTACLE
+//#define DEBUG_OBSTACLE_CHECK
 //#define INACTIVE
 
 #ifdef ObstacleMain
@@ -91,7 +91,7 @@ uint8_t Obstacle_CheckEvents(void) {
 
     uint8_t returnVal = FALSE;
 
-#ifdef DEBUG_OBSTACLE
+#ifdef DEBUG_OBSTACLE_CHECK
     if (curObs1 != prevObs1) printf("\r\ncurObs1: %x", curObs1);
     if (curObs2 != prevObs2) printf("\r\ncurObs2: %x", curObs2);
     if (curObs3 != prevObs3) printf("\r\ncurObs3: %x", curObs3);

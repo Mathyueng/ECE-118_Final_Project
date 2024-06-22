@@ -24,7 +24,7 @@
 #define TRACK_HIGH_THRESHOLD 700
 
 //#define TrackMain
-//#define DEBUG
+//#define DEBUG_TRACK_CHECK
 //#define TRACK_TEST
 
 #ifdef TrackMain
@@ -58,14 +58,14 @@ uint8_t Track_CheckEvents(void) {
     thisEvent.EventType = ES_NO_EVENT;
     thisEvent.EventParam = 0;
 
-#ifdef DEBUG
+#ifdef DEBUG_TRACK_CHECK
     //    printf("\r\n");
     //    printf("\r\nRight: %d", AD_ReadADPin(TRACK_PIN_R1));
     //    printf("\r\nLeft: %d", AD_ReadADPin(TRACK_PIN_L1));
 #endif
 
     if (!TrackFlag && (curSignal > TRACK_HIGH_THRESHOLD)) {
-#ifdef DEBUG
+#ifdef DEBUG_TRACK_CHECK
         printf("Track Active\r\n");
 #endif
         thisEvent.EventType = TRACK_ON;
@@ -74,7 +74,7 @@ uint8_t Track_CheckEvents(void) {
         returnVal = TRUE;
 
     } else if (TrackFlag && (curSignal < TRACK_LOW_THRESHOLD)) {
-#ifdef DEBUG
+#ifdef DEBUG_TRACK_CHECK
         printf("Track Inactive\r\n");
 #endif
         thisEvent.EventType = TRACK_OFF;
@@ -114,7 +114,7 @@ void main(void) {
         if (Track_CheckEvents()) {
             PrintEvent();
         }
-#ifdef DEBUG
+#ifdef DEBUG_TRACK_CHECK
         printf("\r\nCheck");
         PrintEvent();
 #endif
