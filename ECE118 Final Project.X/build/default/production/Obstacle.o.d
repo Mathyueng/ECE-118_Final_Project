@@ -1,6 +1,6 @@
 build/default/production/Obstacle.o: Obstacle.c EventChecker.h \
  ES_Configure.h BOARD.h ES_Events.h TopHSM.h LED.h Tape.h Wall.h \
- Parallel.h Tank_DriveTrain.h BOARD.h Obstacle.h ES_Timers.h serial.h \
+ Parallel.h Obstacle.h Tank_DriveTrain.h BOARD.h ES_Timers.h serial.h \
  IO_Ports.h AD.h
 
 EventChecker.h:
@@ -21,11 +21,11 @@ Wall.h:
 
 Parallel.h:
 
+Obstacle.h:
+
 Tank_DriveTrain.h:
 
 BOARD.h:
-
-Obstacle.h:
 
 ES_Timers.h:
 

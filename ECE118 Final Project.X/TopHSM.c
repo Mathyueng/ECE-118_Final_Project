@@ -147,7 +147,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
 #ifdef DEBUG_TOP
     printf("\r\n\r\nTOP state: %s", StateNames[CurrentState]);
     printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
-    printf("\r\nparams: %x", ThisEvent.EventParam & 0x0F);
+    printf("\r\nparams: %x", ThisEvent.EventParam); // & 0x0F
 
 #endif
     switch (CurrentState) {

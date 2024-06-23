@@ -33,6 +33,7 @@
 #include "Tape.h"
 #include "Wall.h"
 #include "Parallel.h"
+#include "Obstacle.h"
 
 #include "ES_Configure.h"       // defines ES_Event, INIT_EVENT, ENTRY_EVENT, and EXIT_EVENT
 #include "Tank_DriveTrain.h"    // defines Drive Train Functions
@@ -61,7 +62,7 @@
 //#define DEBUG_ROAM
 //#define DEBUG_LOOP
 //#define DEBUG_DUMP
-#define DEBUG_WALL
+//#define DEBUG_WALL
 
 #define LED_USE_TOP
 //#define LED_USE_ROAM

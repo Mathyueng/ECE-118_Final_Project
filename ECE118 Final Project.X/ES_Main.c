@@ -30,11 +30,11 @@ void main(void)
     DT_Init();
 #ifdef LED_USE
     LED_AddBanks (LED_BANK1);
-    LED_AddBanks (LED_BANK2);
+//    LED_AddBanks (LED_BANK2);
 //    LED_AddBanks (LED_BANK3);
 
     LED_SetBank(LED_BANK1, 0x0);
-    LED_SetBank(LED_BANK2, 0x0);
+//    LED_SetBank(LED_BANK2, 0x0);
 //    LED_SetBank(LED_BANK3, 0x0);
 #endif
     printf("All Inits complete.\r\n");

@@ -32,6 +32,13 @@
 #include "ES_Configure.h"
 #include "BOARD.h"
 
+#define LLObstacle 0b100000
+#define FLObstacle 0b010000
+#define CLObstacle 0b001000
+#define CRObstacle 0b000100
+#define FRObstacle 0b000010
+#define RRObstacle 0b000001
+
 uint8_t Obstacle_Init(void);
 
 uint8_t Obstacle_CheckEvents(void);

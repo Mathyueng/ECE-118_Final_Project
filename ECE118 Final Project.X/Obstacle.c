@@ -22,7 +22,7 @@
  ******************************************************************************/
 //#define ObstacleMain
 //#define DEBUG_OBSTACLE_CHECK
-//#define INACTIVE
+#define INACTIVE
 
 #ifdef ObstacleMain
 #include <stdio.h>
@@ -37,8 +37,10 @@ static uint8_t(*EventList[])(void) = {EVENT_CHECK_LIST};
 #define OBSTACLE_PORT PORTX
 #define OBSTACLE_PIN_1 PIN3     // LL
 #define OBSTACLE_PIN_2 PIN4     // FL
-#define OBSTACLE_PIN_3 PIN5     // FR
-#define OBSTACLE_PIN_4 PIN6     // RR
+#define OBSTACLE_PIN_3 PIN5     // CL
+#define OBSTACLE_PIN_4 PIN6     // CR
+#define OBSTACLE_PIN_5 PIN8     // FR
+#define OBSTACLE_PIN_6 PIN10    // RR
 
 /*******************************************************************************
  * PRIVATE MODULE VARIABLES                                                    *
@@ -53,6 +55,8 @@ static uint8_t prevObs1 = 0;
 static uint8_t prevObs2 = 0;
 static uint8_t prevObs3 = 0;
 static uint8_t prevObs4 = 0;
+static uint8_t prevObs5 = 0;
+static uint8_t prevObs6 = 0;
 
 /*******************************************************************************
  * PUBLIC FUNCTIONS                                                            *
@@ -60,19 +64,23 @@ static uint8_t prevObs4 = 0;
 
 uint8_t ReadObstacleSensors() {
     uint8_t obstacleActive =
-            ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_1)) << 3) |
-            ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_2)) << 2) |
-            ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_3)) << 1) |
-            ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_4)) << 0);
+            ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_1)) << 5) |
+            ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_2)) << 4) |
+            ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_3)) << 3) |
+            ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_4)) << 2) |
+            ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_5)) << 1) |
+            ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_6)) << 0);
     return obstacleActive;
 }
 
 uint8_t Obstacle_Init(void) {
-    IO_PortsSetPortInputs(OBSTACLE_PORT, OBSTACLE_PIN_1 | OBSTACLE_PIN_2 | OBSTACLE_PIN_3 | OBSTACLE_PIN_4);
+    IO_PortsSetPortInputs(OBSTACLE_PORT, OBSTACLE_PIN_1 | OBSTACLE_PIN_2 | OBSTACLE_PIN_3 | OBSTACLE_PIN_4 | OBSTACLE_PIN_5 | OBSTACLE_PIN_6);
     prevObs1 = 0;
     prevObs2 = 0;
     prevObs3 = 0;
     prevObs4 = 0;
+    prevObs5 = 0;
+    prevObs6 = 0;
 }
 
 /**
@@ -84,10 +92,12 @@ uint8_t Obstacle_Init(void) {
  * */
 uint8_t Obstacle_CheckEvents(void) {
     ES_Event thisEvent;
-    uint8_t curObs1 = (prevObs1 << 1) | !(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_1);
-    uint8_t curObs2 = (prevObs2 << 1) | !(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_2);
-    uint8_t curObs3 = (prevObs3 << 1) | !(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_3);
-    uint8_t curObs4 = (prevObs4 << 1) | !(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_4);
+    uint8_t curObs1 = (prevObs1 << 1) | !!(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_1);
+    uint8_t curObs2 = (prevObs2 << 1) | !!(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_2);
+    uint8_t curObs3 = (prevObs3 << 1) | !!(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_3);
+    uint8_t curObs4 = (prevObs4 << 1) | !!(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_4);
+    uint8_t curObs5 = (prevObs5 << 1) | !!(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_5);
+    uint8_t curObs6 = (prevObs6 << 1) | !!(IO_PortsReadPort(OBSTACLE_PORT) & OBSTACLE_PIN_6);
 
     uint8_t returnVal = FALSE;
 
@@ -101,25 +111,33 @@ uint8_t Obstacle_CheckEvents(void) {
     if ((curObs1 != prevObs1) ||
             (curObs2 != prevObs2) ||
             (curObs3 != prevObs3) ||
-            (curObs4 != prevObs4)) {
+            (curObs4 != prevObs4) ||
+            (curObs5 != prevObs5) ||
+            (curObs6 != prevObs6)) {
 
         uint8_t obstacleOff =
-                ((curObs1 && !prevObs1) << 3) |
-                ((curObs2 && !prevObs2) << 2) |
-                ((curObs3 && !prevObs3) << 1) |
-                ((curObs4 && !prevObs4) << 0);
+                ((curObs1 && !prevObs1) << 5) |
+                ((curObs2 && !prevObs2) << 4) |
+                ((curObs3 && !prevObs3) << 3) |
+                ((curObs4 && !prevObs4) << 2) |
+                ((curObs5 && !prevObs5) << 1) |
+                ((curObs6 && !prevObs6) << 0);
 
         uint8_t obstacleOn =
-                ((!curObs1 && prevObs1) << 3) |
-                ((!curObs2 && prevObs2) << 2) |
-                ((!curObs3 && prevObs3) << 1) |
-                ((!curObs4 && prevObs4) << 0);
+                ((!curObs1 && prevObs1) << 5) |
+                ((!curObs2 && prevObs2) << 4) |
+                ((!curObs3 && prevObs3) << 3) |
+                ((!curObs4 && prevObs4) << 2) |
+                ((!curObs5 && prevObs5) << 1) |
+                ((!curObs6 && prevObs6) << 0);
 
         uint8_t obstacleActive =
-                (!(IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_1)) << 3) |
-                (!(IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_2)) << 2) |
-                (!(IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_3)) << 1) |
-                (!(IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_4)) << 0);
+                ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_1)) << 5) |
+                ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_2)) << 4) |
+                ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_3)) << 3) |
+                ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_4)) << 2) |
+                ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_5)) << 1) |
+                ((IO_PortsReadPort(OBSTACLE_PORT) & (OBSTACLE_PIN_6)) << 0);
 
         if (obstacleOn) {
             ES_Event thisEvent;
@@ -162,6 +180,8 @@ uint8_t Obstacle_CheckEvents(void) {
     prevObs2 = curObs2;
     prevObs3 = curObs3;
     prevObs4 = curObs4;
+    prevObs5 = curObs5;
+    prevObs6 = curObs6;
 
     return (returnVal);
 }
