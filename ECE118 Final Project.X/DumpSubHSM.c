@@ -39,6 +39,7 @@
 #define TURN_SPEED 60
 #define BANK_RIGHT_SPEED 35
 #define BANK_RIGHT_RADIUS 9000
+#define WALL_RIGHT_RADIUS 15000
 
 //#define LOOP_TEST
 
@@ -54,6 +55,7 @@ typedef enum {
     RaiseArm,
     Forward_2,
     LeftTurn,
+    TurnRight,
 } DumpSubHSMState_t;
 
 static const char *StateNames[] = {
@@ -66,6 +68,7 @@ static const char *StateNames[] = {
     "RaiseArm",
     "Forward_2",
     "LeftTurn",
+    "TurnRight",
 };
 
 
@@ -189,7 +192,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+#ifdef SERVO_ACTIVE
                     DT_ExtendArm();
+#endif
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
@@ -212,7 +217,8 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     if (tapeSensors & FRTape) {
                         DT_SpinCC(TURN_SPEED);
                     } else if (!(tapeSensors & FRTape)) {
-                        DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                        //                        DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                        DT_SpinCC(-TURN_SPEED);
                     }
                     break;
                 case TAPE_ON:
@@ -270,7 +276,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
-                    DT_DriveLeft(-BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                    DT_DriveFwd(REV_MID_SPEED);
                     break;
                 case ES_NO_EVENT:
                     break;
@@ -304,7 +310,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+#ifdef SERVO_ACTIVE
                     DT_RetractArm();
+#endif
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
@@ -324,7 +332,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case Forward_2:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    //                    DT_DriveFwd(FWD_LOW_SPEED);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_6_SEC);
                     if (tapeSensors & FRTape) {
                         DT_SpinCC(TURN_SPEED);
                     } else if (!(tapeSensors & FRTape)) {
@@ -344,10 +352,17 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     }
                     break;
                 case TRACK_ON:
-                    //                    ES_Timer_StopTimer(DUMP_TIMER);
+                    ES_Timer_StopTimer(DUMP_TIMER);
                     nextState = LeftTurn;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventType == DUMP_TIMER) {
+                        nextState = LeftTurn;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
                 case ES_NO_EVENT:
                     break;
@@ -360,12 +375,49 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case LeftTurn:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_DriveRight(-20, 0);
+                    DT_DriveRight(REV_CRAWL_SPEED, 0);
+                    break;
+                case TAPE_OFF:
+                    if (ThisEvent.EventParam & BLTape) {
+                        nextState = TurnRight;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
                 case ES_EXIT:
                     DT_Stop();
                     break;
                 case ES_NO_EVENT:
+                    break;
+                default:
+                    break;
+            }
+            break;
+
+        case TurnRight:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    ES_Timer_InitTimer(START_TURN_TIMER, TIMER_TENTH_SEC);
+                    DT_SpinCC(-TURN_SPEED);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == START_TURN_TIMER) {
+                        // WATCHDOG
+                        ES_Timer_InitTimer(DUMP_TIMER, TIMER_2_SEC);
+                        DT_DriveFwd(FWD_LOW_SPEED);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else if (ThisEvent.EventParam == DUMP_TIMER) {
+                        ThisEvent.EventType = WALLTRACK;
+                        PostTopHSM(ThisEvent);
+                    }
+                    break;
+                case WALL_ON:
+                    ThisEvent.EventType = WALLTRACK;
+                    PostTopHSM(ThisEvent);
+                    break;
+                case ES_NO_EVENT:
+                    break;
+                case ES_EXIT:
                     break;
                 default:
                     break;
@@ -383,7 +435,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         RunDumpSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 #ifdef LED_USE_DUMP
-    LED_SetBank(LED_BANK2, CurrentState);
+    LED_SetBank(LED_BANK1, CurrentState);
 #endif
     ES_Tail(); // trace call stack end
     return ThisEvent;

@@ -42,7 +42,7 @@
 /*******************************************************************************
  * PUBLIC #DEFINES                                                             *
  ******************************************************************************/
-#define TIMER_0_TICKS   50      // 0.050 s
+#define TIMER_TENTH_SEC 100     // 0.100 s
 #define TIMER_BUFFER    200     // 0.200 s
 #define TIMER_QUART_SEC 250     // 0.250 s
 #define TIMER_HALF_SEC  500     // 0.500 s
@@ -71,7 +71,7 @@
 //#define LED_USE_WALL
 
 #define INTAKE_ACTIVE
-
+#define SERVO_ACTIVE
 #define TRACK_ACTIVE
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *

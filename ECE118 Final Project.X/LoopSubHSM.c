@@ -37,8 +37,8 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 #define TURN_SPEED 60
-#define BANK_RIGHT_SPEED 35
-#define BANK_RIGHT_RADIUS 9000
+#define BANK_RIGHT_SPEED 40
+#define BANK_RIGHT_RADIUS 10000
 
 // Debug Defines in TopHSM.h
 
@@ -243,7 +243,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
         RunLoopSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 #ifdef LED_USE_LOOP
-        LED_SetBank(LED_BANK2, CurrentState);
+        LED_SetBank(LED_BANK1, CurrentState);
 #endif
     ES_Tail(); // trace call stack end
     return ThisEvent;

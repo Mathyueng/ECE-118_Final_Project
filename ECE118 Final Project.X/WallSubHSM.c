@@ -38,9 +38,9 @@
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
-#define TURN_SPEED          40
-#define BANK_RIGHT_SPEED    30
-#define BANK_RIGHT_RADIUS   11000
+#define TURN_SPEED          35
+#define BANK_RIGHT_SPEED    40
+#define BANK_RIGHT_RADIUS   12000
 
 // Debug Defines in TopHSM.h
 
@@ -151,7 +151,7 @@ ES_Event RunWallSubHSM(ES_Event ThisEvent) {
         case StartTurn:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(START_TURN_TIMER, TIMER_0_TICKS);
+                    ES_Timer_InitTimer(START_TURN_TIMER, TIMER_QUART_SEC);
                     DT_SpinCC(TURN_SPEED);
                     break;
                 case ES_TIMEOUT:
@@ -174,14 +174,8 @@ ES_Event RunWallSubHSM(ES_Event ThisEvent) {
         case BankRight:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(WALL_FOLLOW_TIMER, TIMER_3_SEC);
+                    ES_Timer_InitTimer(WALL_FOLLOW_TIMER, TIMER_7_SEC);
                     DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
-                    break;
-                case PARALLEL_ON_R:
-                    ES_Timer_StopTimer(WALL_FOLLOW_TIMER);
-                    nextState = BankLeft;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case WALL_ON:
                     ES_Timer_StopTimer(WALL_FOLLOW_TIMER);
@@ -189,13 +183,13 @@ ES_Event RunWallSubHSM(ES_Event ThisEvent) {
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
-//                case ES_TIMEOUT:
-//                    if (ThisEvent.EventParam == WALL_FOLLOW_TIMER) {
-//                        nextState = SpinLeft;
-//                        makeTransition = TRUE;
-//                        ThisEvent.EventType = ES_NO_EVENT;
-//                    }
-//                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == WALL_FOLLOW_TIMER) {
+                        nextState = SpinLeft;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case ES_EXIT:
                     DT_Stop();
                     break;
@@ -229,9 +223,9 @@ ES_Event RunWallSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     DT_SpinCC(TURN_SPEED);
-                    
+
                     // watchdog timer
-                    ES_Timer_InitTimer(WALL_FOLLOW_TIMER, TIMER_1_SEC);
+                    ES_Timer_InitTimer(WALL_FOLLOW_TIMER, TIMER_HALF_SEC);
                     break;
                 case WALL_OFF:
                     ES_Timer_StopTimer(WALL_FOLLOW_TIMER);
@@ -239,15 +233,12 @@ ES_Event RunWallSubHSM(ES_Event ThisEvent) {
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
-//                case ES_TIMEOUT:
-//                    nextState = BankRight;
-//                    makeTransition = TRUE;
-//                    ThisEvent.EventType = ES_NO_EVENT;
-//                    break;
-                case PARALLEL_ON_R:
-                    nextState = BankLeft;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventType = ES_NO_EVENT) {
+                        nextState = BankRight;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
                 case ES_NO_EVENT:
                     break;
@@ -267,7 +258,7 @@ ES_Event RunWallSubHSM(ES_Event ThisEvent) {
         RunWallSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 #ifdef LED_USE_WALL
-    LED_SetBank(LED_BANK2, CurrentState);
+    LED_SetBank(LED_BANK1, CurrentState);
 #endif
     ES_Tail(); // trace call stack end
     return ThisEvent;

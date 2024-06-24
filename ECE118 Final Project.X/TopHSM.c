@@ -226,12 +226,17 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     break;
                 case ES_ENTRY:
                     break;
-                case TAPE_ON:
-                    if (ThisEvent.EventParam & BLTape) {
-                        nextState = WallTracking;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
+                    //                case TAPE_ON:
+                    //                    if (ThisEvent.EventParam & BLTape) {
+                    //                        nextState = WallTracking;
+                    //                        makeTransition = TRUE;
+                    //                        ThisEvent.EventType = ES_NO_EVENT;
+                    //                    }
+                    //                    break;
+                case WALLTRACK:
+                    nextState = WallTracking;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case ES_EXIT:
                     InitDumpSubHSM();
@@ -253,7 +258,19 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
+                    } else if (ThisEvent.EventParam & FRTape) {
+                        nextState = Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
                     }
+                    break;
+                case TAPE_OFF:
+                    if(ThisEvent.EventParam & FLTape) {
+                        nextState = Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case ES_EXIT:
                     InitWallSubHSM();
                     break;

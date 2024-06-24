@@ -223,7 +223,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
         RunRoamSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 #ifdef LED_USE_ROAM
-    LED_SetBank(LED_BANK2, CurrentState);
+    LED_SetBank(LED_BANK1, CurrentState);
 #endif
     ES_Tail(); // trace call stack end
     return ThisEvent;
