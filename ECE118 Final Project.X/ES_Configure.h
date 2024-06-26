@@ -113,7 +113,7 @@ static const char *EventNames[] = {
 #define TIMER5_RESP_FUNC PostTopHSM
 #define TIMER6_RESP_FUNC PostTopHSM
 #define TIMER7_RESP_FUNC PostTopHSM
-#define TIMER8_RESP_FUNC TIMER_UNUSED
+#define TIMER8_RESP_FUNC PostTopHSM
 #define TIMER9_RESP_FUNC TIMER_UNUSED 
 #define TIMER10_RESP_FUNC TIMER_UNUSED
 #define TIMER11_RESP_FUNC TIMER_UNUSED
@@ -129,14 +129,15 @@ static const char *EventNames[] = {
 // definitions for the response functions to make it easier to check that
 // the timer number matches where the timer event will be routed
 
-#define ROAM_TIMER          0   /* Defined for Roam Use     */
-#define LOOP_TIMER          1   /* Defined for Loop Use     */
-#define DUMP_TIMER          2   /* Defined for Dump Use     */
-#define AVOID_TIMER         3   /* Defined for Avoidance    */
-#define TOP_TIMER           4   /* Defined for Top Service  */
-#define REVERSE_TIMER       5   /* Defined for Dump Use     */
-#define WALL_FOLLOW_TIMER   6   /* Defined for Wall Follow  */
-#define START_TURN_TIMER    7   /* Defined for Initial Turn */
+#define ROAM_TIMER          0   /* Defined for Roam Use         */
+#define LOOP_TIMER          1   /* Defined for Loop Use         */
+#define DUMP_TIMER          2   /* Defined for Dump Use         */
+#define AVOID_TIMER         3   /* Defined for Avoidance        */
+#define TOP_TIMER           4   /* Defined for Top Service      */
+#define REVERSE_TIMER       5   /* Defined for Dump Use         */
+#define WALL_FOLLOW_TIMER   6   /* Defined for Wall Follow      */
+#define START_TURN_TIMER    7   /* Defined for Initial Turn     */
+#define DUMP_WATCHDOG_TIMER 8   /* Defined for Dump Watchdog    */
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 

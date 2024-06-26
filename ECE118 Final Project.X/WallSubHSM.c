@@ -39,8 +39,8 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 #define TURN_SPEED          35
-#define BANK_RIGHT_SPEED    40
-#define BANK_RIGHT_RADIUS   12000
+#define BANK_RIGHT_SPEED    35
+#define BANK_RIGHT_RADIUS   10000
 
 // Debug Defines in TopHSM.h
 

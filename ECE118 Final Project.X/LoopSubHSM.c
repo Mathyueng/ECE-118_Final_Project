@@ -38,7 +38,7 @@
  ******************************************************************************/
 #define TURN_SPEED 60
 #define BANK_RIGHT_SPEED 40
-#define BANK_RIGHT_RADIUS 10000
+#define BANK_RIGHT_RADIUS 8000
 
 // Debug Defines in TopHSM.h
 
@@ -47,7 +47,6 @@ typedef enum {
     SpinLeft,
     BankRight,
     LeftTurn,
-    Avoid,
 } LoopSubHSMState_t;
 
 static const char *StateNames[] = {
@@ -55,7 +54,6 @@ static const char *StateNames[] = {
 	"SpinLeft",
 	"BankRight",
 	"LeftTurn",
-	"Avoid",
 };
 
 
@@ -212,20 +210,11 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                     break;
                 case TAPE_ON:
                     if (ThisEvent.EventParam & BLTape) {
+                        ES_Timer_StopTimer(LOOP_TIMER);
                         nextState = BankRight;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
-                    break;
-                default:
-                    break;
-            }
-            break;
-
-        case Avoid:
-            switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    DT_Stop();
                     break;
                 default:
                     break;

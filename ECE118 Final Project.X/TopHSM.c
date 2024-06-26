@@ -39,6 +39,8 @@
 #include "RoamSubHSM.h"
 #include "DumpSubHSM.h"
 #include "WallSubHSM.h"
+#include "TapeDodgeSubHSM.h"
+#include "WallDodgeSubHSM.h"
 /*******************************************************************************
  * PRIVATE #DEFINES                                                            *
  ******************************************************************************/
@@ -57,6 +59,8 @@ typedef enum {
     Looping,
     Dumping,
     WallTracking,
+    TapeDodging,
+    WallDodging,
 } TopHSMState_t;
 
 static const char *StateNames[] = {
@@ -65,6 +69,8 @@ static const char *StateNames[] = {
     "Looping",
     "Dumping",
     "WallTracking",
+    "TapeDodging",
+    "WallDodging",
 };
 
 
@@ -142,6 +148,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
     TopHSMState_t nextState; // <- change type to correct enum
     uint8_t tapeSensors;
+    uint8_t obstSensors;
 
     ES_Tattle(); // trace call stack
 #ifdef DEBUG_TOP
@@ -162,6 +169,8 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 InitRoamSubHSM();
                 InitDumpSubHSM();
                 InitWallSubHSM();
+                InitTapeDodgeSubHSM();
+                InitWallDodgeSubHSM();
                 // now put the machine into the actual initial state
                 nextState = Roaming;
                 makeTransition = TRUE;
@@ -210,6 +219,45 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
+                case OBSTACLE_ON:
+                    if (ThisEvent.EventParam & (LLObstacle | FLObstacle | CLObstacle)) {
+#ifdef DEBUG_TOP
+                        printf("\r\nLeft Obstacle\r\n");
+#endif
+                        DT_DriveFwd(REV_LOW_SPEED);
+                        ES_Timer_InitTimer(AVOID_TIMER, TIMER_1_SEC);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else if (ThisEvent.EventParam & (RRObstacle | FRObstacle | CRObstacle)) {
+#ifdef DEBUG_TOP
+                        printf("\r\nRight Obstacle\r\n");
+#endif
+                        nextState = TapeDodging;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case WALL_ON:
+                    ES_Timer_InitTimer(TOP_TIMER, TIMER_4_SEC);
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == AVOID_TIMER) { // case if obstacle on left side of bot
+                        nextState = TapeDodging;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    } else if (ThisEvent.EventParam == TOP_TIMER) { // Case where we hit the wall but not track
+                        ES_Timer_InitTimer(REVERSE_TIMER, TIMER_1_SEC);
+                        DT_DriveRight(REV_LOW_SPEED, 2000);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    } else if (ThisEvent.EventParam == REVERSE_TIMER) { // backs up before starting walltrack
+                        nextState = WallTracking;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    }
+                    break;
                 case ES_EXIT:
                     DT_Stop();
                     InitLoopSubHSM();
@@ -226,14 +274,15 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     break;
                 case ES_ENTRY:
                     break;
-                    //                case TAPE_ON:
-                    //                    if (ThisEvent.EventParam & BLTape) {
-                    //                        nextState = WallTracking;
-                    //                        makeTransition = TRUE;
-                    //                        ThisEvent.EventType = ES_NO_EVENT;
-                    //                    }
-                    //                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == DUMP_WATCHDOG_TIMER) {
+                        nextState = Roaming;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
                 case WALLTRACK:
+                    ES_Timer_StopTimer(DUMP_WATCHDOG_TIMER);
                     nextState = WallTracking;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -253,6 +302,11 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     break;
                 case ES_ENTRY:
                     break;
+                case OBSTACLE_ON:
+                    nextState = WallDodging;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
                 case TAPE_ON:
                     if (ThisEvent.EventParam & FLTape) {
                         nextState = Looping;
@@ -265,7 +319,7 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     }
                     break;
                 case TAPE_OFF:
-                    if(ThisEvent.EventParam & FLTape) {
+                    if (ThisEvent.EventParam & FLTape) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
@@ -278,6 +332,65 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     break;
             }
             break;
+
+        case TapeDodging:
+            ThisEvent = RunTapeDodgeSubHSM(ThisEvent);
+            switch (ThisEvent.EventType) {
+                case ES_NO_EVENT:
+                    break;
+                case ES_ENTRY:
+                    break;
+                case TAPE_ON:
+                    if (ThisEvent.EventParam & FLTape) {
+                        nextState = Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else if (ThisEvent.EventParam & FRTape) {
+                        nextState = Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case WALL_ON:
+                    nextState = WallTracking;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_EXIT:
+                    InitTapeDodgeSubHSM();
+                    break;
+            }
+            break;
+
+        case WallDodging:
+            ThisEvent = RunWallDodgeSubHSM(ThisEvent);
+            switch (ThisEvent.EventType) {
+                case ES_NO_EVENT:
+                    break;
+                case ES_ENTRY:
+                    break;
+                case TAPE_ON:
+                    if (ThisEvent.EventParam & FLTape) {
+                        nextState = Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else if (ThisEvent.EventParam & FRTape) {
+                        nextState = Looping;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case WALL_ON:
+                    nextState = WallTracking;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_EXIT:
+                    InitWallDodgeSubHSM();
+                    break;
+            }
+            break;
+
         default: // all unhandled states fall into here
             break;
     } // end switch on Current State

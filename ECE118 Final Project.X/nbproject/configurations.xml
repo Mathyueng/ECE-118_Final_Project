@@ -91,6 +91,10 @@
       <itemPath>Obstacle.c</itemPath>
       <itemPath>WallService.c</itemPath>
       <itemPath>WallSubHSM.c</itemPath>
+      <itemPath>TapeDodgeSubHSM.h</itemPath>
+      <itemPath>TapeDodgeSubHSM.c</itemPath>
+      <itemPath>WallDodgeSubHSM.c</itemPath>
+      <itemPath>WallDodgeSubHSM.h</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

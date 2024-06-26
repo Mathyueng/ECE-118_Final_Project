@@ -48,10 +48,10 @@ typedef enum {
 } RoamSubHSMState_t;
 
 static const char *StateNames[] = {
-	"InitPSubState",
-	"Forward",
-	"Spin_Right",
-	"Avoid",
+    "InitPSubState",
+    "Forward",
+    "Spin_Right",
+    "Avoid",
 };
 
 
@@ -124,7 +124,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
     printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
     printf("\r\nparams: %x", ThisEvent.EventParam);
 #endif
-    
+
     switch (CurrentState) {
         case InitPSubState: // If current state is initial Psedudo State
             if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
@@ -193,11 +193,11 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
         case Spin_Right:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_DriveLeft(REV_MID_SPEED,0);
+                    DT_DriveLeft(REV_MID_SPEED, 0);
                     break;
             }
             break;
-            
+
         case Avoid:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
@@ -205,9 +205,11 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
                     ES_Timer_InitTimer(ROAM_TIMER, TIMER_1_SEC);
                     break;
                 case ES_TIMEOUT:
-                    nextState = Forward;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                    if (ThisEvent.EventParam == ROAM_TIMER) {
+                        nextState = Forward;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
             }
             break;

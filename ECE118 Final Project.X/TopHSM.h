@@ -58,20 +58,22 @@
 #define TIMER_10_SEC    10000   // 10.00 s
 
 
-//#define DEBUG_TOP
+#define DEBUG_TOP
 //#define DEBUG_ROAM
 //#define DEBUG_LOOP
 //#define DEBUG_DUMP
 //#define DEBUG_WALL
+//#define DEBUG_DODGE
 
 #define LED_USE_TOP
 //#define LED_USE_ROAM
 //#define LED_USE_LOOP
 //#define LED_USE_DUMP
 //#define LED_USE_WALL
+//#define LED_USE_DODGE
 
 #define INTAKE_ACTIVE
-#define SERVO_ACTIVE
+//#define SERVO_ACTIVE
 #define TRACK_ACTIVE
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *

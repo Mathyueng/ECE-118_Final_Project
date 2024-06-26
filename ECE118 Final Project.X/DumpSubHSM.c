@@ -213,7 +213,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case Forward:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    //                    DT_DriveFwd(FWD_LOW_SPEED);
+                    ES_Timer_InitTimer(DUMP_WATCHDOG_TIMER, TIMER_4_SEC);
                     if (tapeSensors & FRTape) {
                         DT_SpinCC(TURN_SPEED);
                     } else if (!(tapeSensors & FRTape)) {
@@ -234,6 +234,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     }
                     break;
                 case TRACK_ON:
+                    ES_Timer_StopTimer(DUMP_WATCHDOG_TIMER);
                     nextState = Dump;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
