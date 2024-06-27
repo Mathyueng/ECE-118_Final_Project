@@ -39,8 +39,8 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 #define TURN_SPEED          35
-#define BANK_RIGHT_SPEED    35
-#define BANK_RIGHT_RADIUS   10000
+#define BANK_RIGHT_SPEED    40
+#define BANK_RIGHT_RADIUS   6000
 
 // Debug Defines in TopHSM.h
 
@@ -183,6 +183,12 @@ ES_Event RunWallSubHSM(ES_Event ThisEvent) {
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
+//                case PARALLEL_ON_R:
+//                    ES_Timer_StopTimer(WALL_FOLLOW_TIMER);
+//                    nextState = SpinLeft;
+//                    makeTransition = TRUE;
+//                    ThisEvent.EventType = ES_NO_EVENT;
+//                    break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == WALL_FOLLOW_TIMER) {
                         nextState = SpinLeft;
@@ -222,12 +228,17 @@ ES_Event RunWallSubHSM(ES_Event ThisEvent) {
         case SpinLeft: // in the first state, replace this with correct names
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_SpinCC(TURN_SPEED);
-
+                    DT_SpinCC(30);
                     // watchdog timer
-                    ES_Timer_InitTimer(WALL_FOLLOW_TIMER, TIMER_HALF_SEC);
+                    ES_Timer_InitTimer(WALL_FOLLOW_TIMER, TIMER_QUART_SEC);
                     break;
                 case WALL_OFF:
+                    ES_Timer_StopTimer(WALL_FOLLOW_TIMER);
+                    nextState = LeftSideBuffer;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case PARALLEL_OFF:
                     ES_Timer_StopTimer(WALL_FOLLOW_TIMER);
                     nextState = LeftSideBuffer;
                     makeTransition = TRUE;

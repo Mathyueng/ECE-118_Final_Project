@@ -58,6 +58,7 @@ typedef enum {
     TRACK_ON,
     TRACK_OFF,
     WALLTRACK,
+            
     /* User-defined events end here */
     NUMBEROFEVENTS,
 } ES_EventTyp_t;
@@ -86,6 +87,7 @@ static const char *EventNames[] = {
     "OBSTACLE_OFF",
     "TRACK_ON",
     "TRACK_OFF",
+    "WALLTRACK",
     "NUMBEROFEVENTS",
 };
 

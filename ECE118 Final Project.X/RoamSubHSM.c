@@ -40,6 +40,9 @@
 
 // Debug Defines in TopHSM.h
 
+#define Left    0
+#define Right   1
+
 typedef enum {
     InitPSubState,
     Forward,
@@ -117,6 +120,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
     RoamSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
+    static uint8_t LeftOrRight;
     uint8_t tapeSensors;
 
 #ifdef DEBUG_ROAM
@@ -172,18 +176,35 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
                     }
                     break;
                 case OBSTACLE_ON:
-                    nextState = Avoid;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    //                    DT_SpinCC(FWD_MID_SPEED);
-                    break;
+                    if (ThisEvent.EventParam & (RRObstacle | FRObstacle | CRObstacle)) {
+                        LeftOrRight = Right;
+                        nextState = Avoid;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        //                    DT_SpinCC(FWD_MID_SPEED);
+                        break;
+                    } else if (ThisEvent.EventParam & (LLObstacle | FLObstacle | CLObstacle)) {
+                        LeftOrRight = Left;
+                        nextState = Avoid;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        //                    DT_SpinCC(FWD_MID_SPEED);
+                        break;
+                    }
                 case WALL_ON:
-                    // Stuff that happens in transition
-                    //                    DT_DriveLeft(-60, 2000);
-                    nextState = Avoid;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    //                    DT_SpinCC(FWD_MID_SPEED);
+                    if (ThisEvent.EventParam & (LLWall | FLWall)) {
+                        LeftOrRight = Left;
+                        nextState = Avoid;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    } else if (ThisEvent.EventParam & (RRWall | FRWall)) {
+                        LeftOrRight = Right;
+                        nextState = Avoid;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    }
                     break;
                 default: // all unhandled events pass the event back up to the next level
                     break;
@@ -201,7 +222,11 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
         case Avoid:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_SpinCC(30);
+                    if (LeftOrRight == Right) {
+                        DT_SpinCC(30);
+                    } else if (LeftOrRight == Left) {
+                        DT_SpinCC(-30);
+                    }
                     ES_Timer_InitTimer(ROAM_TIMER, TIMER_1_SEC);
                     break;
                 case ES_TIMEOUT:

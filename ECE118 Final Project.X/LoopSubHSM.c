@@ -38,7 +38,7 @@
  ******************************************************************************/
 #define TURN_SPEED 60
 #define BANK_RIGHT_SPEED 40
-#define BANK_RIGHT_RADIUS 8000
+#define BANK_RIGHT_RADIUS 4000
 
 // Debug Defines in TopHSM.h
 
@@ -50,10 +50,10 @@ typedef enum {
 } LoopSubHSMState_t;
 
 static const char *StateNames[] = {
-	"InitPSubState",
-	"SpinLeft",
-	"BankRight",
-	"LeftTurn",
+    "InitPSubState",
+    "SpinLeft",
+    "BankRight",
+    "LeftTurn",
 };
 
 
@@ -125,7 +125,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
     printf("\r\n\r\nLOOP state: %s", StateNames[CurrentState]);
     printf("\r\nevent: %s", EventNames[ThisEvent.EventType]);
     printf("\r\nparams: %x", ThisEvent.EventParam & 0x0F);
-    
+
 #endif
 
     switch (CurrentState) {
@@ -183,6 +183,28 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                         nextState = SpinLeft;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
+                    } else if (tapeSensors & BRTape) {
+                        DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    }
+                    break;
+                case WALL_ON:
+                    ES_Timer_InitTimer(TOP_TIMER, TIMER_2_SEC);
+                    DT_DriveFwd(REV_MID_SPEED);
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == TOP_TIMER) { // Case where we hit the wall but not trackwire
+                        ES_Timer_InitTimer(REVERSE_TIMER, TIMER_1_SEC);
+                        DT_DriveRight(REV_CRAWL_SPEED, 0);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    } else if (ThisEvent.EventParam == REVERSE_TIMER) { // backs up before starting walltrack
+                        ThisEvent.EventType = WALLTRACK;
+                        PostTopHSM(ThisEvent);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                     }
                     break;
                 case ES_EXIT:
@@ -197,7 +219,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     DT_DriveRight(-TURN_SPEED, 1000);
-                    
+
                     //Watchdog timer
                     ES_Timer_InitTimer(LOOP_TIMER, TIMER_1_SEC);
                     break;
@@ -216,6 +238,9 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
+                case ES_EXIT:
+                    DT_Stop();
+                    break;
                 default:
                     break;
             }
@@ -232,7 +257,7 @@ ES_Event RunLoopSubHSM(ES_Event ThisEvent) {
         RunLoopSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 #ifdef LED_USE_LOOP
-        LED_SetBank(LED_BANK1, CurrentState);
+    LED_SetBank(LED_BANK1, CurrentState);
 #endif
     ES_Tail(); // trace call stack end
     return ThisEvent;

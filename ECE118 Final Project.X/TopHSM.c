@@ -229,9 +229,14 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         break;
                     }
                     break;
-                case WALL_ON:
-                    ES_Timer_InitTimer(TOP_TIMER, TIMER_2_SEC);
-                    DT_Stop();
+                    //                case WALL_ON:
+                    //                    ES_Timer_InitTimer(TOP_TIMER, TIMER_2_SEC);
+                    //                    DT_Stop();
+                    //                    ThisEvent.EventType = ES_NO_EVENT;
+                    //                    break;
+                case WALLTRACK:
+                    nextState = WallTracking;
+                    makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case ES_TIMEOUT:
@@ -240,16 +245,6 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                         ES_Timer_InitTimer(AVOID_TIMER, TIMER_2_SEC);
-                        break;
-                    } else if (ThisEvent.EventParam == TOP_TIMER) { // Case where we hit the wall but not trackwire
-                        ES_Timer_InitTimer(REVERSE_TIMER, TIMER_1_SEC);
-                        DT_DriveRight(REV_LOW_SPEED, 2000);
-                        ThisEvent.EventType = ES_NO_EVENT;
-                        break;
-                    } else if (ThisEvent.EventParam == REVERSE_TIMER) { // backs up before starting walltrack
-                        nextState = WallTracking;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
                         break;
                     }
                     break;
@@ -269,25 +264,15 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     break;
                 case ES_ENTRY:
                     break;
-                case ES_TIMEOUT:
-                    if (ThisEvent.EventParam == DUMP_WATCHDOG_TIMER) {
-                        ES_Timer_InitTimer(ROAM_TIMER, TIMER_2_SEC);
-                        DT_DriveFwd(REV_LOW_SPEED);
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    } else if (ThisEvent.EventParam == ROAM_TIMER) {
-                        nextState = Roaming;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
-                    break;
                 case WALLTRACK:
-                    ES_Timer_StopTimer(DUMP_WATCHDOG_TIMER);
                     nextState = WallTracking;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case ES_EXIT:
+#ifdef SERVO_ACTIVE
                     DT_RetractArm();
+#endif
                     DT_Stop();
                     InitDumpSubHSM();
                     break;
@@ -304,10 +289,26 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     break;
                 case OBSTACLE_ON:
-                    nextState = Dodging;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    ES_Timer_InitTimer(AVOID_TIMER, TIMER_2_SEC);
+                    if (ThisEvent.EventParam & (LLObstacle | FLObstacle | CLObstacle)) {
+                        DT_DriveFwd(REV_LOW_SPEED);
+                        ES_Timer_InitTimer(AVOID_TIMER, TIMER_HALF_SEC);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    } else if (ThisEvent.EventParam & (RRObstacle | FRObstacle | CRObstacle)) {
+                        nextState = Dodging;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        ES_Timer_InitTimer(AVOID_TIMER, TIMER_1_SEC);
+                        break;
+                    }
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == AVOID_TIMER) { // case if obstacle on left side of bot
+                        nextState = Dodging;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        ES_Timer_InitTimer(AVOID_TIMER, TIMER_1_SEC);
+                    }
                     break;
                 case TAPE_ON:
                     if (ThisEvent.EventParam & FLTape) {
@@ -348,14 +349,21 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                     } else if (ThisEvent.EventParam & FRTape) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                     }
                     break;
                 case WALL_ON:
                     nextState = WallTracking;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case TRACK_ON:
+                    nextState = Dumping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;

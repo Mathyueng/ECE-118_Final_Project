@@ -38,7 +38,7 @@
  ******************************************************************************/
 
 #define BANK_RIGHT_SPEED    40
-#define BANK_RIGHT_RADIUS   2000
+#define BANK_RIGHT_RADIUS   3000
 
 typedef enum {
     InitPSubState,
@@ -115,7 +115,6 @@ uint8_t InitDodgeSubHSM(void) {
 ES_Event RunDodgeSubHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
     DodgeSubHSMState_t nextState; // <- change type to correct enum
-    uint8_t obstacleSensors = ReadObstacleSensors();
     uint8_t tapeSensors;
     ES_Tattle(); // trace call stack
 
@@ -145,7 +144,6 @@ ES_Event RunDodgeSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_ENTRY:
                     DT_DriveRight(-BANK_RIGHT_SPEED, 0);
-                    ES_Timer_InitTimer(AVOID_TIMER, TIMER_1_SEC);
                     break;
                 case TAPE_ON:
                     tapeSensors = ~(ReadTapeSensors());

@@ -38,7 +38,7 @@
  ******************************************************************************/
 #define TURN_SPEED 60
 #define BANK_RIGHT_SPEED 35
-#define BANK_RIGHT_RADIUS 9000
+#define BANK_RIGHT_RADIUS 6000
 #define WALL_RIGHT_RADIUS 15000
 
 //#define LOOP_TEST
@@ -159,6 +159,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case Reverse:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    DT_RetractArm();
                     // WatchDog Timer
                     ES_Timer_InitTimer(REVERSE_TIMER, TIMER_1_SEC);
                     DT_DriveFwd(REV_MID_SPEED);
@@ -213,7 +214,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case Forward:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(DUMP_WATCHDOG_TIMER, TIMER_4_SEC);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_6_SEC);
                     if (tapeSensors & FRTape) {
                         DT_SpinCC(TURN_SPEED);
                     } else if (!(tapeSensors & FRTape)) {
@@ -233,10 +234,17 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     }
                     break;
                 case TRACK_ON:
-                    ES_Timer_StopTimer(DUMP_WATCHDOG_TIMER);
+                    ES_Timer_StopTimer(DUMP_TIMER);
                     nextState = Dump;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventType == DUMP_TIMER) {
+                        nextState = Reverse;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
                 case ES_EXIT:
                     DT_Stop();
@@ -336,7 +344,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     if (tapeSensors & FRTape) {
                         DT_SpinCC(TURN_SPEED);
                     } else if (!(tapeSensors & FRTape)) {
-                        DT_SpinCC(-TURN_SPEED);
+                        DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
                     }
                     break;
                 case TAPE_ON:
@@ -359,15 +367,9 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventType == DUMP_TIMER) {
-                        ES_Timer_InitTimer(REVERSE_TIMER, TIMER_HALF_SEC);
-                        DT_DriveFwd(REV_LOW_SPEED);
-                        ThisEvent.EventType = ES_NO_EVENT;
-                        break;
-                    } else if (ThisEvent.EventType = REVERSE_TIMER) {
                         nextState = LeftTurn;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
-                        break;
                     }
                     break;
                 case ES_NO_EVENT:
@@ -381,21 +383,14 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case LeftTurn:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
                     DT_DriveRight(REV_CRAWL_SPEED, 0);
                     break;
                 case TAPE_OFF:
                     if (ThisEvent.EventParam & BLTape) {
-                        ES_Timer_StopTimer(DUMP_TIMER);
                         nextState = TurnRight;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
-                    break;
-                case ES_TIMEOUT:
-                    nextState = TurnRight;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case ES_EXIT:
                     DT_Stop();

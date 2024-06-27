@@ -32,6 +32,11 @@
 #include "ES_Configure.h"
 #include "BOARD.h"
 
+#define LLWall 0b1000
+#define FLWall 0b0100
+#define FRWall 0b0010
+#define RRWall 0b0001
+
 uint8_t Wall_Init(void);
 
 uint8_t Wall_CheckEvents(void);
