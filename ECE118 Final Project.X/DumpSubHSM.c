@@ -217,7 +217,6 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     if (tapeSensors & FRTape) {
                         DT_SpinCC(TURN_SPEED);
                     } else if (!(tapeSensors & FRTape)) {
-                        //                        DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
                         DT_SpinCC(-TURN_SPEED);
                     }
                     break;
@@ -337,7 +336,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     if (tapeSensors & FRTape) {
                         DT_SpinCC(TURN_SPEED);
                     } else if (!(tapeSensors & FRTape)) {
-                        DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
+                        DT_SpinCC(-TURN_SPEED);
                     }
                     break;
                 case TAPE_ON:
@@ -360,9 +359,15 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventType == DUMP_TIMER) {
+                        ES_Timer_InitTimer(REVERSE_TIMER, TIMER_HALF_SEC);
+                        DT_DriveFwd(REV_LOW_SPEED);
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    } else if (ThisEvent.EventType = REVERSE_TIMER) {
                         nextState = LeftTurn;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                     }
                     break;
                 case ES_NO_EVENT:
@@ -376,14 +381,21 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case LeftTurn:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
                     DT_DriveRight(REV_CRAWL_SPEED, 0);
                     break;
                 case TAPE_OFF:
                     if (ThisEvent.EventParam & BLTape) {
+                        ES_Timer_StopTimer(DUMP_TIMER);
                         nextState = TurnRight;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
+                    break;
+                case ES_TIMEOUT:
+                    nextState = TurnRight;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case ES_EXIT:
                     DT_Stop();

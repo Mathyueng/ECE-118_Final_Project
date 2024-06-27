@@ -1,5 +1,5 @@
 /*
- * File: WallDodgeSubHSM.c
+ * File: DodgeSubHSM.c
  * Author: J. Edward Carryer
  * Modified: Gabriel H Elkaim, Matthew Eng
  *
@@ -18,7 +18,7 @@
  * 09/13/13 15:17 ghe      added tattletail functionality and recursive calls
  * 01/15/12 11:12 jec      revisions for Gen2 framework
  * 11/07/11 11:26 jec      made the queue static
- * 10/30/11 17:59 jec      fixed references to CurrentEvent in RunWallDodgeSM()
+ * 10/30/11 17:59 jec      fixed references to CurrentEvent in RunDodgeSM()
  * 10/23/11 18:20 jec      began conversion from SMTemplate.c (02/20/07 rev)
  */
 
@@ -31,21 +31,21 @@
 #include "ES_Framework.h"
 #include "BOARD.h"
 #include "TopHSM.h"
-#include "WallDodgeSubHSM.h"
+#include "DodgeSubHSM.h"
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 
 #define BANK_RIGHT_SPEED    40
-#define BANK_RIGHT_RADIUS   3000
+#define BANK_RIGHT_RADIUS   2000
 
 typedef enum {
     InitPSubState,
     SetupLeft,
     BankRight,
     TurnLeft,
-} WallDodgeSubHSMState_t;
+} DodgeSubHSMState_t;
 
 static const char *StateNames[] = {
     "InitPSubState",
@@ -68,7 +68,7 @@ static const char *StateNames[] = {
 /* You will need MyPriority and the state variable; you may need others as well.
  * The type of state variable should match that of enum in header file. */
 
-static WallDodgeSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
+static DodgeSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
 
 
@@ -77,7 +77,7 @@ static uint8_t MyPriority;
  ******************************************************************************/
 
 /**
- * @Function InitWallDodgeSubHSM(uint8_t Priority)
+ * @Function InitDodgeSubHSM(uint8_t Priority)
  * @param Priority - internal variable to track which event queue to use
  * @return TRUE or FALSE
  * @brief This will get called by the framework at the beginning of the code
@@ -86,11 +86,11 @@ static uint8_t MyPriority;
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitWallDodgeSubHSM(void) {
+uint8_t InitDodgeSubHSM(void) {
     ES_Event returnEvent;
 
     CurrentState = InitPSubState;
-    returnEvent = RunWallDodgeSubHSM(INIT_EVENT);
+    returnEvent = RunDodgeSubHSM(INIT_EVENT);
     if (returnEvent.EventType == ES_NO_EVENT) {
         return TRUE;
     }
@@ -98,7 +98,7 @@ uint8_t InitWallDodgeSubHSM(void) {
 }
 
 /**
- * @Function RunWallDodgeSubHSM(ES_Event ThisEvent)
+ * @Function RunDodgeSubHSM(ES_Event ThisEvent)
  * @param ThisEvent - the event (type and param) to be responded.
  * @return Event - return event (type and param), in general should be ES_NO_EVENT
  * @brief This function is where you implement the whole of the heirarchical state
@@ -112,9 +112,9 @@ uint8_t InitWallDodgeSubHSM(void) {
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunWallDodgeSubHSM(ES_Event ThisEvent) {
+ES_Event RunDodgeSubHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
-    WallDodgeSubHSMState_t nextState; // <- change type to correct enum
+    DodgeSubHSMState_t nextState; // <- change type to correct enum
     uint8_t obstacleSensors = ReadObstacleSensors();
     uint8_t tapeSensors;
     ES_Tattle(); // trace call stack
@@ -144,8 +144,17 @@ ES_Event RunWallDodgeSubHSM(ES_Event ThisEvent) {
                 case ES_NO_EVENT:
                     break;
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(AVOID_TIMER, TIMER_3_SEC);
                     DT_DriveRight(-BANK_RIGHT_SPEED, 0);
+                    ES_Timer_InitTimer(AVOID_TIMER, TIMER_1_SEC);
+                    break;
+                case TAPE_ON:
+                    tapeSensors = ~(ReadTapeSensors());
+                    if (tapeSensors & BLTape) {
+                        ES_Timer_StopTimer(AVOID_TIMER);
+                        nextState = BankRight;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == AVOID_TIMER) {
@@ -216,9 +225,9 @@ ES_Event RunWallDodgeSubHSM(ES_Event ThisEvent) {
 
     if (makeTransition == TRUE) { // making a state transition, send EXIT and ENTRY
         // recursively call the current state with an exit event
-        RunWallDodgeSubHSM(EXIT_EVENT); // <- rename to your own Run function
+        RunDodgeSubHSM(EXIT_EVENT); // <- rename to your own Run function
         CurrentState = nextState;
-        RunWallDodgeSubHSM(ENTRY_EVENT); // <- rename to your own Run function
+        RunDodgeSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 #ifdef LED_USE_DODGE
     LED_SetBank(LED_BANK1, CurrentState);

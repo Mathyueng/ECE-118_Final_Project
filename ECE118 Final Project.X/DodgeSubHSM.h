@@ -1,5 +1,5 @@
 /*
- * File: TapeDodgeSubHSM.h
+ * File: DodgeSubHSM.h
  * Author: J. Edward Carryer
  * Modified: Gabriel H Elkaim, Soja-Marie Morgens, and Matthew Eng
  *
@@ -17,8 +17,8 @@
  * Updated on 16/Sep/2013
  */
 
-#ifndef WALL_DODGE_SUB_HSM_H  // <- This should be changed to your own guard on both
-#define WALL_DODGE_SUB_HSM_H  //    of these lines
+#ifndef DODGE_SUB_HSM_H  // <- This should be changed to your own guard on both
+#define DODGE_SUB_HSM_H  //    of these lines
 
 
 /*******************************************************************************
@@ -51,7 +51,7 @@
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitWallDodgeSubHSM(void);
+uint8_t InitDodgeSubHSM(void);
 
 /**
  * @Function RunTapeDodgeSubHSM(ES_Event ThisEvent)
@@ -68,7 +68,7 @@ uint8_t InitWallDodgeSubHSM(void);
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunWallDodgeSubHSM(ES_Event ThisEvent);
+ES_Event RunDodgeSubHSM(ES_Event ThisEvent);
 
 #endif /* SUB_HSM_Template_H */
 

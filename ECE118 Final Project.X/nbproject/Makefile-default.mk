@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c pwm.c serial.c timers.c TopHSM.c RoamSubHSM.c DumpSubHSM.c Track.c LoopSubHSM.c Wall.c Parallel.c Tape.c Obstacle.c WallSubHSM.c TapeDodgeSubHSM.c WallDodgeSubHSM.c
+SOURCEFILES_QUOTED_IF_SPACED=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c pwm.c serial.c timers.c TopHSM.c RoamSubHSM.c DumpSubHSM.c Track.c LoopSubHSM.c Wall.c Parallel.c Tape.c Obstacle.c WallSubHSM.c DodgeSubHSM.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/Track.o ${OBJECTDIR}/LoopSubHSM.o ${OBJECTDIR}/Wall.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/Tape.o ${OBJECTDIR}/Obstacle.o ${OBJECTDIR}/WallSubHSM.o ${OBJECTDIR}/TapeDodgeSubHSM.o ${OBJECTDIR}/WallDodgeSubHSM.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/AD.o.d ${OBJECTDIR}/BOARD.o.d ${OBJECTDIR}/ES_CheckEvents.o.d ${OBJECTDIR}/ES_Framework.o.d ${OBJECTDIR}/ES_KeyboardInput.o.d ${OBJECTDIR}/ES_Main.o.d ${OBJECTDIR}/ES_PostList.o.d ${OBJECTDIR}/ES_Queue.o.d ${OBJECTDIR}/ES_TattleTale.o.d ${OBJECTDIR}/ES_Timers.o.d ${OBJECTDIR}/EventChecker.o.d ${OBJECTDIR}/IO_Ports.o.d ${OBJECTDIR}/LED.o.d ${OBJECTDIR}/RC_Servo.o.d ${OBJECTDIR}/Stepper.o.d ${OBJECTDIR}/Tank_DriveTrain.o.d ${OBJECTDIR}/pwm.o.d ${OBJECTDIR}/serial.o.d ${OBJECTDIR}/timers.o.d ${OBJECTDIR}/TopHSM.o.d ${OBJECTDIR}/RoamSubHSM.o.d ${OBJECTDIR}/DumpSubHSM.o.d ${OBJECTDIR}/Track.o.d ${OBJECTDIR}/LoopSubHSM.o.d ${OBJECTDIR}/Wall.o.d ${OBJECTDIR}/Parallel.o.d ${OBJECTDIR}/Tape.o.d ${OBJECTDIR}/Obstacle.o.d ${OBJECTDIR}/WallSubHSM.o.d ${OBJECTDIR}/TapeDodgeSubHSM.o.d ${OBJECTDIR}/WallDodgeSubHSM.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/Track.o ${OBJECTDIR}/LoopSubHSM.o ${OBJECTDIR}/Wall.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/Tape.o ${OBJECTDIR}/Obstacle.o ${OBJECTDIR}/WallSubHSM.o ${OBJECTDIR}/DodgeSubHSM.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/AD.o.d ${OBJECTDIR}/BOARD.o.d ${OBJECTDIR}/ES_CheckEvents.o.d ${OBJECTDIR}/ES_Framework.o.d ${OBJECTDIR}/ES_KeyboardInput.o.d ${OBJECTDIR}/ES_Main.o.d ${OBJECTDIR}/ES_PostList.o.d ${OBJECTDIR}/ES_Queue.o.d ${OBJECTDIR}/ES_TattleTale.o.d ${OBJECTDIR}/ES_Timers.o.d ${OBJECTDIR}/EventChecker.o.d ${OBJECTDIR}/IO_Ports.o.d ${OBJECTDIR}/LED.o.d ${OBJECTDIR}/RC_Servo.o.d ${OBJECTDIR}/Stepper.o.d ${OBJECTDIR}/Tank_DriveTrain.o.d ${OBJECTDIR}/pwm.o.d ${OBJECTDIR}/serial.o.d ${OBJECTDIR}/timers.o.d ${OBJECTDIR}/TopHSM.o.d ${OBJECTDIR}/RoamSubHSM.o.d ${OBJECTDIR}/DumpSubHSM.o.d ${OBJECTDIR}/Track.o.d ${OBJECTDIR}/LoopSubHSM.o.d ${OBJECTDIR}/Wall.o.d ${OBJECTDIR}/Parallel.o.d ${OBJECTDIR}/Tape.o.d ${OBJECTDIR}/Obstacle.o.d ${OBJECTDIR}/WallSubHSM.o.d ${OBJECTDIR}/DodgeSubHSM.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/Track.o ${OBJECTDIR}/LoopSubHSM.o ${OBJECTDIR}/Wall.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/Tape.o ${OBJECTDIR}/Obstacle.o ${OBJECTDIR}/WallSubHSM.o ${OBJECTDIR}/TapeDodgeSubHSM.o ${OBJECTDIR}/WallDodgeSubHSM.o
+OBJECTFILES=${OBJECTDIR}/AD.o ${OBJECTDIR}/BOARD.o ${OBJECTDIR}/ES_CheckEvents.o ${OBJECTDIR}/ES_Framework.o ${OBJECTDIR}/ES_KeyboardInput.o ${OBJECTDIR}/ES_Main.o ${OBJECTDIR}/ES_PostList.o ${OBJECTDIR}/ES_Queue.o ${OBJECTDIR}/ES_TattleTale.o ${OBJECTDIR}/ES_Timers.o ${OBJECTDIR}/EventChecker.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/LED.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/Tank_DriveTrain.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/serial.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/TopHSM.o ${OBJECTDIR}/RoamSubHSM.o ${OBJECTDIR}/DumpSubHSM.o ${OBJECTDIR}/Track.o ${OBJECTDIR}/LoopSubHSM.o ${OBJECTDIR}/Wall.o ${OBJECTDIR}/Parallel.o ${OBJECTDIR}/Tape.o ${OBJECTDIR}/Obstacle.o ${OBJECTDIR}/WallSubHSM.o ${OBJECTDIR}/DodgeSubHSM.o
 
 # Source Files
-SOURCEFILES=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c pwm.c serial.c timers.c TopHSM.c RoamSubHSM.c DumpSubHSM.c Track.c LoopSubHSM.c Wall.c Parallel.c Tape.c Obstacle.c WallSubHSM.c TapeDodgeSubHSM.c WallDodgeSubHSM.c
+SOURCEFILES=AD.c BOARD.c ES_CheckEvents.c ES_Framework.c ES_KeyboardInput.c ES_Main.c ES_PostList.c ES_Queue.c ES_TattleTale.c ES_Timers.c EventChecker.c IO_Ports.c LED.c RC_Servo.c Stepper.c Tank_DriveTrain.c pwm.c serial.c timers.c TopHSM.c RoamSubHSM.c DumpSubHSM.c Track.c LoopSubHSM.c Wall.c Parallel.c Tape.c Obstacle.c WallSubHSM.c DodgeSubHSM.c
 
 
 
@@ -275,17 +275,11 @@ ${OBJECTDIR}/WallSubHSM.o: WallSubHSM.c  .generated_files/flags/default/9b027df3
 	@${RM} ${OBJECTDIR}/WallSubHSM.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/WallSubHSM.o.d" -o ${OBJECTDIR}/WallSubHSM.o WallSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/TapeDodgeSubHSM.o: TapeDodgeSubHSM.c  .generated_files/flags/default/fa202416db1f3ad510710c6762cd1416e565d69 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/DodgeSubHSM.o: DodgeSubHSM.c  .generated_files/flags/default/eff9ff5c19fdece9b0773f0991d35fa3e961eca2 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/TapeDodgeSubHSM.o.d 
-	@${RM} ${OBJECTDIR}/TapeDodgeSubHSM.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TapeDodgeSubHSM.o.d" -o ${OBJECTDIR}/TapeDodgeSubHSM.o TapeDodgeSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/WallDodgeSubHSM.o: WallDodgeSubHSM.c  .generated_files/flags/default/a612180ad0184ee78149f65015bb11db0224d04 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/WallDodgeSubHSM.o.d 
-	@${RM} ${OBJECTDIR}/WallDodgeSubHSM.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/WallDodgeSubHSM.o.d" -o ${OBJECTDIR}/WallDodgeSubHSM.o WallDodgeSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	@${RM} ${OBJECTDIR}/DodgeSubHSM.o.d 
+	@${RM} ${OBJECTDIR}/DodgeSubHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/DodgeSubHSM.o.d" -o ${OBJECTDIR}/DodgeSubHSM.o DodgeSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 else
 ${OBJECTDIR}/AD.o: AD.c  .generated_files/flags/default/a58e75d1d6ec63820c52a3f1c954b9bba4783b8a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
@@ -462,17 +456,11 @@ ${OBJECTDIR}/WallSubHSM.o: WallSubHSM.c  .generated_files/flags/default/bbe11054
 	@${RM} ${OBJECTDIR}/WallSubHSM.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/WallSubHSM.o.d" -o ${OBJECTDIR}/WallSubHSM.o WallSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/TapeDodgeSubHSM.o: TapeDodgeSubHSM.c  .generated_files/flags/default/1a1b4546956d1daf5abd2d5cb23ff068df6146bb .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/DodgeSubHSM.o: DodgeSubHSM.c  .generated_files/flags/default/915beea4345682842393e177c36ec172017b9673 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/TapeDodgeSubHSM.o.d 
-	@${RM} ${OBJECTDIR}/TapeDodgeSubHSM.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/TapeDodgeSubHSM.o.d" -o ${OBJECTDIR}/TapeDodgeSubHSM.o TapeDodgeSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/WallDodgeSubHSM.o: WallDodgeSubHSM.c  .generated_files/flags/default/9880712c3b2b036535325abd0da5d835f63691b1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/WallDodgeSubHSM.o.d 
-	@${RM} ${OBJECTDIR}/WallDodgeSubHSM.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/WallDodgeSubHSM.o.d" -o ${OBJECTDIR}/WallDodgeSubHSM.o WallDodgeSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	@${RM} ${OBJECTDIR}/DodgeSubHSM.o.d 
+	@${RM} ${OBJECTDIR}/DodgeSubHSM.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../ECE118/include" -I"../ECE118" -MP -MMD -MF "${OBJECTDIR}/DodgeSubHSM.o.d" -o ${OBJECTDIR}/DodgeSubHSM.o DodgeSubHSM.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 endif
 
