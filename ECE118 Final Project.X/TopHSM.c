@@ -59,6 +59,7 @@ typedef enum {
     Dumping,
     WallTracking,
     Dodging,
+    MovingOn,
 } TopHSMState_t;
 
 static const char *StateNames[] = {
@@ -68,6 +69,7 @@ static const char *StateNames[] = {
     "Dumping",
     "WallTracking",
     "Dodging",
+    "MovingOn",
 };
 
 
@@ -174,6 +176,9 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
 #ifdef INTAKE_ACTIVE
                 DT_IntakeFwd();
 #endif
+#ifdef SERVO_ACTIVE
+                DT_RetractArm();
+#endif
                 DT_Stop();
                 break;
             }
@@ -196,8 +201,12 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     nextState = Dumping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    DUMPSDONE += 1;
                     break;
                 case ES_EXIT:
+#ifdef SERVO_ACTIVE
+                    DT_RetractArm();
+#endif
                     DT_Stop();
                     InitRoamSubHSM();
                     break;
@@ -212,6 +221,18 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     break;
                 case TRACK_ON:
+                    //                    if (DUMPSDONE < 2) {
+                    //                        nextState = Dumping;
+                    //                        makeTransition = TRUE;
+                    //                        ThisEvent.EventType = ES_NO_EVENT;
+                    //                        break;
+                    //                    } else if (DUMPSDONE >= 2) {
+                    //                        nextState = MovingOn;
+                    //                        makeTransition = TRUE;
+                    //                        ThisEvent.EventType = ES_NO_EVENT;
+                    //                        break;
+                    //                    }
+                    //                    DUMPSDONE += 2;
                     nextState = Dumping;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -249,6 +270,9 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     }
                     break;
                 case ES_EXIT:
+#ifdef SERVO_ACTIVE
+                    DT_RetractArm();
+#endif
                     DT_Stop();
                     InitLoopSubHSM();
                     break;
@@ -266,6 +290,11 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                     break;
                 case WALLTRACK:
                     nextState = WallTracking;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case BACKTOROAM:
+                    nextState = Roaming;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
@@ -315,10 +344,12 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                     } else if (ThisEvent.EventParam & FRTape) {
                         nextState = Looping;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                     }
                     break;
                 case TAPE_OFF:
@@ -375,6 +406,40 @@ ES_Event RunTopHSM(ES_Event ThisEvent) {
             }
             break;
 
+            //        case MovingOn:
+            //            switch (ThisEvent.EventType) {
+            //                case ES_ENTRY:
+            //                    ES_Timer_InitTimer(TOP_TIMER, TIMER_10_SEC);
+            //                    ES_Timer_InitTimer(REVERSE_TIMER, TIMER_1_SEC);
+            //                    DT_DriveFwd(REV_MID_SPEED);
+            //                    break;
+            //                case ES_NO_EVENT:
+            //                    break;
+            //                case ES_TIMEOUT:
+            //                    if (ThisEvent.EventParam == REVERSE_TIMER) {
+            //                        ES_Timer_InitTimer(WALL_FOLLOW_TIMER, TIMER_1_SEC);
+            //                        DT_DriveLeft(FWD_MID_SPEED, 4000);
+            //                        ThisEvent.EventType = ES_NO_EVENT;
+            //                        break;
+            //                    } else if (ThisEvent.EventParam == WALL_FOLLOW_TIMER) {
+            //                        nextState = WallTracking;
+            //                        makeTransition = TRUE;
+            //                        ThisEvent.EventType = ES_NO_EVENT;
+            //                        break;
+            //                    } else if (ThisEvent.EventParam == TOP_TIMER) {
+            //                        nextState = Roaming;
+            //                        makeTransition = TRUE;
+            //                        ThisEvent.EventType = ES_NO_EVENT;
+            //                        break;
+            //                    }
+            //                    break;
+            //                case ES_EXIT:
+            //                    DT_Stop();
+            //                    break;
+            //                default:
+            //                    break;
+            //            }
+            //            break;
         default: // all unhandled states fall into here
             break;
     } // end switch on Current State

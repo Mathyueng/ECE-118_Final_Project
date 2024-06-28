@@ -38,7 +38,7 @@
  ******************************************************************************/
 
 #define BANK_RIGHT_SPEED    40
-#define BANK_RIGHT_RADIUS   3000
+#define BANK_RIGHT_RADIUS   4000
 
 typedef enum {
     InitPSubState,
@@ -174,12 +174,21 @@ ES_Event RunDodgeSubHSM(ES_Event ThisEvent) {
                 case ES_NO_EVENT:
                     break;
                 case ES_ENTRY:
+                    ES_Timer_InitTimer(AVOID_TIMER, TIMER_8_SEC);
                     DT_DriveRight(BANK_RIGHT_SPEED, BANK_RIGHT_RADIUS);
                     break;
                 case OBSTACLE_ON:
+                    ES_Timer_StopTimer(AVOID_TIMER);
                     nextState = TurnLeft;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == AVOID_TIMER) {
+                        nextState = TurnLeft;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
                 case ES_EXIT:
                     DT_Stop();

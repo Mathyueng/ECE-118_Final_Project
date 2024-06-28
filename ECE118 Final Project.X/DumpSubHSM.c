@@ -161,7 +161,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     DT_RetractArm();
                     // WatchDog Timer
-                    ES_Timer_InitTimer(REVERSE_TIMER, TIMER_1_SEC);
+                    ES_Timer_InitTimer(REVERSE_TIMER, TIMER_HALF_SEC);
                     DT_DriveFwd(REV_MID_SPEED);
                     break;
                 case TAPE_ON:
@@ -192,7 +192,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case LowerArm: // in the first state, replace this with correct names
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
 #ifdef SERVO_ACTIVE
                     DT_ExtendArm();
 #endif
@@ -240,10 +240,14 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
                 case ES_TIMEOUT:
-                    if (ThisEvent.EventType == DUMP_TIMER) {
-                        nextState = Reverse;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                    if (ThisEvent.EventParam == DUMP_TIMER) {
+                        ES_Timer_InitTimer(REVERSE_TIMER, TIMER_HALF_SEC);
+                        DT_DriveFwd(REV_MID_SPEED);
+                        break;
+                    } else if (ThisEvent.EventParam == REVERSE_TIMER) {
+                        ThisEvent.EventType = BACKTOROAM;
+                        PostTopHSM(ThisEvent);
+                        break;
                     }
                     break;
                 case ES_EXIT:
@@ -261,7 +265,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
                     DT_IntakeBack();
 #endif
                     DT_Stop();
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_3_SEC);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_2_SEC);
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == DUMP_TIMER) {
@@ -283,7 +287,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case Reverse_2:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
                     DT_DriveFwd(REV_MID_SPEED);
                     break;
                 case ES_NO_EVENT:
@@ -317,7 +321,7 @@ ES_Event RunDumpSubHSM(ES_Event ThisEvent) {
         case RaiseArm: // in the first state, replace this with correct names
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_1_SEC);
+                    ES_Timer_InitTimer(DUMP_TIMER, TIMER_HALF_SEC);
 #ifdef SERVO_ACTIVE
                     DT_RetractArm();
 #endif

@@ -194,6 +194,7 @@ ES_Event RunWallSubHSM(ES_Event ThisEvent) {
                         nextState = SpinLeft;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                     }
                     break;
                 case ES_EXIT:
@@ -216,6 +217,7 @@ ES_Event RunWallSubHSM(ES_Event ThisEvent) {
                         nextState = BankRight;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                     }
                     break;
                 case ES_EXIT:

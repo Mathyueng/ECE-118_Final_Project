@@ -147,7 +147,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
         case Forward: // in the first state, replace this with correct names
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    DT_DriveFwd(FWD_MID_SPEED);
+                    DT_DriveFwd(65);
                     break;
                 case ES_NO_EVENT:
                     break;
@@ -227,7 +227,7 @@ ES_Event RunRoamSubHSM(ES_Event ThisEvent) {
                     } else if (LeftOrRight == Left) {
                         DT_SpinCC(-30);
                     }
-                    ES_Timer_InitTimer(ROAM_TIMER, TIMER_1_SEC);
+                    ES_Timer_InitTimer(ROAM_TIMER, 1500);
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == ROAM_TIMER) {
